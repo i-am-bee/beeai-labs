@@ -1,0 +1,7 @@
+#! /bin/bash
+do=${1:-"none"}
+case "$do" in
+	run) DEFER_PYDANTIC_BUILD=false ../../bee-hive/run_workflow.py "$2" ;;
+    create) ../../bee-hive/create_agents.py "$2";;
+    none) echo "invalid option" ;;
+esac

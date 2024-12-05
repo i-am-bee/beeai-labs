@@ -1,0 +1,28 @@
+apiVersion: beehive/v1
+kind: Agent
+metadata:
+  name: current-affairs
+  labels:
+    app: mas-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: Get the current weather
+  tools:
+    - code_interpreter
+    - weather
+  instructions: Get the current temperature for the location provided by the user. Return results in Fahrenheit.
+
+---
+apiVersion: beehive/v1
+kind: Agent
+metadata:
+  name: hot-or-not
+  labels:
+    app: mas-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: Is the current temperature hotter than usual?
+  tools:
+    - code_interpreter
+    - weather
+  instructions: The user will give you a temperature in Fahrenheit and a location. Use the OpenMateo weather tool to find the average monthly temperature for the location. Answer if the temperature provided by the user is hotter or colder than the average found by the tool.
