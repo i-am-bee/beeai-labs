@@ -30,8 +30,8 @@ If you've written some code but need help finishing it, want to get initial feed
 
 Bee uses the following labels to help non-maintainers find issues best suited to their interests and experience level:
 
-- [good first issue](https://github.com/i-am-bee/bee-agent-framework-python/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) - these issues are typically the simplest available to work on, ideal for newcomers. They should already be fully scoped, with a straightforward approach outlined in the descriptions.
-- [help wanted](https://github.com/i-am-bee/bee-agent-framework-python/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) - these issues are generally more complex than good first issues. They typically cover work that core maintainers don't currently have the capacity to implement and may require more investigation/discussion. These are great options for experienced contributors looking for something more challenging.
+- [good first issue](https://github.com/i-am-bee/bee-hive/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) - these issues are typically the simplest available to work on, ideal for newcomers. They should already be fully scoped, with a straightforward approach outlined in the descriptions.
+- [help wanted](https://github.com/i-am-bee/bee-hive/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) - these issues are generally more complex than good first issues. They typically cover work that core maintainers don't currently have the capacity to implement and may require more investigation/discussion. These are great options for experienced contributors looking for something more challenging.
 
 ## Set up a development environment
 
