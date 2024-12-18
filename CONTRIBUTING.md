@@ -1,6 +1,6 @@
 # Contributing
 
-Bee Agent Framework Python is an open-source project committed to bringing LLM agents to people of all backgrounds. This page describes how you can join the Bee community in this goal.
+Bee Hive is an open-source project committed to bringing LLM agents to people of all backgrounds. This page describes how you can join the Bee community in this goal.
 
 ## Before you start
 
