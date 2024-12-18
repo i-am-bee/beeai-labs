@@ -1,6 +1,6 @@
-> ⚠️ WORK IN PROGRESS ⚠️
-> Please reach out if you want to get involved in the discussions.
-> All feedback is welcomed
+
+> [!WARNING] 
+> [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
 <p align="center">
     <img alt="Bee Framework logo" src="../docs/assets/Bee_Dark.svg" height="128">
@@ -27,7 +27,7 @@ Our goal is to empower Python developers to adopt the latest open-source and pro
 ### Installation
 
 ```bash
-pip install ./bee-agent
+pip install ./framework/bee-py
 ```
 
 ### Quick Example
@@ -50,10 +50,11 @@ python -m examples.bee_agent.basic
 
 ## Local Development
 
-1. Clone the repository: `git clone https://github.com/i-am-bee/bee-agent-framework-py.git`
-2. Install dependencies: `poetry install`
-3. Activate virtual environment: `poetry shell`
-4. Create `.env` from `.env.template` and fill in required values
+1. Clone the repository: `git clone https://github.com/i-am-bee/bee-hive.git`
+1. Change into the `./framework/bee-py` directory
+1. Install dependencies: `poetry install`
+1. Activate virtual environment: `poetry shell`
+1. Create `.env` from `.env.example` and fill in required values
 
 
 ### Build the pip package
@@ -61,7 +62,7 @@ python -m examples.bee_agent.basic
 #### Build the package:
 
 ```bash
-cd ./bee-agent
+cd ./framework/bee-py
 poetry build
 ```
 
@@ -74,7 +75,7 @@ python -m venv test_env
 source test_env/bin/activate  # On Windows: test_env\Scripts\activate
 
 # Install the built package
-pip install dist/bee-agent-framework-py-0.1.0.tar.gz
+pip install dist/bee-py-0.1.0.tar.gz
 ```
 
 #### Publish to TestPyPI
@@ -85,7 +86,7 @@ poetry config repositories.testpypi https://test.pypi.org/legacy/
 # Publish
 poetry publish -r testpypi
 #Test the installation
-pip install --index-url https://test.pypi.org/simple/ bee-agent-framework-py
+pip install --index-url https://test.pypi.org/simple/ bee-py
 ```
 
 ## Modules
@@ -118,7 +119,7 @@ The Bee Agent Framework Python is an open-source project and we ❤️ contribut
 
 ### Reporting Issues
 
-We use [GitHub Issues](https://github.com/i-am-bee/bee-agent-framework-py/issues) to track public bugs. Please check existing issues before filing new ones.
+We use [GitHub Issues](https://github.com/i-am-bee/bee-hive/issues) to track public bugs. Please check existing issues before filing new ones.
 
 ### Code of Conduct
 
