@@ -33,9 +33,9 @@ pip install ./bee-agent
 ### Quick Example
 
 ```python
-from bee_agent import BeeAgent, OllamaLLM
+from bee_agent import BeeAgent, LLM
 
-agent = BeeAgent(llm=OllamaLLM())
+agent = BeeAgent(llm=LLM())
 
 agent.run("Agent 🤖: What is the capital of Massachusetts")
 ```
@@ -61,6 +61,7 @@ python -m examples.bee_agent.basic
 #### Build the package:
 
 ```bash
+cd ./bee-agent
 poetry build
 ```
 
