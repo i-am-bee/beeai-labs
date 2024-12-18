@@ -10,7 +10,7 @@ If you are new to Bee contributing, we recommend you do the following before div
 
 ## Style and lint
 
-Bee Python uses the following tools to meet code quality standards and ensure a unified code style across the codebase:
+Bee Hive uses the following tools to meet code quality standards and ensure a unified code style across the codebase:
 
 We use the following libs to check the Python code: 
 - [Black](https://black.readthedocs.io/) - Code Formatter
