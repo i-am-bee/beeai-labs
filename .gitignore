@@ -164,6 +164,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-/examples/*/agent_store.json
+/examples/**/agent_store.json
 /bee-hive/agent_store.json
 
