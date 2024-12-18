@@ -35,7 +35,7 @@ Bee uses the following labels to help non-maintainers find issues best suited to
 
 ## Set up a development environment
 
-To start contributing to the Bee Agent Framework Python, follow these steps to set up your development environment:
+To start contributing to the Bee Hive, follow these steps to set up your development environment:
 
 1. **Set up Python environment:** We recommend using Python 3.9 or higher. First, ensure you have Python installed:
 
