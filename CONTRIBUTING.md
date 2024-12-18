@@ -37,7 +37,7 @@ Bee uses the following labels to help non-maintainers find issues best suited to
 
 To start contributing to the Bee Hive, follow these steps to set up your development environment:
 
-1. **Set up Python environment:** We recommend using Python 3.9 or higher. First, ensure you have Python installed:
+1. **Set up Python environment:** We recommend using Python 3.11 or higher. First, ensure you have Python installed:
 
 ```bash
 python --version
