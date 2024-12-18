@@ -1,6 +1,8 @@
-from bee_agent.memory.sliding_memory import SlidingMemory, SlidingMemoryConfig
-from bee_agent.memory.message import BaseMessage, Role
 import asyncio
+
+from bee_agent.memory.sliding_memory import SlidingMemory, SlidingMemoryConfig
+from bee_agent.memory.message import BaseMessage
+from bee_agent.utils import Role
 
 
 async def main():

@@ -6,9 +6,11 @@ from .tools import WeatherTool, Tool
 
 from .memory import BaseMemory, UnconstrainedMemory, ReadOnlyMemory, TokenMemory
 
-from .memory.message import BaseMessage, Role
+from .memory.message import BaseMessage
 
 from .memory.serializable import Serializable
+
+from .utils.roles import Role
 
 __all__ = [
     "BaseAgent",

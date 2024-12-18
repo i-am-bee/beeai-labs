@@ -1,7 +1,9 @@
+import asyncio
+
 from bee_agent.llms import LLM
 from bee_agent.memory.summarize_memory import SummarizeMemory
-from bee_agent.memory.message import BaseMessage, Role
-import asyncio
+from bee_agent.memory.message import BaseMessage
+from bee_agent.utils import Role
 
 
 async def main():

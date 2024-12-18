@@ -1,6 +1,8 @@
 import asyncio
+
 from bee_agent.memory import UnconstrainedMemory
-from bee_agent.memory.message import BaseMessage, Role
+from bee_agent.memory.message import BaseMessage
+from bee_agent.utils import Role
 
 
 async def main():

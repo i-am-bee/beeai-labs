@@ -1,4 +1,4 @@
-from .message import BaseMessage, Role, BaseMessageMeta
+from .message import BaseMessage, BaseMessageMeta
 from .base_memory import BaseMemory
 from .exceptions import MemoryError, MemoryFatalError
 from .unconstrained_memory import UnconstrainedMemory
@@ -25,7 +25,6 @@ __all__ = [
     "SummarizeMemory",
     "SlidingMemory",
     "BaseMessage",
-    "Role",
     "BaseCache",
     "FileCache",
     "SlidingCache",

@@ -1,8 +1,10 @@
+import asyncio
+
 from bee_agent import BeeAgent, LLM
 from bee_agent.memory import UnconstrainedMemory, BaseMessage
-from bee_agent.memory.message import Role
 from bee_agent.llms.prompt import Prompt
-import asyncio
+from bee_agent.utils import Role
+
 
 # Initialize the memory and LLM
 memory = UnconstrainedMemory()

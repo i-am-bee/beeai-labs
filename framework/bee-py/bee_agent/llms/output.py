@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import Sequence, List
-from bee_agent.memory.message import BaseMessage, Role
+
 from .base_output import BaseChatLLMOutput
+from bee_agent.memory.message import BaseMessage
+from bee_agent.utils import Role
 
 
 @dataclass

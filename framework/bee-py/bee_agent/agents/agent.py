@@ -14,10 +14,9 @@ from bee_agent.llms import (
     SystemPromptTemplate,
     UserPromptTemplate,
 )
+from bee_agent.memory import BaseMessage, BaseMemory, UnconstrainedMemory
 from bee_agent.tools import Tool
-from bee_agent.memory import BaseMessage, BaseMemory, UnconstrainedMemory, Role
-
-from bee_agent.utils import BeeLogger
+from bee_agent.utils import BeeLogger, Role
 
 
 logger = BeeLogger(__name__)

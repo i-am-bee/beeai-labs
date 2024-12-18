@@ -1,8 +1,11 @@
+import asyncio
+import math
+
 from bee_agent import LLM
 from bee_agent.memory import TokenMemory
-from bee_agent.memory.message import BaseMessage, Role
-import math
-import asyncio
+from bee_agent.memory.message import BaseMessage
+from bee_agent.utils import Role
+
 
 # Initialize the LLM
 llm = LLM()

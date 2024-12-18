@@ -1,6 +1,9 @@
 from typing import List, Optional, Dict, Iterable, TYPE_CHECKING
+
 from .base_memory import BaseMemory
-from .message import BaseMessage, Role
+from .message import BaseMessage
+from bee_agent.utils import Role
+
 
 if TYPE_CHECKING:
     from bee_agent.llms import BaseLLM

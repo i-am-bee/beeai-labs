@@ -1,9 +1,10 @@
 from abc import ABC
-from enum import Enum
-from typing import Dict, Any, Optional, Type, Union
+from typing import Dict, Any, Optional, Type
 from datetime import datetime
 from copy import deepcopy
 from dataclasses import dataclass
+
+from bee_agent.utils import Role, RoleType
 
 
 # Basic Serialization implementation
@@ -27,24 +28,6 @@ class Serializable(ABC):
         instance = cls.__new__(cls)
         instance.load_snapshot(data)
         return instance
-
-
-# Basic Role class
-class Role(str, Enum):
-    ASSISTANT: str = "assistant"
-    SYSTEM: str = "system"
-    USER: str = "user"
-
-    @classmethod
-    def values(cls) -> set[str]:
-        return {
-            value
-            for key, value in vars(cls).items()
-            if not key.startswith("_") and isinstance(value, str)
-        }
-
-
-RoleType = Union[str, None]  # Equivalent to TypeScript's string type for roles
 
 
 # TypedDict equivalent for BaseMessageMeta
