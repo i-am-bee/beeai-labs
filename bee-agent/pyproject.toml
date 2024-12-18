@@ -14,6 +14,7 @@ pydantic-settings = "^2.6.1"
 chevron = "^0.14.0"
 types-requests = "^2.32.0.20241016"
 litellm = "^1.55.3"
+aiofiles = "^24.1.0"
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.20"
