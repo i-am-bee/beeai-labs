@@ -1,0 +1,93 @@
+> ⚠️ WORK IN PROGRESS ⚠️
+> Please reach out if you want to get involved in the discussions.
+> All feedback is welcomed
+
+# bee-hive
+
+A multiagent platform for the bee agent framework.
+
+## Usage
+
+There are two steps to running a workflow. 1. Agent Creation, and 2. Running a Workflow. Also, make sure you [configured your local environment](#local-environment)
+
+### Agent Creation
+
+* Define your agents in YAML. For example, create an `agents.yaml` file containing the following:
+
+```yaml
+apiVersion: beehive/v1
+kind: Agent
+metadata:
+  name: current-affairs
+  labels:
+    app: mas-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: Get the current weather
+  tools:
+    - code_interpreter
+    - weather
+  instructions: Get the current temperature for the location provided by the user. Return results in Fahrenheit.
+
+---
+apiVersion: beehive/v1
+kind: Agent
+metadata:
+  name: hot-or-not
+  labels:
+    app: mas-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: Is the current temperature hotter than usual?
+  tools:
+    - code_interpreter
+    - weather
+  instructions: The user will give you a temperature in Fahrenheit and a location. Use the OpenMateo weather tool to find the average monthly temperature for the location. Answer if the temperature provided by the user is hotter or colder than the average found by the tool.
+```
+
+* Create the agents by running the following command:
+
+```bash
+python create_agents.py agents.yaml
+```
+
+### Running a Workflow
+
+#### Sequential
+
+* Define a workflow in YAML listing the agents you wish to run. For example, create a `workflow.yaml` file containing the following:
+
+```yaml
+apiVersion: beehive/v1
+kind: Workflow
+metadata:
+  name: beehive-deployment
+  labels:
+    app: mas-example
+spec:
+  strategy:
+    type: sequence
+    output: verbose
+  template:
+    metadata:
+      labels:
+        app: mas-example
+    agents:
+      - name: current-affairs
+      - name: hot-or-not
+    prompt: New York
+```
+
+* Execute the workflow:
+
+```bash
+python run_workflow workflow.yaml
+```
+
+## Local environment
+
+* Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
+
+* Install dependencies: `pip install -r requirements.txt`
+
+* Configure environmental variables: `cp example.env .env`
