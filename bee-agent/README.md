@@ -27,7 +27,7 @@ Our goal is to empower Python developers to adopt the latest open-source and pro
 ### Installation
 
 ```bash
-poetry install
+pip install bee-agent-framework
 ```
 
 ### Quick Example
