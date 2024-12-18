@@ -27,7 +27,7 @@ Our goal is to empower Python developers to adopt the latest open-source and pro
 ### Installation
 
 ```bash
-pip install bee-agent-framework
+poetry install
 ```
 
 ### Quick Example
@@ -37,7 +37,7 @@ from bee_agent import BeeAgent, OllamaLLM
 
 agent = BeeAgent(llm=OllamaLLM())
 
-print(agent.run("Agent 🤖: What is the capital of Massachusetts"))
+agent.run("Agent 🤖: What is the capital of Massachusetts")
 ```
 
 > **Note**: To run this example, ensure you have [ollama](https://ollama.com) installed with the [llama3.1](https://ollama.com/library/llama3.1) model downloaded.
