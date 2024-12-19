@@ -1,18 +1,19 @@
-> ⚠️ WORK IN PROGRESS ⚠️
-> Please reach out if you want to get involved in the discussions.
-> All feedback is welcomed
+> [!WARNING]
+> [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
 # bee-hive
 
-A multiagent platform for the bee agent framework.
+A multi-agent platform with the vision to facilitate deploy and run Bee agents.
+
+In this initial version you are going to find some examples how run a group of agents, that you can build using current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](/bee_agent).
 
 ## Usage
 
 There are two steps to running a workflow. 1. Agent Creation, and 2. Running a Workflow. Also, make sure you [configured your local environment](#local-environment)
 
-### Agent Creation
+### Agent Definition
 
-* Define your agents in YAML. For example, create an `agents.yaml` file containing the following:
+* You can define your Agent in a declarative way using a YAML file, where you can use the current Bee Agent implementation. With that, you can configure your agent or agents. For example, create an `agents.yaml` file containing the following:
 
 ```yaml
 apiVersion: beehive/v1
