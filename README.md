@@ -29,7 +29,7 @@ This repository includes the following key modules:
 
     1.2 Python
 
-    The Python implementation focuses on scalability and ease of use for building agent-based workflows. Refer to the Bee Agent Framework Python [README](framework/bee-py/README.md) for details on installation, usage, and contributing.
+    The Python implementation of the Bee Agent Framework is available at: https://github.com/i-am-bee/bee-hive/tree/main/framework/bee-py
 
 2. Bee Hive
 
