@@ -6,7 +6,7 @@ authors = ["IBM"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">= 3.11, < 3.13"
 pydantic = "^2.10"
 requests = "^2.32"
 pylint = "^3.3.2"
