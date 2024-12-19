@@ -19,6 +19,7 @@ Our goal is to empower Python developers to adopt the latest open-source and pro
 
 - 🤖 **AI agents**: Use our powerful Bee agent refined for Llama 3.x and Granite 3.x, or build your own.
 - 🛠️ **Tools**: Use our built-in tools or create your own in Python.
+- 💾 **Memory**: Multiple strategies to optimize token spend.
 - ... more on our Roadmap
 
 ## Getting Started
@@ -101,7 +102,6 @@ The package provides several modules:
 ## Roadmap
 
 - 👩‍💻 **Code interpreter**: Run code safely in a sandbox container.
-- 💾 **Memory**: Multiple strategies to optimize token spend.
 - ⏸️ **Serialization**: Handle complex agentic workflows and easily pause/resume them without losing state.
 - 🔍 **Instrumentation**: Full visibility of your agent's inner workings.
 - 🎛️ **Production-level** control with caching and error handling.
