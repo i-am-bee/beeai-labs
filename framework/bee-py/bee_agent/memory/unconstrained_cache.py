@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import TypeVar, Dict, Any, Generic
 from .base_cache import BaseCache
 from .serializer import Serializer

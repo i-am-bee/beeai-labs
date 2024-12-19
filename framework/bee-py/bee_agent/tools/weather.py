@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import Literal, Optional, TypedDict
 from urllib.parse import urlencode
 

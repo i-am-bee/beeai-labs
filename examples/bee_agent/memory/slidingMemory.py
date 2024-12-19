@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 import asyncio
 
 from bee_agent.memory.sliding_memory import SlidingMemory, SlidingMemoryConfig

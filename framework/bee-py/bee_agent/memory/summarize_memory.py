@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import List, Optional, Dict, Iterable, TYPE_CHECKING
 
 from .base_memory import BaseMemory

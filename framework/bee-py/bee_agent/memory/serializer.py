@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from abc import ABC, abstractmethod
 import json
 from typing import Any, Dict, Type, TypeVar, Optional, Callable

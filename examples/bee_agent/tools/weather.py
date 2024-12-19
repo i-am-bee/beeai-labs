@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from bee_agent import BeeAgent, LLM
 from bee_agent.tools import WeatherTool
 

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import List, Dict, Optional
 from .base_memory import BaseMemory
 from .message import BaseMessage

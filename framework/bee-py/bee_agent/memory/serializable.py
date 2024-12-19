@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Type, TypeVar, Optional, ClassVar
 from copy import deepcopy

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import List, Optional, Dict, Any, Callable, Union, TypedDict
 from copy import copy
 from dataclasses import dataclass

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 from typing import Generic, TypeVar, Optional, Dict, Any
 from collections import OrderedDict
 import time
