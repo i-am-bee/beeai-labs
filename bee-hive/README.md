@@ -9,7 +9,9 @@ In this initial version you are going to find some examples how run a group of a
 
 ## Usage
 
-There are two steps to running a workflow. 1. Agent Creation, and 2. Running a Workflow. Also, make sure you [configured your local environment](#local-environment)
+There are two steps to running a workflow: defining some agents and creating a workflow to run those agents.
+
+> Note: to run Bee Hive, you will need to [configure your local environment](#local-environment)
 
 ### Agent Definition
 
