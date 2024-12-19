@@ -37,7 +37,7 @@ from bee_agent import BeeAgent, LLM
 
 agent = BeeAgent(llm=LLM())
 
-agent.run("Agent 🤖: What is the capital of Massachusetts")
+agent.run("What is the capital of Massachusetts")
 ```
 
 > **Note**: To run this example, ensure you have [ollama](https://ollama.com) installed with the [llama3.1](https://ollama.com/library/llama3.1) model downloaded.

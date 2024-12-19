@@ -12,6 +12,7 @@ from .output import ChatLLMOutput, ChatOutput
 from .prompt import Prompt
 from bee_agent.memory.base_memory import BaseMemory, BaseMessage
 from bee_agent.utils.custom_logger import BeeLogger
+from bee_agent.utils.roles import Role
 
 
 T = TypeVar("T", bound="BaseChatLLMOutput")
@@ -46,7 +47,7 @@ class BaseLLM(Generic[T], ABC):
 
     def generate(self, prompt: Union[Prompt, List[BaseMessage]], options=None) -> T:
         if type(prompt) is dict:
-            input = [BaseMessage.of({"role": "user", "text": prompt.get("prompt")})]
+            input = [BaseMessage.of({"role": Role.USER, "text": prompt.get("prompt")})]
         else:
             input = prompt
 

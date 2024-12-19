@@ -1,10 +1,11 @@
-from abc import ABC, abstractmethod
 import asyncio
+import json
+
+from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Any, Dict, List, Optional, TypeVar, Union
 
-import json
 import chevron
 
 from bee_agent.llms import (
@@ -16,10 +17,11 @@ from bee_agent.llms import (
 )
 from bee_agent.memory import BaseMessage, BaseMemory, UnconstrainedMemory
 from bee_agent.tools import Tool
-from bee_agent.utils import BeeLogger, Role
+from bee_agent.utils import BeeLogger, BeeEventEmitter, MessageEvent, Role
 
 
 logger = BeeLogger(__name__)
+event_emitter = BeeEventEmitter()
 T = TypeVar("T")
 
 
@@ -29,6 +31,14 @@ class BaseAgent(ABC):
     memory: BaseMemory
 
     max_iterations = 20
+
+    @property
+    def __is_loop_running(self) -> bool:
+        try:
+            asyncio.get_running_loop()
+            return True
+        except RuntimeError:
+            return False
 
     def __init__(
         self,
@@ -62,7 +72,7 @@ class BaseAgent(ABC):
         await self.memory.add(
             BaseMessage.of(
                 {
-                    "role": Role.SYSTEM.value,
+                    "role": Role.SYSTEM,
                     "text": chevron.render(**system_prompt),
                     "meta": {"createdAt": datetime.now().isoformat()},
                 }
@@ -81,11 +91,15 @@ class BaseAgent(ABC):
         if iteration_count == 0:
             user_prompt = dict(UserPromptTemplate)
             user_prompt["data"] = {"input": prompt.get("prompt", "")}
-            logger.info(f"User: {prompt.get('prompt', '')}")
+
+            event_emitter.emit(MessageEvent(
+                source=Role.USER, message=prompt.get("prompt", "")
+            ))
+
             await self.memory.add(
                 BaseMessage.of(
                     {
-                        "role": Role.USER.value,
+                        "role": Role.USER,
                         "text": chevron.render(**user_prompt),
                         "meta": {"createdAt": datetime.now().isoformat()},
                     }
@@ -112,13 +126,16 @@ class BaseAgent(ABC):
                 "tool_output": tool_response,
             }
 
-            logger.info(f"Agent (thought) 🤖: {output_parts.get('Thought')}")
-            logger.info(f"Agent (tool_name) 🤖: {output_parts.get('Function Name')}")
-            logger.info(f"Agent (tool_input) 🤖: {output_parts.get('Function Input')}")
+            event_emitter.emit_many([
+                MessageEvent(source="Agent", state="thought", message=output_parts.get('Thought')),
+                MessageEvent(source="Agent", state="tool_name", message=output_parts.get('Function Name')),
+                MessageEvent(source="Agent", state="tool_input", message=output_parts.get('Function Input'))
+            ])
+
             await self.memory.add(
                 BaseMessage.of(
                     {
-                        "role": Role.ASSISTANT.value,
+                        "role": Role.ASSISTANT,
                         "text": chevron.render(**assistant_prompt),
                         "meta": {"createdAt": datetime.now().isoformat()},
                     }
@@ -150,11 +167,14 @@ class BaseAgent(ABC):
 
             final_answer = output_parts.get("Final Answer")
             if final_answer:
-                logger.info(f"Agent (final_answer) 🤖: {final_answer}")
+                event_emitter.emit(MessageEvent(
+                    source="Agent", message=final_answer, state="final_answer"
+                ))
+
                 await self.memory.add(
                     BaseMessage.of(
                         {
-                            "role": Role.ASSISTANT.value,
+                            "role": Role.ASSISTANT,
                             "text": final_answer,
                             "meta": {"createdAt": datetime.now().isoformat()},
                         }
@@ -175,13 +195,11 @@ class BaseAgent(ABC):
             await agent.init_memory()
             await agent.plan_step(_prompt, {"count": 0}, options)
 
-        try:
-            # Already running event loop, e.g., Jupyter
-            asyncio.get_running_loop()
+        if self.__is_loop_running:
             # Create a separate thread so we can block before returning
             with ThreadPoolExecutor(1) as pool:
                 pool.submit(lambda: asyncio.run(runner(self, _prompt))).result()
-        except RuntimeError:
+        else:
             # No event loop
             asyncio.run(runner(self, _prompt))
 
