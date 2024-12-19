@@ -1580,6 +1580,26 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "pyventus"
+version = "0.6.0"
+description = "A powerful Python package for event-driven programming; define, emit, and orchestrate events with ease."
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "pyventus-0.6.0-py3-none-any.whl", hash = "sha256:fab55c04cc1c08c57af60116eb54e309c38245c0a4ef70d19b54f6c6bd44dafa"},
+    {file = "pyventus-0.6.0.tar.gz", hash = "sha256:1950f8ac7a6591fe3a36c66a79fdceea03ec34f9ad064b2e7e66120c8031cc6a"},
+]
+
+[package.extras]
+all = ["celery (>=5.3.5)", "fastapi (>=0.95.2)", "rq (>=1.15.0)"]
+celery = ["celery (>=5.3.5)"]
+dev = ["black (>=23.12.0)", "celery (>=5.3.5)", "coverage[toml] (>=7.3.3)", "fakeredis (>=2.20.0)", "fastapi (>=0.95.2)", "hatch (>=1.8.1)", "httpx (>=0.23.0)", "mike (>=2.1.3)", "mkdocs-git-committers-plugin-2 (>=2.3.0)", "mkdocs-git-revision-date-localized-plugin (>=1.2.1)", "mkdocs-material (>=9.5.17)", "mkdocs-material[imaging]", "mkdocstrings[python] (>=0.24.0)", "mypy (>=1.7.1)", "pytest (>=7.4.0)", "pytest-asyncio (>=0.21.0)", "rq (>=1.15.0)"]
+docs = ["mike (>=2.1.3)", "mkdocs-git-committers-plugin-2 (>=2.3.0)", "mkdocs-git-revision-date-localized-plugin (>=1.2.1)", "mkdocs-material (>=9.5.17)", "mkdocs-material[imaging]", "mkdocstrings[python] (>=0.24.0)"]
+fastapi = ["fastapi (>=0.95.2)"]
+rq = ["rq (>=1.15.0)"]
+tests = ["black (>=23.12.0)", "celery (>=5.3.5)", "coverage[toml] (>=7.3.3)", "fakeredis (>=2.20.0)", "fastapi (>=0.95.2)", "httpx (>=0.23.0)", "mypy (>=1.7.1)", "pytest (>=7.4.0)", "pytest-asyncio (>=0.21.0)", "rq (>=1.15.0)"]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
@@ -2246,4 +2266,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "52fd4a5e693a5a66bbd7d86ee6771ab58d51a00b43a4e63d921b7ff828905d91"
+content-hash = "a9f508f15fd00ed239073aa675b8e29e860081f6c859113318e2a88fd0bdb4e2"
