@@ -61,4 +61,4 @@ All content in this repository is provided by IBM under the associated open sour
 
 ---
 
-Happy coding with Bee Hive🚀
+Happy coding with Bee Hive 🚀
