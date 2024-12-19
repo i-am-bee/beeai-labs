@@ -1,27 +1,31 @@
-from typing import Optional, TypedDict
+from typing import Any, Optional, TypedDict
+
+import chevron
 
 
 class Prompt(TypedDict):
     prompt: Optional[str]
 
 
-class PromptTemplate(TypedDict):
+class PromptTemplate:
     template: str
 
+    def __init__(self, template: str):
+        self.template = template
 
-UserPromptTemplate = PromptTemplate({"template": """Message: {{input}}"""})
+    def render(self, data: dict[str, Any] = {}):
+        return chevron.render(template=self.template, data=data)
+
+
+UserPromptTemplate = PromptTemplate("Message: {{input}}")
 
 
 AssistantPromptTemplate = PromptTemplate(
-    {
-        "template": """{{#thought}}Thought: {{.}}\n{{/thought}}{{#tool_name}}Function Name: {{.}}\n{{/tool_name}}{{#tool_input}}Function Input: {{.}}\n{{/tool_input}}{{#toolOutput}}Function Output: {{.}}\n{{/toolOutput}}{{#final_answer}}Final Answer: {{.}}{{/final_answer}}"""
-    }
+    "{{#thought}}Thought: {{.}}\n{{/thought}}{{#tool_name}}Function Name: {{.}}\n{{/tool_name}}{{#tool_input}}Function Input: {{.}}\n{{/tool_input}}{{#toolOutput}}Function Output: {{.}}\n{{/toolOutput}}{{#final_answer}}Final Answer: {{.}}{{/final_answer}}"
 )
 
 
-SystemPromptTemplate = PromptTemplate(
-    {
-        "template": """# Available functions
+SystemPromptTemplate = PromptTemplate("""# Available functions
 {{#tools_length}}
 You can only use the following functions. Always use all required parameters.
 
@@ -88,6 +92,4 @@ Prefer to use these capabilities over functions.
 - You cannot do complex calculations, computations, or data manipulations without using functions.
 
 # Role
-{{instructions}}"""
-    }
-)
+{{instructions}}""")

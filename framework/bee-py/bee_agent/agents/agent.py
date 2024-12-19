@@ -6,7 +6,6 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Any, Dict, List, Optional, TypeVar, Union
 
-import chevron
 
 from bee_agent.llms import (
     BaseLLM,
@@ -60,20 +59,21 @@ class BaseAgent(ABC):
         logger.debug(f"Initializing {type(self.memory).__name__}")
 
         self.memory.reset()
-        system_prompt = dict(SystemPromptTemplate)
+        system_prompt_data = {}
 
         if len(self.tools):
             tool_box = [tool.prompt_data() for tool in self.tools]
-            system_prompt["data"] = {
+            system_prompt_data = {
                 "tools": tool_box,
                 "tools_length": len(tool_box),
                 "instructions": "You are a helpful assistant",
             }
+        
         await self.memory.add(
             BaseMessage.of(
                 {
                     "role": Role.SYSTEM,
-                    "text": chevron.render(**system_prompt),
+                    "text": SystemPromptTemplate.render(system_prompt_data),
                     "meta": {"createdAt": datetime.now().isoformat()},
                 }
             )
@@ -89,8 +89,7 @@ class BaseAgent(ABC):
             return
 
         if iteration_count == 0:
-            user_prompt = dict(UserPromptTemplate)
-            user_prompt["data"] = {"input": prompt.get("prompt", "")}
+            user_prompt_text = UserPromptTemplate.render({"input": prompt.get("prompt", "")})
 
             event_emitter.emit(MessageEvent(
                 source=Role.USER, message=prompt.get("prompt", "")
@@ -100,7 +99,7 @@ class BaseAgent(ABC):
                 BaseMessage.of(
                     {
                         "role": Role.USER,
-                        "text": chevron.render(**user_prompt),
+                        "text": user_prompt_text,
                         "meta": {"createdAt": datetime.now().isoformat()},
                     }
                 )
@@ -118,13 +117,12 @@ class BaseAgent(ABC):
             tool_response = tool.run(tool_input)
             logger.debug(f"Response from {tool_name}: {tool_response}")
 
-            assistant_prompt = dict(AssistantPromptTemplate)
-            assistant_prompt["data"] = {
+            assistant_prompt_text = AssistantPromptTemplate.render({
                 "thought": output_parts.get("Thought"),
                 "tool_name": output_parts.get("Function Name"),
                 "tool_input": tool_input,
                 "tool_output": tool_response,
-            }
+            })
 
             event_emitter.emit_many([
                 MessageEvent(source="Agent", state="thought", message=output_parts.get('Thought')),
@@ -136,7 +134,7 @@ class BaseAgent(ABC):
                 BaseMessage.of(
                     {
                         "role": Role.ASSISTANT,
-                        "text": chevron.render(**assistant_prompt),
+                        "text": assistant_prompt_text,
                         "meta": {"createdAt": datetime.now().isoformat()},
                     }
                 )
