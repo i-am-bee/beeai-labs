@@ -33,7 +33,7 @@ This repository includes the following key modules:
 
 2. Bee Hive
 
-The Bee Hive module serves as a multi-agent platform for orchestrating workflows. It supports declarative agent definitions and YAML-based workflows.
+    The Bee Hive module serves as a multi-agent platform for orchestrating workflows. It supports declarative agent definitions and YAML-based workflows.
 
 Refer to the Bee Hive [README](bee-hive/README.md) for detailed instructions.
 
