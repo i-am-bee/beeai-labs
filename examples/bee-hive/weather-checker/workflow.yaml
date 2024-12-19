@@ -1,4 +1,4 @@
-apiVersion: beehive/v1
+apiVersion: beehive/v1alpha1
 kind: Workflow
 metadata:
   name: beehive-deployment

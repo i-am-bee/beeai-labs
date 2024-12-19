@@ -1,11 +1,11 @@
 > [!WARNING]
 > [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
-# bee-hive
+# Bee Hive
 
 A multi-agent platform with the vision to facilitate deploy and run Bee agents.
 
-In this initial version you are going to find some examples how run a group of agents, that you can build using current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](/bee_agent).
+In this initial version you are going to find some examples how run a group of agents, that you can build using current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
 ## Usage
 
@@ -16,7 +16,7 @@ There are two steps to running a workflow. 1. Agent Creation, and 2. Running a W
 * You can define your Agent in a declarative way using a YAML file, where you can use the current Bee Agent implementation. With that, you can configure your agent or agents. For example, create an `agents.yaml` file containing the following:
 
 ```yaml
-apiVersion: beehive/v1
+apiVersion: beehive/v1alpha1
 kind: Agent
 metadata:
   name: current-affairs
@@ -31,7 +31,7 @@ spec:
   instructions: Get the current temperature for the location provided by the user. Return results in Fahrenheit.
 
 ---
-apiVersion: beehive/v1
+apiVersion: beehive/v1alpha1
 kind: Agent
 metadata:
   name: hot-or-not
@@ -59,7 +59,7 @@ python create_agents.py agents.yaml
 * Define a workflow in YAML listing the agents you wish to run. For example, create a `workflow.yaml` file containing the following:
 
 ```yaml
-apiVersion: beehive/v1
+apiVersion: beehive/v1alpha1
 kind: Workflow
 metadata:
   name: beehive-deployment

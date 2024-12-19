@@ -1,4 +1,4 @@
-apiVersion: beehive/v1
+apiVersion: beehive/v1alpha1
 kind: Agent
 metadata:
   name: current-affairs
@@ -13,7 +13,7 @@ spec:
   instructions: Get the current temperature for the location provided by the user. Return results in Fahrenheit.
 
 ---
-apiVersion: beehive/v1
+apiVersion: beehive/v1alpha1
 kind: Agent
 metadata:
   name: hot-or-not
