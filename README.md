@@ -9,13 +9,13 @@
 
 ## Key Features
 
-* **Open Platform**: run and orchestrate agents seamlessly on an open platform designed for experimentation and scalability.
+* **🔓 Open Platform**: Run and orchestrate agents seamlessly on an open platform designed for experimentation and scalability.
 
-* **Flexible Agent Framework**: write and experiment with agent and tool building in a flexible and modular framework.
+* **🤖 Flexible Agent Framework**: Write and experiment with agent and tool building in a flexible and modular framework.
 
-* **Versatile Agent Orchestration Capabilities**: Design multi-agent workflows tailored to your specific needs.
+* **⛓️‍💥 Versatile Agent Orchestration Capabilities**: Design multi-agent workflows tailored to your specific needs.
 
-* **Optimized for Open-Source Models**: Achieve best-in-class performance against open-source models like IBM Granite and Llama 3.x
+* **✨ Optimized for Open-Source Models**: Achieve best-in-class performance against open-source models like IBM Granite and Llama 3.x
 
 ## Modules
 
