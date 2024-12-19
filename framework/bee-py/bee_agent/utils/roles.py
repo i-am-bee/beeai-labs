@@ -1,4 +1,3 @@
-
 from enum import Enum
 from typing import Union
 
@@ -19,4 +18,3 @@ class Role(str, Enum):
             for key, value in vars(cls).items()
             if not key.startswith("_") and isinstance(value, str)
         }
-

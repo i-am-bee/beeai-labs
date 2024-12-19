@@ -29,7 +29,9 @@ class BeeEventEmitter(AsyncIOEventEmitter):
 
         # Log the execution context, if debug mode is enabled
         if self._logger.debug_enabled:  # pragma: no cover
-            self._logger.debug(action=f"Context:", msg=f"{'Async' if is_loop_running else 'Sync'}")
+            self._logger.debug(
+                action="Context:", msg=f"{'Async' if is_loop_running else 'Sync'}"
+            )
 
         if is_loop_running:
             # Create a separate thread

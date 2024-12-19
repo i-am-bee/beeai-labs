@@ -25,7 +25,8 @@ AssistantPromptTemplate = PromptTemplate(
 )
 
 
-SystemPromptTemplate = PromptTemplate("""# Available functions
+SystemPromptTemplate = PromptTemplate(
+    """# Available functions
 {{#tools_length}}
 You can only use the following functions. Always use all required parameters.
 
@@ -92,4 +93,5 @@ Prefer to use these capabilities over functions.
 - You cannot do complex calculations, computations, or data manipulations without using functions.
 
 # Role
-{{instructions}}""")
+{{instructions}}"""
+)

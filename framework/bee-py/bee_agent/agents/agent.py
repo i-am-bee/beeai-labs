@@ -68,7 +68,7 @@ class BaseAgent(ABC):
                 "tools_length": len(tool_box),
                 "instructions": "You are a helpful assistant",
             }
-        
+
         await self.memory.add(
             BaseMessage.of(
                 {
@@ -89,11 +89,13 @@ class BaseAgent(ABC):
             return
 
         if iteration_count == 0:
-            user_prompt_text = UserPromptTemplate.render({"input": prompt.get("prompt", "")})
+            user_prompt_text = UserPromptTemplate.render(
+                {"input": prompt.get("prompt", "")}
+            )
 
-            event_emitter.emit(MessageEvent(
-                source=Role.USER, message=prompt.get("prompt", "")
-            ))
+            event_emitter.emit(
+                MessageEvent(source=Role.USER, message=prompt.get("prompt", ""))
+            )
 
             await self.memory.add(
                 BaseMessage.of(
@@ -117,18 +119,34 @@ class BaseAgent(ABC):
             tool_response = tool.run(tool_input)
             logger.debug(f"Response from {tool_name}: {tool_response}")
 
-            assistant_prompt_text = AssistantPromptTemplate.render({
-                "thought": output_parts.get("Thought"),
-                "tool_name": output_parts.get("Function Name"),
-                "tool_input": tool_input,
-                "tool_output": tool_response,
-            })
+            assistant_prompt_text = AssistantPromptTemplate.render(
+                {
+                    "thought": output_parts.get("Thought"),
+                    "tool_name": output_parts.get("Function Name"),
+                    "tool_input": tool_input,
+                    "tool_output": tool_response,
+                }
+            )
 
-            event_emitter.emit_many([
-                MessageEvent(source="Agent", state="thought", message=output_parts.get('Thought')),
-                MessageEvent(source="Agent", state="tool_name", message=output_parts.get('Function Name')),
-                MessageEvent(source="Agent", state="tool_input", message=output_parts.get('Function Input'))
-            ])
+            event_emitter.emit_many(
+                [
+                    MessageEvent(
+                        source="Agent",
+                        state="thought",
+                        message=output_parts.get("Thought"),
+                    ),
+                    MessageEvent(
+                        source="Agent",
+                        state="tool_name",
+                        message=output_parts.get("Function Name"),
+                    ),
+                    MessageEvent(
+                        source="Agent",
+                        state="tool_input",
+                        message=output_parts.get("Function Input"),
+                    ),
+                ]
+            )
 
             await self.memory.add(
                 BaseMessage.of(
@@ -165,9 +183,11 @@ class BaseAgent(ABC):
 
             final_answer = output_parts.get("Final Answer")
             if final_answer:
-                event_emitter.emit(MessageEvent(
-                    source="Agent", message=final_answer, state="final_answer"
-                ))
+                event_emitter.emit(
+                    MessageEvent(
+                        source="Agent", message=final_answer, state="final_answer"
+                    )
+                )
 
                 await self.memory.add(
                     BaseMessage.of(

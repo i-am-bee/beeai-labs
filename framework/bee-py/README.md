@@ -41,10 +41,10 @@ agent.run("What is the capital of Massachusetts")
 
 > **Note**: To run this example, ensure you have [ollama](https://ollama.com) installed with the [llama3.1](https://ollama.com/library/llama3.1) model downloaded.
 
-to run other examples you can use, "python -m examples.bee_agent.[example_name]":
+to run other examples you can use, "python -m examples/bee_agent/[example_name]":
 
 ```bash
-python -m examples.bee_agent.basic
+python examples/bee_agent/basic.py
 ```
 
 ## Local Development

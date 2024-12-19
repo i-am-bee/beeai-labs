@@ -30,5 +30,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-lint = "tools.scripts:lint"
-commit = "tools.scripts:commit"
+lint = "dev_tools.scripts:lint"
+commit = "dev_tools.scripts:commit"

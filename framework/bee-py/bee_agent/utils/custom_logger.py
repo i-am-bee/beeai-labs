@@ -1,4 +1,3 @@
-from enum import Enum
 import logging
 import sys
 
@@ -40,10 +39,15 @@ class BeeLogger(logging.Logger):
 
         global _handler
         if _handler is None:
-            _handler = EventLinker.subscribe(MessageEvent, event_callback=self.log_message_events)
+            _handler = EventLinker.subscribe(
+                MessageEvent, event_callback=self.log_message_events
+            )
 
     def log_message_events(self, event: MessageEvent):
         source = str.lower(event.source)
         state = f" ({event.state})" if event.state else ""
         icon = " 👤" if source == str.lower(Role.USER) else " 🤖"
-        self.info(f" {str.capitalize(source)}{state}{icon}: {event.message}", extra={"is_event_message": True})
+        self.info(
+            f" {str.capitalize(source)}{state}{icon}: {event.message}",
+            extra={"is_event_message": True},
+        )
