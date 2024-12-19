@@ -1,5 +1,4 @@
-
-> [!WARNING] 
+> [!WARNING]
 > [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
 <p align="center">
