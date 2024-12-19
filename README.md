@@ -23,13 +23,13 @@ This repository includes the following key modules:
 
 1. Bee Agent Framework
 
-1.1 TypeScript
+    1.1 TypeScript
 
-The Typescript implementation of the Bee Agent Framework is available at: https://github.com/i-am-bee/bee-agent-framework
+    The Typescript implementation of the Bee Agent Framework is available at: https://github.com/i-am-bee/bee-agent-framework
 
-1.2 Python
+    1.2 Python
 
-The Python implementation focuses on scalability and ease of use for building agent-based workflows. Refer to the Bee Agent Framework Python [README](framework/bee-py/README.md) for details on installation, usage, and contributing.
+    The Python implementation focuses on scalability and ease of use for building agent-based workflows. Refer to the Bee Agent Framework Python [README](framework/bee-py/README.md) for details on installation, usage, and contributing.
 
 2. Bee Hive
 
