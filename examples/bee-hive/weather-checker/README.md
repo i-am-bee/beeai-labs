@@ -6,11 +6,11 @@ A multi-agent workflow using Bee-Hive to check if the current temperature in a l
 
 * Run a local instance of the Bee Stack
 
-* Install dependencies: `pip install -r ../../bee-hive/requirements.txt`
+* Install dependencies: `pip install -r ../../../bee-hive/requirements.txt`
 
 * Configure environmental variables: `cp example.env .env`
 
-* Copy `.env` to main bee-hive directory: `cp .env ../../bee-hive`
+* Copy `.env` to main bee-hive directory: `cp .env ../../../bee-hive`
 
 * Create the agents: `./hive create agents.yaml`
 
