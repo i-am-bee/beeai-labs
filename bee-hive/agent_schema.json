@@ -23,7 +23,8 @@
           "type": "object",
             "description": "agent labels, key: value pairs"
         }    
-      }
+      },
+      "required": ["name"]
     },
     "spec": {
       "type": "object",
@@ -46,7 +47,16 @@
           "items": {
             "type": "string"
           }    
-        }    
+        },
+        "input": {
+          "type": "string",
+          "description": "instructions for the agent"
+        },
+        "output": {
+          "type": "string",
+          "description": "instructions for the agent"
+        },
+	"required": ["model","instructions"]
       }
     }
   }
