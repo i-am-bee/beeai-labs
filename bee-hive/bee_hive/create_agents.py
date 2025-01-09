@@ -27,6 +27,8 @@ def create_agent(agent):
     agent_model = agent["spec"]["model"]
     agent_desc = agent["spec"]["description"]
     agent_instr = agent["spec"]["instructions"]
+    agent_input = agent["spec"].get("input")
+    agent_output = agent["spec"].get("output")
     agent_tools = []
 
     # weather_tool = {"type":"object", "properties":{"location":{"anyOf":[{"type":"object","properties":{"name":{"type":"string", "minLength":1 },"country":{"type":"string" },"language":{"type":"string","default":"English" }},"required":["name"],},{"type":"object","properties":{"latitude":{"type":"number"},"longitude":{"type":"number"}},"required":["latitude","longitude"]}]},"start_date":{"type":"string","format":"date","description":"Start date for the weather forecast in the format YYYY-MM-DD (UTC)"},"end_date":{"type":"string","format":"date","description": "End date for the weather forecast in the format YYYY-MM-DD (UTC)" },"temperature_unit":{"type":"string","enum":["celsius","fahrenheit"],"default":"celsius"}},"required":["location","start_date"]}
@@ -37,12 +39,14 @@ def create_agent(agent):
         else:
             print(f"Enable the {tool} tool in the Bee UI")
 
+    instructions = f"{agent_instr} Input is expected in format: {agent_input}" if agent_input else agent_instr
+    instructions = f"{instructions} Output must be in format: {agent_output}" if agent_output else instructions
     assistant = client.beta.assistants.create(
         name=agent_name,
         model=agent_model,
         description=agent_desc,
         tools=agent_tools,
-        instructions=agent_instr,
+        instructions=instructions,
     )
 
     return assistant.id
