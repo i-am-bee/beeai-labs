@@ -31,7 +31,7 @@ class DuckDuckGoSearchTool(Tool):
     """DuckDuckGo search tool implementation"""
 
     name = "DuckDuckGoSearch"
-    description = "Search the web using DuckDuckGo"
+    description = "Search for information on the web using DuckDuckGo"
 
     def __init__(
         self, max_results: int = 10, safe_search: str = DuckDuckGoSearchType.STRICT
@@ -61,6 +61,7 @@ class DuckDuckGoSearchTool(Tool):
                 input = json.loads(input)
 
             query = input.get("query", "")
+
             if not query:
                 return "Error: No search query provided"
 
@@ -209,4 +210,5 @@ async def run_agent():
 
 if __name__ == "__main__":
     # Run the async main function
+    # logging.basicConfig(level=logging.DEBUG)
     asyncio.run(run_agent())

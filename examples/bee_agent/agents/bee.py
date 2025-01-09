@@ -10,7 +10,7 @@ from bee_agent.agents import BeeAgent
 from bee_agent.memory import TokenMemory
 from bee_agent.utils import BeeLogger
 from bee_agent.llms import LLM
-from bee_agent.tools import WeatherTool, Tool
+from bee_agent.tools import Tool
 
 # Import LangChain's Wikipedia tool from community package
 from langchain_community.tools import WikipediaQueryRun
@@ -38,15 +38,26 @@ class LangChainWikipediaTool(Tool):
 
     def __init__(self):
         super().__init__()
-        self.wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())
+        wikipedia = WikipediaAPIWrapper()
+        self.wikipedia = WikipediaQueryRun(api_wrapper=wikipedia)
 
     def input_schema(self):
-        return '{"type":"object","properties":{"query":{"type":"string","description":"The topic or question to search for on Wikipedia"}},"required":["query"]}'
+        return """{
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The topic or question to search for on Wikipedia",
+                }
+            },
+            "required": ["query"],
+        }"""
 
     def _run(self, input: Dict[str, Any], options=None):
         query = input.get("query", "")
         try:
-            return self.wikipedia.run(query)
+            result = self.wikipedia.run(query)
+            return result
         except Exception as e:
             logger.error(f"Wikipedia search error: {str(e)}")
             return f"Error searching Wikipedia: {str(e)}"
@@ -66,7 +77,8 @@ def create_agent() -> BeeAgent:
     )
 
     # Configure tools with LangChain's Wikipedia tool
-    tools = [LangChainWikipediaTool(), WeatherTool()]
+    # tools = [LangChainWikipediaTool(), WeatherTool()]
+    tools = [LangChainWikipediaTool()]
 
     # Add code interpreter tool if URL is configured
     code_interpreter_url = get_env_var("CODE_INTERPRETER_URL")
@@ -124,7 +136,7 @@ async def main():
 
                 if prompt.lower() in ["exit", "quit"]:
                     break
-
+                print(">>>", prompt)
                 # Run agent with the prompt
                 agent.run(
                     prompt=prompt,
@@ -149,4 +161,6 @@ async def main():
 
 if __name__ == "__main__":
     # Run the async main function
+    # logging.basicConfig(level=logging.DEBUG)
+
     asyncio.run(main())
