@@ -3,24 +3,25 @@
 
 import json
 import os
-from pprint import pprint
 import sys
 
 import dotenv
-from openai import OpenAI, BaseModel
+from openai import OpenAI
 import yaml
 
 dotenv.load_dotenv()
 
 
 def parse_yaml(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         yaml_data = list(yaml.safe_load_all(file))
     return yaml_data
 
 
 def create_agent(agent):
-    client = OpenAI(base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY"))
+    client = OpenAI(
+        base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
+    )
 
     agent_name = agent["metadata"]["name"]
     agent_model = agent["spec"]["model"]
@@ -41,7 +42,7 @@ def create_agent(agent):
         model=agent_model,
         description=agent_desc,
         tools=agent_tools,
-        instructions=agent_instr
+        instructions=agent_instr,
     )
 
     return assistant.id
@@ -60,7 +61,7 @@ def create_agents(agents_yaml):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print('Usage: python create_agents.py <yaml_file>')
+        print("Usage: python create_agents.py <yaml_file>")
         sys.exit(1)
 
     file_path = sys.argv[1]
