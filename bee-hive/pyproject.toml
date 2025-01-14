@@ -11,6 +11,9 @@ python = ">= 3.11, < 3.13"
 pyyaml = "^6.0.2"
 openai = "^1.56.2"
 python-dotenv = "^1.0.1"
+opentelemetry-api = "^1.29.0"
+opentelemetry-sdk = "^1.29.0"
+opentelemetry-exporter-otlp = "^1.29.0"
 
 [build-system]
 requires = ["poetry-core"]
