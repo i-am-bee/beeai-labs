@@ -91,6 +91,6 @@ python run_workflow workflow.yaml
 
 * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
 
-* Install dependencies: `pip install -r requirements.txt`
+* Install dependencies: `poetry shell && poetry install`
 
 * Configure environmental variables: `cp example.env .env`

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "bee_hive"
+version = "0.1.0"
+description = "A multi-agent platform with the vision to facilitate deploy and run Bee agents."
+authors = ["IBM"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">= 3.11, < 3.13"
+pyyaml = "^6.0.2"
+openai = "^1.56.2"
+python-dotenv = "^1.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

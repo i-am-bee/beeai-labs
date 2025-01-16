@@ -87,6 +87,7 @@ class LLM(BaseLLM[BaseChatLLMOutput]):
         response = completion(
             model=self.model,
             messages=self.prepare_messages(input),
+            base_url=self.base_url,
         )
 
         logger.debug(f"Inference response choices size: {len(response.choices)}")

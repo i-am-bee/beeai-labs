@@ -1,6 +1,9 @@
 # MacOS
 .DS_Store
 
+#lock files
+*.lock
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
