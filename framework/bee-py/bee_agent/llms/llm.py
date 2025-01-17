@@ -68,10 +68,13 @@ class LLM(BaseLLM[BaseChatLLMOutput]):
     def __init__(
         self,
         model: str = "ollama_chat/llama3.1",
-        base_url: str = "http://localhost:11434",
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
         parameters: Dict[str, Any] = {},
     ):
-        h = base_url[:-1] if base_url.endswith("/") else base_url
+        self.api_key = api_key
+
+        h = base_url[:-1] if base_url and base_url.endswith("/") else base_url
         self.parameters = {
             "temperature": 0,
             "repeat_penalty": 1.0,
@@ -88,6 +91,7 @@ class LLM(BaseLLM[BaseChatLLMOutput]):
             model=self.model,
             messages=self.prepare_messages(input),
             base_url=self.base_url,
+            api_key=self.api_key,
         )
 
         logger.debug(f"Inference response choices size: {len(response.choices)}")
