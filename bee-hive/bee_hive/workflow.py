@@ -29,18 +29,18 @@ class Workflow:
         """Execute workflow."""
 
         if (self.workflow["spec"]["strategy"]["type"]  == "sequence"):
-            prompt = self.workflow["spec"]["template"]["prompt"]
-            for agent in self.agents:
-                if (
-                    self.workflow["spec"]["strategy"]["output"]
-                    and self.workflow["spec"]["strategy"]["output"] == "verbose"
-                ):
-                    prompt = agent.run_streaming(prompt)
-                else:
-                    prompt = agent.run(prompt)
-            return prompt
+            return self._sequence()
         else:
             print("not supported yet")   
 
-
-
+    def _sequence(self):
+        prompt = self.workflow["spec"]["template"]["prompt"]
+        for agent in self.agents:
+            if (
+                self.workflow["spec"]["strategy"]["output"]
+                and self.workflow["spec"]["strategy"]["output"] == "verbose"
+            ):
+                prompt = agent.run_streaming(prompt)
+            else:
+                prompt = agent.run(prompt)
+        return prompt
