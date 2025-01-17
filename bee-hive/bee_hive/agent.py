@@ -16,6 +16,7 @@ from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
 
 class Agent:
     agent_id = ""
+    agent_tools = []
     
     def __init__(self, agent):
         client = OpenAI(
@@ -32,26 +33,25 @@ class Agent:
 
         for tool in agent["spec"]["tools"]:
             if tool == "code_interpreter":
-                agent_tools.append({"type": tool})
+                self.agent_tools.append({"type": tool})
             else:
                 print(f"Enable the {tool} tool in the Bee UI")
 
         instructions = f"{agent_instr} Input is expected in format: {self.agent_input}" if self.agent_input else self.agent_instr
-        instructions = f"{instructions} Output must be in format: {self.agent_output}" if self.agent_output else self.instructions
+        instructions = f"{instructions} Output must be in format: {self.agent_output}" if self.agent_output else instructions
         assistant = client.beta.assistants.create(
-            name=agent_name,
-            model=agent_model,
-            description=agent_desc,
-            tools=agent_tools,
+            name=self.agent_name,
+            model=self.agent_model,
+            description=self.agent_desc,
+            tools=self.agent_tools,
             instructions=instructions,
         )
 
-        agent_id = assistant.id
+        self.agent_id = assistant.id
 
 
     def run(self, prompt):
         print(f"🐝 Running {self.agent_name}...")
-        agent_id = load_agent(agent_name)
         client = OpenAI(
             base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
         )
@@ -67,7 +67,7 @@ class Agent:
         print(f"🐝 Response from {self.agent_name}: {answer}")
         return answer
 
-    def run_streaming_agent(self, prompt):
+    def run_streaming(self, prompt):
         print(f"🐝 Running {self.agent_name}...")
         client = OpenAI(
             base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
