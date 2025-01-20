@@ -7,9 +7,13 @@ import sys
 
 import yaml
 import dotenv
+
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
 from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
+
+from abc import ABC, abstractmethod
+import re
 
 dotenv.load_dotenv()
 
@@ -25,19 +29,106 @@ def load_agent(agent):
         agent_store = json.load(f)
     return agent_store[agent]
 
+# --- Abstract Base Class for Agent Runners ---
+class AgentRunner(ABC):
+    def __init__(self, agent_name):
+        self.agent_name = agent_name
 
+    @abstractmethod
+    def run(self, prompt):
+        """Runs the agent with the given prompt."""
+        pass
+    
+    @abstractmethod
+    def stream(self, prompt):
+        """Runs the agent in streaming mode with the given prompt."""
+        pass
+    
+class CrewAIAgentRunner(AgentRunner):
+    def __init__(self, agent_name):
+        super().__init__(agent_name)
+        # Initialize CrewAI-specific resources here, if needed
+
+    def run(self, prompt):
+        print(f"Running CrewAI agent: {self.agent_name} with prompt: {prompt}")
+        # Implement CrewAI agent execution logic here
+        # crew = Crew(agent_name, ...)
+        # crew.kickoff() << this is how we kick it off in the sample code. Note could be additional tasks
+        raise NotImplementedError("CrewAI agent execution logic not implemented yet")
+    
+    def stream(self, prompt):
+        print(f"Running CrewAI agent (streaming): {self.agent_name} with prompt: {prompt}")
+
+        raise NotImplementedError("CrewAI agent execution logic not implemented yet")
+        
+class LangGraphAgentRunner(AgentRunner):
+    def __init__(self, agent_name):
+        super().__init__(agent_name)
+        # Initialize LangGraph-specific resources here
+
+    def run(self, prompt):
+        print(f"Running LangGraph agent: {self.agent_name} with prompt: {prompt}")
+        # Implement LangGraph agent execution logic here
+        # workflow = StateGraph(...) << not yet used by sample, can refactor as this is normal way of launching
+        raise NotImplementedError("LangGraph agent execution logic not implemented yet")
+    
+    def stream(self, prompt):
+        print(f"Running LangGraph agent (streaming): {self.agent_name} with prompt: {prompt}")
+        # Implement LangGraph agent execution logic here
+        # workflow = StateGraph(...) << not yet used by sample, can refactor as this is normal way of launching
+        raise NotImplementedError("LangGraph agent execution logic not implemented yet")
+        
+class BeeAgentRunner(AgentRunner):
+    def __init__(self, agent_name):
+        super().__init__(agent_name)
+        # Initialize Bee-specific resources here
+
+    def run(self, prompt):
+        print(f"Running Bee agent: {self.agent_name} with prompt: {prompt}")
+
+        # delegate to existing implementation
+        # TODO: Refactor bee code to be more modular
+        result=run_agent(self.agent_name, prompt)
+        return result
+    
+    def stream(self, prompt):
+        print(f"Running Bee agent (streaming): {self.agent_name} with prompt: {prompt}")
+
+        # delegate to existing implementation
+        result=run_streaming_agent(self.agent_name, prompt)
+        return result
+        
+# --- Agent Runner Factory ---
+
+class AgentRunnerFactory:
+    @staticmethod
+    def create_agent_runner(agent_name):
+        """Creates an agent runner based on the agent's name."""
+        # TODO: May want to discover agent type, or define in workflow
+        if agent_name.startswith("crewai_"):
+            return CrewAIAgentRunner(agent_name)
+        elif agent_name.startswith("langgraph_"):
+            return LangGraphAgentRunner(agent_name)
+        else:
+        #elif re.match(r"^[a-zA-Z]+$", agent_name):
+            return BeeAgentRunner(agent_name)
+        #else:
+            #raise ValueError(f"Unknown agent framework for agent: {agent_name}")
+        
 def sequential_workflow(workflow):
     prompt = workflow_yaml["spec"]["template"]["prompt"]
     agents = workflow_yaml["spec"]["template"]["agents"]
-    if (
-        workflow_yaml["spec"]["strategy"]["output"]
-        and workflow_yaml["spec"]["strategy"]["output"] == "verbose"
-    ):
-        run_workflow = run_streaming_agent
-    else:
-        run_workflow = run_agent
+
     for agent in agents:
-        prompt = run_workflow(agent["name"], prompt)
+        try:
+            agent_runner = AgentRunnerFactory.create_agent_runner(agent["name"])
+            # TODO: reinstate streaming support
+            #prompt=agent_runner.stream(prompt) if( workflow_yaml["spec"]["strategy"]["streaming"] and workflow_yaml["spec"]["strategy"]["output"] == "verbose" ) else agent_runner.run(prompt)
+            agent_runner.run(prompt)
+        except ValueError as e:
+            print(e)
+            raise(e)
+
     return prompt
 
 
