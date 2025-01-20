@@ -1,4 +1,4 @@
-activityfinder_task:
+activity_finder_task:
   description: >
     Find a list of 5 activities to do in the cold or wet weather in {location}.
     Make sure the information is current as of 2025.
@@ -6,4 +6,4 @@ activityfinder_task:
     A list of 5 activities to do in the cold or wet weather in {location} with
     the name of the activity, a brief description, and the address of the
     location.
-  agent: activityplanner
+  agent: activity_planner_agent
