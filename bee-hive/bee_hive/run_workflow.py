@@ -71,6 +71,9 @@ class CrewAIAgentRunner(AgentRunner):
         # Implement CrewAI agent execution logic here
         # crew = Crew(agent_name, ...)
         # crew.kickoff() << this is how we kick it off in the sample code. Note could be additional tasks
+        
+        # TODO: We get called with prompt='New York' or similar. test agent needs { "location": "New York" }
+        #prompt2  = { "location": prompt }
         try: 
             # TODO: need to lookup method to call - base don agent name?
             self.instance.activity_crew().kickoff(prompt)
