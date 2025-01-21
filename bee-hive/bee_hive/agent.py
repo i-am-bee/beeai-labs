@@ -31,11 +31,13 @@ class Agent:
         self.agent_output = agent["spec"].get("output")
         self.agent_tools = []
 
-        for tool in agent["spec"]["tools"]:
-            if tool == "code_interpreter":
-                self.agent_tools.append({"type": tool})
-            else:
-                print(f"Enable the {tool} tool in the Bee UI")
+        tools = agent["spec"].get("tools")
+        if tools:
+            for tool in tools:
+                if tool == "code_interpreter":
+                    self.agent_tools.append({"type": tool})
+                else:
+                    print(f"Enable the {tool} tool in the Bee UI")
 
         instructions = f"{agent_instr} Input is expected in format: {self.agent_input}" if self.agent_input else self.agent_instr
         instructions = f"{instructions} Output must be in format: {self.agent_output}" if self.agent_output else instructions
