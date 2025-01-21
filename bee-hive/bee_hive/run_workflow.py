@@ -4,7 +4,9 @@
 import json
 import os
 import sys
-
+import importlib
+        
+from click import prompt
 import yaml
 import dotenv
 
@@ -47,14 +49,34 @@ class AgentRunner(ABC):
 class CrewAIAgentRunner(AgentRunner):
     def __init__(self, agent_name):
         super().__init__(agent_name)
-        # Initialize CrewAI-specific resources here, if needed
+        # load python module based on name
+        # TODO: improve flex. for now agent_name should be the module + classname (which must begin with crewai_)
+        # For example:
+        #   crewai_things_to_do_cold_weather.ColdWeatherCrew
+        try:
+            module_name, class_name = agent_name.rsplit(".", 1)
+            my_module = importlib.import_module(module_name)
+            # Get the class object
+            self.crew_agent_class = getattr(my_module, class_name)
+
+            # Instantiate the class
+            self.instance = self.crew_agent_class()
+        except Exception as e:
+            print(f"Failed to load agent {agent_name}: {e}")
+            raise(e)
+
 
     def run(self, prompt):
         print(f"Running CrewAI agent: {self.agent_name} with prompt: {prompt}")
         # Implement CrewAI agent execution logic here
         # crew = Crew(agent_name, ...)
         # crew.kickoff() << this is how we kick it off in the sample code. Note could be additional tasks
-        raise NotImplementedError("CrewAI agent execution logic not implemented yet")
+        try: 
+            # TODO: need to lookup method to call - base don agent name?
+            self.instance.activity_crew().kickoff(prompt)
+        except Exception as e:
+            print(f"Failed to kickoff crew agent: {self.agent_name}: {e}")
+            raise(e)
     
     def stream(self, prompt):
         print(f"Running CrewAI agent (streaming): {self.agent_name} with prompt: {prompt}")
@@ -105,9 +127,9 @@ class AgentRunnerFactory:
     def create_agent_runner(agent_name):
         """Creates an agent runner based on the agent's name."""
         # TODO: May want to discover agent type, or define in workflow
-        if agent_name.startswith("crewai_"):
+        if "crewai_" in agent_name:
             return CrewAIAgentRunner(agent_name)
-        elif agent_name.startswith("langgraph_"):
+        elif "langgraph_" in agent_name:
             return LangGraphAgentRunner(agent_name)
         else:
         #elif re.match(r"^[a-zA-Z]+$", agent_name):
