@@ -50,17 +50,18 @@ class CrewAIAgentRunner(AgentRunner):
     def __init__(self, agent_name):
         super().__init__(agent_name)
         # load python module based on name
-        # TODO: improve flex. for now agent_name should be the module + classname (which must begin with crewai_)
-        # For example:
-        #   crewai_things_to_do_cold_weather.ColdWeatherCrew
+        # TODO: improve configuration - current requirement is to have the agent name in the format:
+        #   <directory>.<filename>.<class>.<method> where 'crewai_' must appear in the name ie
+        #   test.crewai_test.ColdWeatherCrew.activity_crew
         try:
-            module_name, class_name = agent_name.rsplit(".", 1)
+            partial_agent_name, method_name = agent_name.rsplit(".", 1)
+            module_name, class_name = partial_agent_name.rsplit(".", 1)
             my_module = importlib.import_module(module_name)
             # Get the class object
             self.crew_agent_class = getattr(my_module, class_name)
-
             # Instantiate the class
-            self.instance = self.crew_agent_class()
+            self.instance = self.crew_agent_class()            
+            self.method_name = method_name
         except Exception as e:
             print(f"Failed to load agent {agent_name}: {e}")
             raise(e)
@@ -68,15 +69,14 @@ class CrewAIAgentRunner(AgentRunner):
 
     def run(self, prompt):
         print(f"Running CrewAI agent: {self.agent_name} with prompt: {prompt}")
-        # Implement CrewAI agent execution logic here
-        # crew = Crew(agent_name, ...)
-        # crew.kickoff() << this is how we kick it off in the sample code. Note could be additional tasks
         
-        # TODO: We get called with prompt='New York' or similar. test agent needs { "location": "New York" }
-        #prompt2  = { "location": prompt }
-        try: 
-            # TODO: need to lookup method to call - base don agent name?
-            self.instance.activity_crew().kickoff(prompt)
+        try:
+
+            method = getattr(self.instance, self.method_name)
+            output = method().kickoff(inputs=prompt)
+            # TODO: Still need to figure out return
+            return output
+    
         except Exception as e:
             print(f"Failed to kickoff crew agent: {self.agent_name}: {e}")
             raise(e)
