@@ -274,10 +274,15 @@ def sequential_workflow(workflow):
 
     for agent in agents:
         try:
+
             agent_runner = AgentRunnerFactory.create_agent_runner(agent["name"])
-            # TODO: reinstate streaming support
-            #prompt=agent_runner.stream(prompt) if( workflow_yaml["spec"]["strategy"]["streaming"] and workflow_yaml["spec"]["strategy"]["output"] == "verbose" ) else agent_runner.run(prompt)
-            agent_runner.run(prompt)
+
+            if ( workflow_yaml["spec"]["strategy"]["output"]
+                 and 
+                 workflow_yaml["spec"]["strategy"]["output"] == "verbose" ):
+                prompt = agent_runner.stream(prompt)
+            else:
+                prompt = agent_runner.run(prompt)                
         except ValueError as e:
             print(e)
             raise(e)
