@@ -6,7 +6,6 @@ import os
 import sys
 import importlib
         
-from click import prompt
 import yaml
 import dotenv
 
@@ -15,10 +14,8 @@ from openai.types.beta import AssistantStreamEvent
 from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
 
 from abc import ABC, abstractmethod
-import re
 
 dotenv.load_dotenv()
-
 
 def parse_yaml(file_path):
     with open(file_path, "r") as file:
@@ -33,26 +30,60 @@ def load_agent(agent):
 
 # --- Abstract Base Class for Agent Runners ---
 class AgentRunner(ABC):
+    """
+    Abstract base class for running agents.
+    """
+
     def __init__(self, agent_name):
+        """
+        Initializes the AgentRunner with the given agent name.
+        Args:
+            agent_name (str): The name of the agent.
+        """
         self.agent_name = agent_name
 
     @abstractmethod
     def run(self, prompt):
-        """Runs the agent with the given prompt."""
+        """
+        Runs the agent with the given prompt.
+        Args:
+            prompt (str): The prompt to run the agent with.
+        """
+
         pass
     
     @abstractmethod
     def stream(self, prompt):
-        """Runs the agent in streaming mode with the given prompt."""
+        """
+        Runs the agent in streaming mode with the given prompt.
+        Args:
+            prompt (str): The prompt to run the agent with.
+        """
         pass
     
 class CrewAIAgentRunner(AgentRunner):
+    """
+    CrewAIAgentRunner extends the AgentRunner class to load and run a specific CrewAI agent.
+    """
     def __init__(self, agent_name):
+        """
+        Initializes the workflow for the specified agent. 
+        The executable code must be within $PYTHONPATH.
+        Args:
+            agent_name (str): The name of the agent in the format 
+                              <directory>.<filename>.<class>.<method> where 'crewai_' 
+                              must appear in the name, e.g., test.crewai_test.ColdWeatherCrew.activity_crew.
+        Raises:
+            Exception: If the agent cannot be loaded, an exception is raised with an error message.
+        """
+        
         super().__init__(agent_name)
+        
         # load python module based on name
         # TODO: improve configuration - current requirement is to have the agent name in the format:
         #   <directory>.<filename>.<class>.<method> where 'crewai_' must appear in the name ie
         #   test.crewai_test.ColdWeatherCrew.activity_crew
+        
         try:
             partial_agent_name, method_name = agent_name.rsplit(".", 1)
             module_name, class_name = partial_agent_name.rsplit(".", 1)
@@ -68,6 +99,16 @@ class CrewAIAgentRunner(AgentRunner):
 
 
     def run(self, prompt):
+        """
+        Executes the CrewAI agent with the given prompt. The agent's `kickoff` method is called with the input.
+       
+        Args:
+            prompt (str): The input to be processed by the agent. This must be in JSON format ie {"key": "value"}.
+        Returns:
+            Any: The output from the agent's `kickoff` method.
+        Raises:
+            Exception: If there is an error in retrieving or executing the agent's method.
+        """
         print(f"Running CrewAI agent: {self.agent_name} with prompt: {prompt}")
         
         try:
@@ -82,33 +123,91 @@ class CrewAIAgentRunner(AgentRunner):
             raise(e)
     
     def stream(self, prompt):
+        """
+        Streams the execution of the CrewAI agent with the given prompt.
+        This is NOT YET IMPLEMENTED
+
+        Args:
+            prompt (str): The input prompt to be processed by the CrewAI agent.
+
+        Raises:
+            NotImplementedError: Indicates that the CrewAI agent execution logic is not yet implemented.
+        """
         print(f"Running CrewAI agent (streaming): {self.agent_name} with prompt: {prompt}")
 
         raise NotImplementedError("CrewAI agent execution logic not implemented yet")
         
 class LangGraphAgentRunner(AgentRunner):
+    """
+    LangGraphAgentRunner extends the AgentRunner class to load and run a specific LangGraph agent.
+    """
     def __init__(self, agent_name):
+        """
+        Initialize a new instance.
+        Args:
+            agent_name (str): The name of the agent to be initialized.
+        """
+        
         super().__init__(agent_name)
         # Initialize LangGraph-specific resources here
 
     def run(self, prompt):
+        """
+        Executes the LangGraph agent with the given prompt.
+        This is NOT YET IMPLEMENTED
+
+        Args:
+            prompt (str): The input prompt to be processed by the LangGraph agent.
+
+        Raises:
+            NotImplementedError: If the LangGraph agent execution logic is not implemented yet.
+        """
+
         print(f"Running LangGraph agent: {self.agent_name} with prompt: {prompt}")
         # Implement LangGraph agent execution logic here
         # workflow = StateGraph(...) << not yet used by sample, can refactor as this is normal way of launching
         raise NotImplementedError("LangGraph agent execution logic not implemented yet")
     
     def stream(self, prompt):
+        """
+        Executes the LangGraph agent with the given prompt in streaming mode.
+        This is NOT YET IMPLEMENTED
+
+        Args:
+            prompt (str): The input prompt to be processed by the LangGraph agent.
+
+        Raises:
+            NotImplementedError: If the LangGraph agent execution logic is not implemented yet.
+        """
         print(f"Running LangGraph agent (streaming): {self.agent_name} with prompt: {prompt}")
         # Implement LangGraph agent execution logic here
         # workflow = StateGraph(...) << not yet used by sample, can refactor as this is normal way of launching
         raise NotImplementedError("LangGraph agent execution logic not implemented yet")
         
 class BeeAgentRunner(AgentRunner):
+    """
+    BeeAgentRunner extends the AgentRunner class to load and run a specific Bee agent.
+    """
+
     def __init__(self, agent_name):
+        """
+        Initializes the workflow for the specified agent.
+        
+        Args:
+            agent_name (str): The name of the agent. This should already be defined in agents.yaml and hive run with 'hive create -f agents.yaml'
+        """
         super().__init__(agent_name)
         # Initialize Bee-specific resources here
 
     def run(self, prompt):
+        """
+        Executes the Bee agent with the given prompt. 
+       
+        Args:
+            prompt (str): The input to be processed by the agent. 
+        Returns:
+            Any: The output from the agent.
+        """
         print(f"Running Bee agent: {self.agent_name} with prompt: {prompt}")
 
         # delegate to existing implementation
@@ -117,6 +216,14 @@ class BeeAgentRunner(AgentRunner):
         return result
     
     def stream(self, prompt):
+        """
+        Executes the Bee agent with the given prompt in streaming mode. 
+       
+        Args:
+            prompt (str): The input to be processed by the agent. 
+        Returns:
+            Any: The output from the agent.
+        """
         print(f"Running Bee agent (streaming): {self.agent_name} with prompt: {prompt}")
 
         # delegate to existing implementation
@@ -127,8 +234,29 @@ class BeeAgentRunner(AgentRunner):
 
 class AgentRunnerFactory:
     @staticmethod
+    class AgentRunnerFactory:
+        """
+        Factory class for creating agent runners based on the agent's name.
+        
+        The following agent types are supported: CrewAIUI, LangGraph, Bee.
+        """
+        
     def create_agent_runner(agent_name):
-        """Creates an agent runner based on the agent's name."""
+        """
+        Creates and returns an agent runner based on the provided agent name.
+        The function determines the type of agent runner to create based on the 
+        prefix of the agent name. It supports three types of agent runners:
+        - CrewAIAgentRunner: for agent names starting with "crewai_"
+        - LangGraphAgentRunner: for agent names starting with "langgraph_"
+        - BeeAgentRunner: for all other agent names
+        Args:
+            agent_name (str): The name of the agent for which to create a runner.
+        Returns:
+            An instance of the appropriate agent runner class based on the agent name.
+        Raises:
+            ValueError: If the agent name does not match any known agent framework.
+        """
+        
         # TODO: May want to discover agent type, or define in workflow
         if "crewai_" in agent_name:
             return CrewAIAgentRunner(agent_name)
