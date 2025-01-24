@@ -32,6 +32,6 @@
       "step3": "agent1",
       "step4": "agent3"
     },
-      "How are you?",
+      "prompt": "How are you?",
   }
 }
