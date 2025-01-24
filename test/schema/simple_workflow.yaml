@@ -23,3 +23,5 @@ spec:
     step2: agent2
     step3: agent1
     step4: agent3
+  prompt:
+    How are you?

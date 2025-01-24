@@ -4,48 +4,63 @@
   "title": "BeeAI Hive",
   "description": "A schema for defining Bee Hive workflows in YAML or JSON",
   "type": "object",
-  "metadata": {
-    "type": "object",
-    "properties": {
-      "name": {
-        "type": "string",
-        "description": "workflow name"
+  "properties": {
+    "apiVersion": {
+	"type": "string"
+    }
+    "kind": {
+	"type": "string",
+	"description": "Workflow"
+    }
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "workflow name"
+        },
+        "labels": {
+          "type": "object",
+          "description": "workflow labels, key: value pairs"
+        }
       },
-      "labels": {
-        "type": "object",
-        "description": "workflow labels, key: value pairs"
-      }
+      "required": [
+        "name"
+      ]
     },
-    "required": [
-      "name"
-    ]
-  },
-  "spec": {
-    "strategy": {
-      "type": "sequence"
-    },
-    "properties": {
-      "name": {
-        "type": "string",
-        "description": "workflow name"
+    "spec": {
+      "strategy": {
+        "type": "string"
       },
-      "labels": {
+      "template": {
         "type": "object",
-        "description": "workflow labels, key: value pairs"
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "workflow name"
+          },
+          "labels": {
+            "type": "object",
+            "description": "workflow labels, key: value pairs"
+          }
+        }
+      },
+      "agents": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "steps": {
+        "type": "object",
+        "description": "step name: step"
+      }
+      "exception": {
+        "type": "string"
+      },
+      "prompt": {
+        "type": "string"
       }
     }
-  },
-  "agents": {
-    "type": "array",
-    "items": {
-      "type": "string"
-    }
-  },
-  "steps": {
-    "type": "array",
-    "items": {
-      "type": "string"
-    }
-  },
-  "exception": "string"
+  }
 }
