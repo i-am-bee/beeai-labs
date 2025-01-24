@@ -1,0 +1,13 @@
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: test
+  labels:
+    app: test-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: this is a test.
