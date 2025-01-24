@@ -41,9 +41,7 @@ class Workflow:
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
         for step in steps:
-            if step["agent"]:
-                step["agent"] = self.agents.get(step["agent"])
-            self.steps[step["name"]] = Step(step)
+            self.steps[step] = Step({"name": step, "agent": self.agents.get(step)})
         for step in self.steps:
             response = step.run(prompt)
             prompt = response.get("prompt", prompt)
@@ -53,12 +51,10 @@ class Workflow:
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
         for step in steps:
-            if step["agent"]:
-                step["agent"] = self.agents.get(step["agent"])
-            self.steps[step["name"]] = Step(step)
+            self.steps[step] = Step({"name": step, "agent": self.agents.get(step)})
         current_step = self.workflow["spec"]["template"]["start"]
         while current_step != "end":
             response = self.steps[current_step].run(prompt)
-            prompt = response["prompt"]
-            current_step = response["next"]
+            prompt = response.get("prompt", prompt)
+            current_step = response.get("next", "end")
         return prompt
