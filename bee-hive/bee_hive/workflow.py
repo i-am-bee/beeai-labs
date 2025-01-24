@@ -47,11 +47,6 @@ class Workflow:
         for step in self.steps:
             response = step.run(prompt)
             prompt = response.get("prompt", prompt)
-        if (
-            self.workflow["spec"]["strategy"]["output"]
-            and self.workflow["spec"]["strategy"]["output"] == "verbose"
-        ):
-            print(f"Step {step.step_name} output: {response}")
         return prompt
 
     def _condition(self):
