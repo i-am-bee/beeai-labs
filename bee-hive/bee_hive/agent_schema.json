@@ -8,7 +8,7 @@
       "type": "string",
       "description": "API version beehive/v1alpha1"
     },
-    "knd": {
+    "kind": {
       "type": "string",
       "description": "must be Agent"
     },
@@ -22,7 +22,11 @@
         "labels": {
           "type": "object",
             "description": "agent labels, key: value pairs"
-        }    
+        },
+        "namespace": {
+          "type": "string",
+          "description": "agent namespace"
+        }
       },
       "required": ["name"]
     },
@@ -32,6 +36,11 @@
         "model": {
           "type": "string",
           "description": "agent name"
+        },
+        "framework": {
+          "enum": [ "bee", "crewai", "langgraph" ],
+          "default": "bee",
+          "description": "Framework agent uses. Must be one of bee, crewai or langgraph. Default is bee"
         },
         "description": {
           "type": "string",
@@ -43,7 +52,7 @@
         },
         "tools": {
           "type": "array",
-          "description": "tool list of the agent"
+          "description": "tool list of the agent",
           "items": {
             "type": "string"
           }    
@@ -55,9 +64,9 @@
         "output": {
           "type": "string",
           "description": "instructions for the agent"
-        },
-	"required": ["model","instructions"]
-      }
+        }
+      },
+      "required": ["model","instructions"]
     }
   }
 }
