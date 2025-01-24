@@ -38,15 +38,28 @@ class Workflow:
             print("not supported yet")   
 
     def _sequence(self):
+        # NOTE: "template" is an arbitrary key name that we use for now, it could be anything
         prompt = self.workflow["spec"]["template"]["prompt"]
-        for agent in self.agents.values():
-            if (
-                self.workflow["spec"]["strategy"]["output"]
-                and self.workflow["spec"]["strategy"]["output"] == "verbose"
-            ):
-                prompt = agent.run_streaming(prompt)
-            else:
-                prompt = agent.run(prompt)
+        steps = self.workflow["spec"]["template"]["steps"]
+
+        # Create a Step object for each step in the workflow
+        for step in steps:
+            if step["agent"]:
+                step["agent"] = self.agents.get(step["agent"])
+            self.steps[step["name"]] = Step(step)
+
+        # Run each step in sequence, assuming that the output of each step is the input to the next
+        for step_name in self.steps:
+            step = self.steps[step_name]
+            response = step.run(prompt)
+            prompt = response.get("prompt", prompt)
+
+        if (
+            self.workflow["spec"]["strategy"]["output"]
+            and self.workflow["spec"]["strategy"]["output"] == "verbose"
+        ):
+            print(f"Step {step_name} output: {response}")
+
         return prompt
 
     def _condition(self):
