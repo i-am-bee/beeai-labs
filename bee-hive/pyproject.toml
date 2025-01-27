@@ -7,11 +7,24 @@ license = "Apache 2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">= 3.11, < 3.13"
+python = ">= 3.12, < 3.13"
 pyyaml = "^6.0.2"
 openai = "^1.56.2"
 python-dotenv = "^1.0.1"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+#addopts = [
+#    "--import-mode=importlib",
+#]
+#pythonpath = [
+#  ".",
+#  "bee_hive"
+#]

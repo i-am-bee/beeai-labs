@@ -4,14 +4,29 @@
 import json
 import os
 import sys
+from time import clock_settime
+from typing import Callable
 
 import yaml
 import dotenv
-from step import Step
-from bee_agent import BeeAgent
+from bee_hive import Step
+from bee_hive import Agent
+from agent_factory import AgentFactory, AgentFramework
 
 dotenv.load_dotenv()
 
+# TODO: Refactor later to factory or similar
+from crewai_agent import CrewAIAgent
+from bee_agent import BeeAgent
+
+@staticmethod
+def get_agent_class(framework: str) -> type:
+    if framework == 'crewai':
+        return CrewAIAgent
+    else:
+        return BeeAgent
+    
+    
 
 class Workflow:
     agents = {}
@@ -24,7 +39,10 @@ class Workflow:
             workflow: workflow definition
         """
         for agent_def in agent_defs:
-            self.agents[agent_def["metadata"]["name"]] = BeeAgent(agent_def)
+            # Use 'bee' if this value isn't set
+            # 
+            agent_def["spec"]["framework"] = agent_def["spec"].get("framework", AgentFramework.BEE)
+            self.agents[agent_def["metadata"]["name"]] = get_agent_class(agent_def["spec"]["framework"])(agent_def)
         self.workflow = workflow
 
 

@@ -15,7 +15,7 @@ class Agent:
         """
         # TODO: Review which attributes belong in base class vs subclasses
         self.agent_name = agent["metadata"]["name"]
-        self.agent_framework = agent["metadata"]["name"]
+        self.agent_framework = agent["spec"]["framework"]
         self.agent_model = agent["spec"]["model"]
 
         self.agent_desc = agent["spec"]["description"]
