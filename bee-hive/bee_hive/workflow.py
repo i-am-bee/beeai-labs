@@ -7,10 +7,11 @@ import sys
 
 import yaml
 import dotenv
+from step import Step
+from bee_agent import BeeAgent
 
 dotenv.load_dotenv()
-from agent import Agent
-from step import Step
+
 
 class Workflow:
     agents = {}
@@ -23,7 +24,7 @@ class Workflow:
             workflow: workflow definition
         """
         for agent_def in agent_defs:
-            self.agents[agent_def["metadata"]["name"]] = Agent(agent_def)
+            self.agents[agent_def["metadata"]["name"]] = BeeAgent(agent_def)
         self.workflow = workflow
 
 
