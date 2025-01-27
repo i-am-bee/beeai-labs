@@ -57,7 +57,7 @@ class Workflow:
             if step["agent"]:
                 step["agent"] = self.agents.get(step["agent"])
             self.steps[step["name"]] = Step(step)
-        current_step = self.workflow["spec"]["template"]["start"]
+        current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
         while current_step != "end":
             response = self.steps[current_step].run(prompt)
             prompt = response["prompt"]
