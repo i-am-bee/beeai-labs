@@ -16,7 +16,6 @@ spec:
       - name: expert
       - name: colleague
     prompt: Tell me a joke about IBM
-    start: expert
     steps:
       - name: expert
         agent: expert
