@@ -1,0 +1,22 @@
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: expert
+  labels:
+    app: mas-example
+spec:
+  model: "llama3.1:latest"
+  description: expert
+  instructions: Say a joke.
+
+---
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: colleague
+  labels:
+    app: mas-example
+spec:
+  model: "llama3.1:latest"
+  description: colleague
+  instructions: your colleague likes joks.  He says a joke. Put score for the joke between 1-10, 10 is the funniest.  If the score is more than 9, say the score and the joke otherwise say "Can you give me a funnier joke about IBM?".

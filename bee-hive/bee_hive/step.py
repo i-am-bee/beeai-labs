@@ -12,12 +12,18 @@ import yaml
 dotenv.load_dotenv()
 from agent import Agent
 
+def eval_expression(expression, prompt):
+    local = {}
+    local["input"] = prompt
+    result = eval(expression, local)
+    print(result)
+    return result
+
 class Step:
     def __init__(self, step):
         self.step_name = step["name"]
         self.step_agent = step.get("agent")
         self.step_condition = step.get("condition")
-        self.step_dependencies = step.get("dependencies")
 
     def run(self, prompt):
         output = {}
@@ -25,10 +31,31 @@ class Step:
             prompt = self.step_agent.run(prompt)
             output["prompt"] = prompt
         if self.step_condition:
-            input = {"prompt": prompt}
-            exec(self.step_condition, {}, input)
-            output = locals()["input"].get("output")
+            next = self.evaluate_condition(prompt)
+            output["next"] = next
             print(output)
-        if self.step_dependencies:
-            output["dependencies"] = self.step_dependencies
         return output
+
+    def evaluate_condition(self, prompt):
+        if self.step_condition[0].get("if"):
+            return self.process_if(prompt)
+        else:
+            return self.process_case(prompt)
+
+    def process_if(self, prompt):
+        expression = self.step_condition[0].get("if")
+        if eval_expression(expression, prompt):
+            return self.step_condition[0].get("then")
+        else:
+            return self.step_condition[0].get("else")
+
+    def process_case(self, prompt):
+        default = ""
+        for condition in self.step_condition:
+            expression = condition.get("case")
+            if expression:
+                if eval_expression(expression, prompt):
+                    return condition.get("do")
+            else:
+                default = condition.get("do")
+        return default
