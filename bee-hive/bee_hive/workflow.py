@@ -1,37 +1,31 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-import json
-import os
-import sys
-from time import clock_settime
-from typing import Callable
 
-import yaml
+from bee_hive.step import Step
+from bee_hive.agent_factory import AgentFramework
 import dotenv
-from bee_hive import Step
-from bee_hive import Agent
-from agent_factory import AgentFactory, AgentFramework
+
+# TODO: Refactor later to factory or similar
+from bee_hive.crewai_agent import CrewAIAgent
+from bee_hive.bee_agent import BeeAgent
 
 dotenv.load_dotenv()
 
-# TODO: Refactor later to factory or similar
-from crewai_agent import CrewAIAgent
-from bee_agent import BeeAgent
 
 @staticmethod
 def get_agent_class(framework: str) -> type:
-    if framework == 'crewai':
+    if framework == "crewai":
         return CrewAIAgent
     else:
         return BeeAgent
-    
-    
+
 
 class Workflow:
     agents = {}
     steps = {}
     workflow = {}
+
     def __init__(self, agent_defs, workflow):
         """Execute sequential workflow.
         input:
@@ -40,21 +34,24 @@ class Workflow:
         """
         for agent_def in agent_defs:
             # Use 'bee' if this value isn't set
-            # 
-            agent_def["spec"]["framework"] = agent_def["spec"].get("framework", AgentFramework.BEE)
-            self.agents[agent_def["metadata"]["name"]] = get_agent_class(agent_def["spec"]["framework"])(agent_def)
+            #
+            agent_def["spec"]["framework"] = agent_def["spec"].get(
+                "framework", AgentFramework.BEE
+            )
+            self.agents[agent_def["metadata"]["name"]] = get_agent_class(
+                agent_def["spec"]["framework"]
+            )(agent_def)
         self.workflow = workflow
-
 
     def run(self):
         """Execute workflow."""
 
-        if (self.workflow["spec"]["strategy"]["type"]  == "sequence"):
+        if self.workflow["spec"]["strategy"]["type"] == "sequence":
             return self._sequence()
-        elif (self.workflow["spec"]["strategy"]["type"]  == "condition"):
+        elif self.workflow["spec"]["strategy"]["type"] == "condition":
             return self._condition()
         else:
-            print("not supported yet")   
+            print("not supported yet")
 
     def _sequence(self):
         prompt = self.workflow["spec"]["template"]["prompt"]

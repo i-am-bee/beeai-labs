@@ -6,7 +6,7 @@ import dotenv
 import yaml
 
 
-from bee_hive import Workflow
+from bee_hive.workflow import Workflow
 
 dotenv.load_dotenv()
 
@@ -21,8 +21,8 @@ class CrewAITest(TestCase):
                 yaml_data = list(yaml.safe_load_all(file))
             return yaml_data
 
-        agents_yaml = parse_yaml("test/crewai/agents.yaml")
-        workflow_yaml = parse_yaml("test/crewai/workflow.yaml")
+        agents_yaml = parse_yaml("tests/crewai/agents.yaml")
+        workflow_yaml = parse_yaml("tests/crewai/workflow.yaml")
         try:
             workflow = Workflow(agents_yaml, workflow_yaml[0])
         except Exception as excep:
