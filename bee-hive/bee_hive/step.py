@@ -10,7 +10,7 @@ from openai import OpenAI
 import yaml
 
 dotenv.load_dotenv()
-from agent import Agent
+from bee_hive.agent import Agent
 
 class Step:
     def __init__(self, step):
