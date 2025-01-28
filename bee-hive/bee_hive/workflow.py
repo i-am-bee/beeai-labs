@@ -13,6 +13,11 @@ from bee_agent import BeeAgent
 dotenv.load_dotenv()
 
 
+def find_index(steps, name):
+    for step in steps:
+        if step.get("name") == name:
+            return steps.index(step)
+
 class Workflow:
     agents = {}
     steps = {}
@@ -54,12 +59,19 @@ class Workflow:
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
         for step in steps:
-            if step["agent"]:
+            if step.get("agent"):
                 step["agent"] = self.agents.get(step["agent"])
             self.steps[step["name"]] = Step(step)
         current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
-        while current_step != "end":
+        while True:
             response = self.steps[current_step].run(prompt)
             prompt = response["prompt"]
-            current_step = response["next"]
+            if response.get("next"):
+                current_step = response["next"]
+            else:
+                if current_step == steps[len(steps)-1].get("name"):
+                    break
+                else:
+                    current_step = find_index(steps, current_step)
         return prompt
+

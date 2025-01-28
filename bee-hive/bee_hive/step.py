@@ -26,7 +26,7 @@ class Step:
         self.step_condition = step.get("condition")
 
     def run(self, prompt):
-        output = {}
+        output = {"prompt": prompt}
         if self.step_agent:
             prompt = self.step_agent.run(prompt)
             output["prompt"] = prompt
