@@ -1,0 +1,56 @@
+{
+    "apiVersion": "beehive/v1alpha1",
+    "kind": "Workflow",
+    "metadata": {
+        "name": "beehive-deployment",
+        "labels": {
+            "app": "mas-example"
+        }
+    },
+    "spec": {
+        "strategy": {
+            "type": "condition",
+            "output": "nonal"
+        },
+        "template": {
+            "metadata": {
+                "labels": {
+                    "app": "mas-example"
+                }
+            },
+            "agents": [
+                {
+                    "name": "expert"
+                },
+                {
+                    "name": "colleague"
+                }
+            ],
+            "prompt": "Tell me a joke about IBM",
+            "start": "expert",
+            "steps": [
+                {
+                    "name": "expert",
+                    "agent": "expert",
+                    "condition": [
+                        {
+                            "default": null,
+                            "do": "colleague"
+                        }
+                    ]
+                },
+                {
+                    "name": "colleague",
+                    "agent": "colleague",
+                    "condition": [
+                        {
+                            "if": "(input.find('funnier') != -1)",
+                            "then": "expert",
+                            "else": "end"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
