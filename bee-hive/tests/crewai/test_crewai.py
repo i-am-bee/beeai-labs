@@ -28,5 +28,6 @@ class CrewAITest(TestCase):
             raise RuntimeError("Unable to create agents") from excep
         result = workflow.run()
         print(result)
+        
         assert result is not None
 
