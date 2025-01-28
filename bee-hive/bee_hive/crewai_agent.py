@@ -1,7 +1,7 @@
 
 import importlib
 
-from agent import Agent
+from bee_hive.agent import Agent
 
 class CrewAIAgent(Agent):
     """
