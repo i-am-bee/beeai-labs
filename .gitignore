@@ -170,3 +170,5 @@ cython_debug/
 /examples/**/agent_store.json
 /bee-hive/agent_store.json
 
+# VScode
+.vscode/
