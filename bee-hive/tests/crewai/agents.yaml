@@ -1,0 +1,11 @@
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: tests.crewai.crew_dummy.DummyCrew.dummy_crew
+  labels:
+    app: crewtest
+spec:
+  model: "llama3.1:latest"
+  description: test
+  instructions: Nothing to do
+  framework: crewai

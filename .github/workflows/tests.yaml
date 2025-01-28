@@ -1,0 +1,32 @@
+name: Bee-Hive Tests
+
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup poetry
+        run: |
+          pipx ensurepath
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pipx install poetry
+          poetry self add poetry-plugin-shell
+      - name: Install dependencies
+        run: |
+          cd bee-hive
+          poetry install
+
+      - name: Run unit tests
+        run: |
+          cd bee-hive
+          poetry run pytest

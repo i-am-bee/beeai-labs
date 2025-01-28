@@ -1,0 +1,22 @@
+apiVersion: beehive/v1alpha1
+kind: Workflow
+metadata:
+  name: beehive-deployment
+  labels:
+    app: mas-example
+spec:
+  strategy:
+    type: sequence
+    output: nonal
+  template:
+    metadata:
+      labels:
+        app: crewtest
+    agents:
+      - name: crewtest
+    prompt: Nothing
+    start: begin
+    steps:
+      - name: begin
+        agent: crewtest
+        dependencies:
