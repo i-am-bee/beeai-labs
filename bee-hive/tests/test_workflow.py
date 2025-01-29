@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from workflow import Workflow
+from bee_hive.workflow import Workflow
 
 
 class TestSequenceMethod(unittest.TestCase):
