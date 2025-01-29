@@ -61,7 +61,9 @@ class Workflow:
 
     def _sequence(self):
         prompt = self.workflow["spec"].get("prompt","")   # using get b/c prompt is optional
-        steps = self.workflow["spec"]["steps"]
+        steps = self.workflow["spec"].get("steps",[])
+        if not steps: 
+            raise ValueError("Worflow is missing required 'steps' key in 'spec")
         for step in steps:
             step_name = step["name"]
             agent_name = step["agent"]
