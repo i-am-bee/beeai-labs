@@ -30,5 +30,5 @@ class CrewAITest(TestCase):
         print(result)
         
         assert result is not None
-        assert (result=="OK")
+        assert (result["final_prompt"]=="OK")
 
