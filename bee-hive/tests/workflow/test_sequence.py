@@ -23,24 +23,18 @@ def test_sequence_method(mocker):
         with open(file_path, "r", encoding="utf-8") as file:
             yaml_data = list(yaml.safe_load_all(file))
         return yaml_data
-
-    # Setup mock agents
     mock_agent1 = MockAgent("agent1")
     mock_agent2 = MockAgent("agent2")
     mock_agents = {"agent1": mock_agent1, "agent2": mock_agent2}
-
     mocker.patch.object(BeeAgent, "__new__", side_effect=lambda name: mock_agents[name])
-
-    # Load workflow YAML
     workflow_yaml = parse_yaml("tests/workflow/workflow.yaml")
-
     try:
         workflow = Workflow(agent_defs=[], workflow=workflow_yaml[0])
-        workflow.agents = mock_agents  # Manually inject mocked agents
+        workflow.agents = mock_agents 
     except Exception as excep:
         raise RuntimeError("Unable to create workflow") from excep
-
-    prompt = workflow._sequence()
-    # debugging
-    print(prompt)
-    assert prompt 
+    step_results = workflow._sequence()
+    assert step_results["step_0"] == "Start of the workflow"
+    assert step_results["step_1"] == "Start of the workflow processed by agent1"
+    assert step_results["step_2"] == "Start of the workflow processed by agent1 processed by agent2"
+    assert step_results["final_prompt"] == "Start of the workflow processed by agent1 processed by agent2 processed by agent1"
