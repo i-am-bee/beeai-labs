@@ -15,8 +15,6 @@ spec:
     agents:
       - name: beetest
     prompt: Welcome
-    start: begin
     steps:
       - name: begin
-        agent: crewtest
-        dependencies:
+        agent: beetest

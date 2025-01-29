@@ -3,7 +3,7 @@ kind: Workflow
 metadata:
   name: beehive-deployment
   labels:
-    app: mas-example
+    app: crewtest
 spec:
   strategy:
     type: sequence
@@ -13,10 +13,8 @@ spec:
       labels:
         app: crewtest
     agents:
-      - name: crewtest
+      - name: tests.crewai.crew_dummy.DummyCrew.dummy_crew
     prompt: Nothing
-    start: begin
     steps:
       - name: begin
-        agent: crewtest
-        dependencies:
+        agent: tests.crewai.crew_dummy.DummyCrew.dummy_crew

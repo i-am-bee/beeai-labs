@@ -3,7 +3,7 @@ kind: Agent
 metadata:
   name: beetest
   labels:
-    app: beetest
+    app: testapp
 spec:
   model: "llama3.1:latest"
   description: test
