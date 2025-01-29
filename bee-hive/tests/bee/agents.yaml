@@ -1,0 +1,11 @@
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: beetest
+  labels:
+    app: beetest
+spec:
+  model: "llama3.1:latest"
+  description: test
+  instructions: Welcome me
+  framework: bee
