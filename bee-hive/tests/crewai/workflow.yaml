@@ -14,7 +14,7 @@ spec:
         app: crewtest
     agents:
       - name: tests.crewai.crew_dummy.DummyCrew.dummy_crew
-    prompt: Nothing
-    steps:
-      - name: begin
-        agent: tests.crewai.crew_dummy.DummyCrew.dummy_crew
+  prompt: Nothing
+  steps:
+    - name: begin
+      agent: tests.crewai.crew_dummy.DummyCrew.dummy_crew

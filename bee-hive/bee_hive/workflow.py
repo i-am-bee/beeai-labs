@@ -78,13 +78,13 @@ class Workflow:
         return prompt
 
     def _condition(self):
-        prompt = self.workflow["spec"]["template"]["prompt"]
-        steps = self.workflow["spec"]["template"]["steps"]
+        prompt = self.workflow["spec"]["prompt"]
+        steps = self.workflow["spec"]["steps"]
         for step in steps:
             if step.get("agent"):
                 step["agent"] = self.agents.get(step["agent"])
             self.steps[step["name"]] = Step(step)
-        current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
+        current_step = self.workflow["spec"]["steps"][0]["name"]
         while True:
             response = self.steps[current_step].run(prompt)
             prompt = response["prompt"]
@@ -96,4 +96,3 @@ class Workflow:
                 else:
                     current_step = find_index(steps, current_step)
         return prompt
-
