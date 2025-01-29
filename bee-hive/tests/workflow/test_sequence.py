@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import MagicMock
 from bee_hive.workflow import Workflow
 
-
 class TestSequenceMethod(unittest.TestCase):
     def setUp(self):
         self.mock_workflow = {
@@ -36,7 +35,6 @@ class TestSequenceMethod(unittest.TestCase):
 
         expected_final_prompt = "Start of the workflow processed by agent1 processed by agent2 processed by agent1"
         self.assertEqual(final_prompt, expected_final_prompt)
-
-
+    
 if __name__ == "__main__":
     unittest.main()
