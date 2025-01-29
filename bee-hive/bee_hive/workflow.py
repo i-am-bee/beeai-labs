@@ -60,7 +60,7 @@ class Workflow:
             print("not supported yet")
 
     def _sequence(self):
-        prompt = self.workflow["spec"]["prompt"]
+        prompt = self.workflow["spec"].get("prompt","")   # using get b/c prompt is optional
         steps = self.workflow["spec"]["steps"]
         for step in steps:
             step_name = step["name"]
