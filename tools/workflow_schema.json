@@ -25,9 +25,7 @@
           "description": "workflow labels, key: value pairs"
         }
       },
-      "required": [
-	"name"
-      ]
+      "required": ["name"]
     },
     "spec": {
       "type": "object",
@@ -36,7 +34,7 @@
           "type": "object",
           "properties": {
             "type": {
-                "type":"string",
+              "type": "string",
               "description": "sequence, condition"
             }
           }
@@ -54,37 +52,37 @@
                 "labels": {
                   "type": "object",
                   "description": "workflow labels, key: value pairs"
-		}
+                }
               }
             }
-	  }
+          }
         },
         "agents": {
           "type": "array",
           "items": {
-	    "type": "string"
+            "type": "string"
           }
         },
         "exception": {
-	  "type": "string"
+          "type": "string"
         },
         "prompt": {
-	  "type": "string"
+          "type": "string"
         },
-	"steps": {
+        "steps": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-	      "name": {
+              "name": {
                 "type": "string",
                 "description": "step name"
               },
-	      "agent": {
+              "agent": {
                 "type": "string",
-		"description": "the agent for this step"
+                "description": "the agent for this step"
               },
-	      "condition": {
+              "condition": {
                 "type": "array",
                 "description": "if/then/else or case/do/default condition",
                 "items": {
@@ -101,10 +99,10 @@
                     },
                     "case": {
                       "type": "string"
-	            },
+                    },
                     "do": {
                       "type": "string"
-	            },
+                    },
                     "default": {
                       "type": "string"
                     }
@@ -112,10 +110,7 @@
                 }
               }
             },
-            "required": [
-              "name",
-              "agent"
-            ]
+            "required": ["name", "agent"]
           }
         }
       }
