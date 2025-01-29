@@ -94,3 +94,16 @@ python run_workflow workflow.yaml
 * Install dependencies: `poetry shell && poetry install`
 
 * Configure environmental variables: `cp example.env .env`
+
+### Run workflow in local environment with container runtime (e.g. podman)
+
+* Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
+
+* Build bee-hive container image: `podman build -t bee-hive .` in	bee-hive/bee-hive directory
+
+* Prepare agent and workflow definition yaml files in a directory (e.g. /Users/user1/bee-hive/agent.yaml, /Users/user1/bee-hive/workflow.yaml)
+
+* Run workflow: `podman run -e env1=value1 -e env2=value2 --mount type=bind,src=/Users/user1/bee-hive, target=/data  bee-hive /data/agent.yaml /data/workflow.yaml`
+  * The required environment variables can be provided with `-e` option (e.g.  `-e BEE_API=http://192.168.86.45:4000`).  
+
+  
