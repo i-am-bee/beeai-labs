@@ -40,15 +40,19 @@ ENV PYTHONUNBUFFERED=1
 # Install pip
 RUN python3.11 -m ensurepip --upgrade
 # Install dependencies and update then uninstall pip (not needed in final image)
-RUN python3.11 -m pip install openai pyyaml python-dotenv --no-cache-dir --upgrade && \
+RUN python3.11 -m pip install openai pyyaml python-dotenv flask --no-cache-dir --upgrade && \
     python3.11 -m pip uninstall -y pip
 
 COPY bee_hive ./bee_hive
 COPY entrypoint.sh .
 COPY run_workflow.py .
+COPY entrypoint_api.sh .
+COPY api.py .
 
 RUN chown -R 1000:100 /usr/src/app &&\
     mkdir /usr/src/app/media && chown 1000:100 /usr/src/app/media
 
+EXPOSE 5000
 USER 1000:100
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+#ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/app/entrypoint_api.sh"]
