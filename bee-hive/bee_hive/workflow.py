@@ -58,24 +58,7 @@ class Workflow:
             return self._condition()
         else:
             print("not supported yet")
-
-    # def _sequence(self):
-        # prompt = self.workflow["spec"].get("prompt","")   # using get b/c prompt is optional
-        # steps = self.workflow["spec"].get("steps",[])
-        # if not steps: 
-        #     raise ValueError("Worflow is missing required 'steps' key in 'spec")
-        # for step in steps:
-        #     step_name = step["name"]
-        #     agent_name = step["agent"]
-        #     agent_instance = self.agents.get(agent_name)
-        #     if not agent_instance:
-        #         raise ValueError(f"Agent {agent_name} not found for step {step_name}")
-        #     self.steps[step_name] = Step({"name": step_name, "agent": agent_instance})
-
-        # for step_name, step_obj in self.steps.items():
-        #     response = step_obj.run(prompt)  
-        #     prompt = response.get("prompt", prompt)
-        # return prompt
+            
     def _sequence(self):
         prompt = self.workflow["spec"].get("prompt", "")
         steps = self.workflow["spec"].get("steps", [])
