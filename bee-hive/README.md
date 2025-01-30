@@ -99,11 +99,10 @@ python run_workflow workflow.yaml
 
 * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
 
-* Build bee-hive container image: `podman build -t bee-hive .` in	bee-hive/bee-hive directory
+* Build bee-hive container image: `./bee-hive.sh build` in	bee-hive/bee-hive directory
 
-* Prepare agent and workflow definition yaml files in a directory (e.g. /Users/user1/bee-hive/agent.yaml, /Users/user1/bee-hive/workflow.yaml)
+* Prepare agent and workflow definition yaml files in the current directory (e.g. agent.yaml, workflow.yaml)
 
-* Run workflow: `podman run -e env1=value1 -e env2=value2 --mount type=bind,src=/Users/user1/bee-hive, target=/data  bee-hive /data/agent.yaml /data/workflow.yaml`
-  * The required environment variables can be provided with `-e` option (e.g.  `-e BEE_API=http://192.168.86.45:4000`).  
-
+* Run workflow: `./bee-hive.sh run $PWD agents.yaml workflow.yaml BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
+  * The required environment variables can be provided at the end of command argunets (e.g.  `BEE_API=http://192.168.86.45:4000`).  
   
