@@ -101,8 +101,9 @@ python run_workflow workflow.yaml
 
 * Build bee-hive container image: `./bee-hive.sh build` in	bee-hive/bee-hive directory
 
+* Deploy bee-hive: `./bee-hive.sh deploy BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
+  * The required environment variables can be provided at the end of command argunets (e.g.  `BEE_API=http://192.168.86.45:4000`).
+
 * Prepare agent and workflow definition yaml files in the current directory (e.g. agent.yaml, workflow.yaml)
 
-* Run workflow: `./bee-hive.sh run $PWD agents.yaml workflow.yaml BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
-  * The required environment variables can be provided at the end of command argunets (e.g.  `BEE_API=http://192.168.86.45:4000`).  
-  
+* Run workflow: `./bee-hive.sh run agents.yaml workflow.yaml

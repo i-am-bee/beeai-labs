@@ -1,24 +1,28 @@
 #!/bin/sh
 
 cmd=${CONTAINER_CMD:-docker}
-if [ "$1" != "build" ] && [ "$1" != "run" ]; then
-    echo "Invalid argument. Must be 'build' or 'run'."
+target=${TARGET_IP:-127.0.0.1:5000}
+if [ "$1" != "build" ] && [ "$1" != "deploy" ] && [ "$1" != "run" ]; then
+    echo "Invalid argument. Must be 'build', 'deploy' or 'run'."
     exit 1
 fi
 
 if [ "$1" == "build" ]; then
+    echo "Building..."
     $cmd build -t bee-hive .
-elif [ "$1" == "run" ]; then
-    echo "Running..."
-    path=$2
-    agents=$3
-    workflow=$4
+elif [ "$1" == "deploy" ]; then
+    echo "Deploying..."
     env=""
-    while [ "$5" != "" ]; do
-        env=$env" -e "$5" "
+    while [ "$2" != "" ]; do
+        env=$env" -e "$2" "
         shift
     done
-    $cmd run  $env --mount type=bind,src=$path,target=/data bee-hive /data/$agents /data/$workflow
+    $cmd run  -d $env -p $target:5000 bee-hive
+elif [ "$1" == "run" ]; then
+    echo "Running..."
+    agents=$2
+    workflow=$3
+    curl -X POST -L http://$target/ -F "agents=@$agents" -F "workflow=@$workflow"
 fi
 
 
