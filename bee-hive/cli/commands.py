@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io, sys, yaml, json, jsonschema
+import yaml, json, jsonschema
 
 from jsonschema.exceptions import ValidationError
-from common import Console
+from cli.common import Console
 
 # Base class for all commands
 class Command:

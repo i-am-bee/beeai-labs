@@ -32,21 +32,26 @@ Options:
   -v --version                   Show version.
 
 """
-import os, sys, traceback
+import sys
 
 from docopt import docopt
+from cli.common import Console
+from cli.cli import CLI
 
-from cli import *
-
-if __name__ == '__main__':
+def run_cli():
+    """
+    run CLI command
+    """
     args = docopt(__doc__, version='beeAI CLI v0.0.1')
     command = CLI(args).command()
     try:
         rc = command.execute()
         if rc != 0:
-            Console.error("executing command: {rc}".format(rc=rc))
+            Console.error(f"executing command: {rc}".format(rc=rc))
             sys.exit(rc)
     except Exception as e:
         Console.error(str(e))
         sys.exit(1)
         
+if __name__ == '__main__':
+    run_cli()

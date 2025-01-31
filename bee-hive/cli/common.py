@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import sys
-from random import randint
 
 VERBOSE=False
 

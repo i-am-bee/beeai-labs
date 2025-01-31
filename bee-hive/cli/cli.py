@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io, sys
-
-from commands import *
-from common import *
+from cli.commands import Validate
 
 class CLI:
     def __init__(self, args):
