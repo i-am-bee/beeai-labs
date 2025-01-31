@@ -19,10 +19,8 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        - name: BEE_API_KEY
-          value: sk-proj-testkey
-        - name: BEE_API
-          value: http://192.168.86.45:4000
+        - name: DUMMY
+          value: dummyvalue
 ---
 apiVersion: v1
 kind: Service
