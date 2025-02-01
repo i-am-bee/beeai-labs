@@ -44,7 +44,7 @@
         "template": {
           "type": "object",
           "properties": {
-            "meatdata": {
+            "metadata": {
               "type": "object",
               "properties": {
                 "name": {
