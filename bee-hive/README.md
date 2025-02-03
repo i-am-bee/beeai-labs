@@ -101,6 +101,10 @@ python run_workflow workflow.yaml
   * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
   * `curl` is required for `run` command
   * for Kubernetes, `kubectl` and `sed` are required
+  * set CONTAINER_CMD, TARGET_IP and BUILD_FLAGS environment variables to adjust bee-hive.sh script
+    * CONTAINER_CMD: docker, podman. nerdctl, etc..
+    * TARGET_IP: 127.0.0.1:"NodePort of the bee-hive service" for kubernetes deployment
+    * BUILD_FLAGS: image build command extra flag (e.g. "--namespace k8s.io" for nerdctl)
 
 * Build bee-hive container image: `./bee-hive.sh build` in bee-hive/bee-hive directory
 
