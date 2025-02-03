@@ -107,6 +107,7 @@ python run_workflow workflow.yaml
     * BUILD_FLAGS: image build command extra flag (e.g. "--namespace k8s.io" for nerdctl)
 
 * Build bee-hive container image: `./bee-hive.sh build` in bee-hive/bee-hive directory
+  * The built bee-hive:latest image need to be pushed/placed in the local retistry for kubernetes deployment
 
 * Deploy bee-hive: `./bee-hive.sh deploy BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
   * To deploy to kubernetes cluster, user `deploy-k` instead `deploy` as the first argument
