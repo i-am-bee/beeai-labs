@@ -22,7 +22,7 @@ def find_index(steps, name):
 
 @staticmethod
 def get_agent_class(framework: str) -> type:
-    if os.getenv("BEE_TEST"):
+    if os.getenv("DRY_RUN"):
         return MockAgent
     if framework == "crewai":
         return CrewAIAgent
