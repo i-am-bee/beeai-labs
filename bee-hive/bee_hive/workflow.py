@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-
+import os
 from bee_hive.step import Step
 from bee_hive.agent_factory import AgentFramework
 import dotenv
@@ -9,6 +9,7 @@ import dotenv
 # TODO: Refactor later to factory or similar
 from bee_hive.crewai_agent import CrewAIAgent
 from bee_hive.bee_agent import BeeAgent
+from bee_hive.mock_agent import MockAgent
 
 dotenv.load_dotenv()
 
@@ -21,6 +22,8 @@ def find_index(steps, name):
 
 @staticmethod
 def get_agent_class(framework: str) -> type:
+    if os.getenv("BEE_TEST"):
+        return MockAgent
     if framework == "crewai":
         return CrewAIAgent
     else:
