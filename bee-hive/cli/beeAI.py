@@ -47,7 +47,7 @@ def run_cli():
     try:
         rc = command.execute()
         if rc != 0:
-            Console.error(f"executing command: {rc}".format(rc=rc))
+            Console.error("executing command: {rc}".format(rc=rc))
             sys.exit(rc)
     except Exception as e:
         Console.error(str(e))
