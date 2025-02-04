@@ -34,7 +34,8 @@ elif [ "$1" == "run" ]; then
     echo "Running..."
     agents=$2
     workflow=$3
-    curl -X POST -L http://$target/ -F "agents=@$agents" -F "workflow=@$workflow"
+    curl -s -X POST -L http://$target/ -F "agents=@$agents" -F "workflow=@$workflow" | awk '{gsub(/\\n/,"\n")}1'
+
 fi
 
 

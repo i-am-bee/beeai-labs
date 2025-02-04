@@ -54,14 +54,16 @@ def process_workflow():
         sys.stdout = output
         workflow_instance.run()
         sys.stdout = sys.__stdout__
-        
+
         response = {
             'workflow': workflow.filename,
             'agents': agents.filename,
             'output': output.getvalue()
         }
-
-        return jsonify(response)
+        if os.getenv("DEBUG"):
+            return response
+        else:
+            return output.getvalue()
 
     return render_template('upload.html')
 if __name__ == '__main__':

@@ -16,7 +16,6 @@ def eval_expression(expression, prompt):
     local = {}
     local["input"] = prompt
     result = eval(expression, local)
-    print(result)
     return result
 
 class Step:
@@ -33,7 +32,6 @@ class Step:
         if self.step_condition:
             next = self.evaluate_condition(prompt)
             output["next"] = next
-            print(output)
         return output
 
     def evaluate_condition(self, prompt):
