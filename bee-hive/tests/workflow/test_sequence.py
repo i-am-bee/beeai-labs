@@ -29,11 +29,10 @@ def test_sequence_method(mocker):
 
     mock_agent1 = MockAgent("agent1")
     mock_agent2 = MockAgent("agent2")
-    save_agent(mock_agent1)
-    save_agent(mock_agent2)
     mock_agents = {"agent1": mock_agent1, "agent2": mock_agent2}
     mocker.patch.object(BeeAgent, "__new__", side_effect=lambda name: mock_agents[name])
     workflow_yaml = parse_yaml("tests/workflow/workflow.yaml")
+    workflow_yaml[0]["spec"]["template"]["agents"] = []
     try:
         workflow = Workflow(agent_defs=[], workflow=workflow_yaml[0])
         workflow.agents = mock_agents 
@@ -46,5 +45,4 @@ def test_sequence_method(mocker):
     assert step_results["final_prompt"] == "Start of the workflow processed by agent1 processed by agent2 processed by agent1"
     expected_order = ["agent1", "agent2", "agent1"]
     assert execution_order == expected_order, f"Expected order {expected_order}, but got {execution_order}"
-    remove_agent("agent1")
-    remove_agent("agent2")
+
