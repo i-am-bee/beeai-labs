@@ -54,71 +54,72 @@
                 "labels": {
                   "type": "object",
                   "description": "workflow labels, key: value pairs"
+                },
+                "agents": {
+                  "type": "array",
+                   "items": {
+                   "type": "string"
+                  }
+                },
+                "exception": {
+                  "type": "string"
+                },
+                "prompt": {
+                  "type": "string"
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "step name"
+                      },
+                      "agent": {
+                        "type": "string",
+                        "description": "the agent for this step"
+                      },
+                      "condition": {
+                        "type": "array",
+                        "description": "if/then/else or case/do/default condition",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "if": {
+                              "type": "string"
+                            },
+                            "then": {
+                              "type": "string"
+                            },
+                            "else": {
+                              "type": "string"
+                            },
+                            "case": {
+                              "type": "string"
+                            },
+                            "do": {
+                              "type": "string"
+                            },
+                            "default": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                    "required": [
+                      "name",
+                      "agent"
+                    ]
+                    }
+                  } 
                 }
               }
             }
-          }
-        },
-        "agents": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "exception": {
-          "type": "string"
-        },
-        "prompt": {
-          "type": "string"
-        },
-        "steps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "step name"
-              },
-              "agent": {
-                "type": "string",
-                "description": "the agent for this step"
-              },
-              "condition": {
-                "type": "array",
-                "description": "if/then/else or case/do/default condition",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "if": {
-                      "type": "string"
-                    },
-                    "then": {
-                      "type": "string"
-                    },
-                    "else": {
-                      "type": "string"
-                    },
-                    "case": {
-                      "type": "string"
-                    },
-                    "do": {
-                      "type": "string"
-                    },
-                    "default": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "required": [
-              "name",
-              "agent"
-            ]
           }
         }
       }
     }
   }
 }
+
