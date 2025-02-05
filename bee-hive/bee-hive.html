@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bee-hive</title>
+</head>
+<style>
+    body {color: black; background-color: lightblue;}
+</style>
+<body>
+    <h1>
+        Bee-hive
+    </h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <h2>Select a agent defintion file and workflow difinition file</h2>
+        <div style="display: flex;">
+            <input type="file" name="agents"  placeholder="Agent definition" style="color: blue;">
+            <input type="file" name="workflow"  placeholder="Workflow definition" style="color: blue;">
+        </div>
+        <h2>Run workflow</h2>
+        <input type="submit" value="Ececute" style="color: green;">
+    </form>
+</body>
+</html>
+

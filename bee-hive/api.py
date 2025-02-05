@@ -63,9 +63,8 @@ def process_workflow():
         if os.getenv("DEBUG"):
             return response
         else:
-            return output.getvalue()
-
-    return render_template('upload.html')
+            html = "<html><style>div { white-space: pre-wrap;}</style> <div>"+ output.getvalue()+"</div></html>"
+            return html
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
 

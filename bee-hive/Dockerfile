@@ -48,6 +48,7 @@ COPY entrypoint.sh .
 COPY run_workflow.py .
 COPY entrypoint_api.sh .
 COPY api.py .
+COPY bee-hive.html ./static/bee-hive.html
 
 RUN chown -R 1000:100 /usr/src/app &&\
     mkdir /usr/src/app/media && chown 1000:100 /usr/src/app/media
