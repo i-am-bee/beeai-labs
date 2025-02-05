@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import abstractmethod
+import os
+import pickle
 
 class Agent:
     """
@@ -40,3 +42,40 @@ class Agent:
         Args:
             prompt (str): The prompt to run the agent with.
         """
+
+def _load_agent_db():
+    agents = {}
+    if os.path.exists('agents.db'):
+        with open('agents.db', 'rb') as f:
+            agents = pickle.load(f)
+    return agents
+
+def _save_agent_db(db):
+    with open('agents.db', 'wb') as f:
+        pickle.dump(db, f)
+
+def save_agent(agent):
+    """
+    Save agent in storage.
+    """
+    agents = _load_agent_db()
+    agent_data = pickle.dumps(agent)
+    agents[agent.agent_name] = agent_data
+    _save_agent_db(agents)
+
+def restore_agent(agent_name: str) -> Agent:
+    """
+    Restore agent from storage.
+    """
+    agents = _load_agent_db()
+    agent_data= agents[agent_name]
+    agent = pickle.loads(agent_data)
+    return(agent)
+
+def remove_agent(agent_name: str):
+    """
+    Remove agent from storage.
+    """
+    agents = _load_agent_db()
+    agents.pop(agent_name)
+    _save_agent_db(agents)

@@ -10,6 +10,7 @@ import dotenv
 from bee_hive.crewai_agent import CrewAIAgent
 from bee_hive.bee_agent import BeeAgent
 from bee_hive.mock_agent import MockAgent
+from bee_hive.agent import restore_agent
 
 dotenv.load_dotenv()
 
@@ -38,18 +39,25 @@ class Workflow:
     def __init__(self, agent_defs, workflow):
         """Execute sequential workflow.
         input:
-            agents: array of agent definitions
+            agents: array of agent definitions, saved agent names, or None (agents in workflow must be pre-created)
             workflow: workflow definition
         """
-        for agent_def in agent_defs:
-            # Use 'bee' if this value isn't set
-            #
-            agent_def["spec"]["framework"] = agent_def["spec"].get(
-                "framework", AgentFramework.BEE
-            )
-            self.agents[agent_def["metadata"]["name"]] = get_agent_class(
-                agent_def["spec"]["framework"]
-            )(agent_def)
+        if agent_defs:
+            for agent_def in agent_defs:
+                if type(agent_def) == str:
+                    self.agents[agent_def] = restore_agent(agent_def)
+                else:
+                    # Use 'bee' if this value isn't set
+                    #
+                    agent_def["spec"]["framework"] = agent_def["spec"].get(
+                        "framework", AgentFramework.BEE
+                    )
+                    self.agents[agent_def["metadata"]["name"]] = get_agent_class(
+                        agent_def["spec"]["framework"]
+                    )(agent_def)
+        else:
+            for agent in workflow["spec"]["template"]["agents"]:
+                self.agents[agent["name"]] = restore_agent(agent["name"])
         self.workflow = workflow
 
     def run(self):
