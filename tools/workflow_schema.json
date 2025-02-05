@@ -54,24 +54,26 @@
                 "labels": {
                   "type": "object",
                   "description": "workflow labels, key: value pairs"
-                },
-                "agents": {
-                  "type": "array",
-                   "items": {
-                   "type": "string"
-                  }
-                },
-                "exception": {
-                  "type": "string"
-                },
-                "prompt": {
-                  "type": "string"
-                },
-                "steps": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
+                }
+              }
+            },
+            "agents": {
+              "type": "array",
+                "items": {
+                "type": "string"
+              }
+            },
+            "exception": {
+              "type": "string"
+            },
+            "prompt": {
+              "type": "string"
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
                       "name": {
                         "type": "string",
                         "description": "step name"
@@ -111,13 +113,11 @@
                       "name",
                       "agent"
                     ]
-                    }
-                  } 
                 }
-              }
+              } 
             }
           }
-        }
+        }         
       }
     }
   }
