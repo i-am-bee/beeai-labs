@@ -7,6 +7,8 @@ from pytest_mock import mocker
 
 from bee_hive.workflow import Workflow
 from bee_hive.bee_agent import BeeAgent
+from bee_hive.agent import save_agent, remove_agent
+
 
 dotenv.load_dotenv()
 
@@ -20,12 +22,15 @@ def test_sequence_method(mocker):
     class MockAgent:
         def __init__(self, name):
             self.name = name
+            self.agent_name = name
         def run(self, prompt):
             execution_order.append(self.name)
             return f"{prompt} processed by {self.name}"
 
     mock_agent1 = MockAgent("agent1")
     mock_agent2 = MockAgent("agent2")
+    save_agent(mock_agent1)
+    save_agent(mock_agent2)
     mock_agents = {"agent1": mock_agent1, "agent2": mock_agent2}
     mocker.patch.object(BeeAgent, "__new__", side_effect=lambda name: mock_agents[name])
     workflow_yaml = parse_yaml("tests/workflow/workflow.yaml")
@@ -41,3 +46,5 @@ def test_sequence_method(mocker):
     assert step_results["final_prompt"] == "Start of the workflow processed by agent1 processed by agent2 processed by agent1"
     expected_order = ["agent1", "agent2", "agent1"]
     assert execution_order == expected_order, f"Expected order {expected_order}, but got {execution_order}"
+    remove_agent("agent1")
+    remove_agent("agent2")
