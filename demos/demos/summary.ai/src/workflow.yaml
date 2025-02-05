@@ -1,0 +1,33 @@
+apiVersion: beehive/v1
+kind: Workflow
+metadata:
+  name: arxiv_workflow
+  labels:
+    type: research_pipeline
+spec:
+  strategy:
+    type: sequence
+
+  template:
+    metadata:
+      name: arxiv_workflow
+      labels:
+        type: research_pipeline
+
+  prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
+
+  steps:
+    - name: search_arxiv_step
+      agent: search_arxiv_agent
+
+    - name: binding_step
+      agent: binding_agent_1
+
+    - name: selector_step
+      agent: selector_agent
+
+    # - name: binding_step_2
+    #   agent: binding_agent_2
+
+    - name: summary_step
+      agent: summary_agent

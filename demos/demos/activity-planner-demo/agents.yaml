@@ -1,0 +1,11 @@
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: activity_planner.ActivityPlannerCrew.activity_crew
+  labels:
+    app: activity-planner-demo
+spec:
+  model: "llama3.1:latest"
+  description: test
+  instructions: Nothing to do
+  framework: crewai

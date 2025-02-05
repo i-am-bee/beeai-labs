@@ -1,0 +1,27 @@
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: current-affairs
+  labels:
+    app: mas-example
+spec:
+  model: "llama3.1:latest"
+  description: Get the current weather
+  tools:
+    - code_interpreter
+    - weather
+  instructions: An input is given of a location.  Use the OpenMeteo tool to get today's current forecast for the location. Return results in the format - location, temperature in Fahrenheit, and date.
+---
+apiVersion: beehive/v1alpha1
+kind: Agent
+metadata:
+  name: hot-or-not
+  labels:
+    app: mas-example
+spec:
+  model: "llama3.1:latest"
+  description: Is the current temperature hotter than usual?
+  tools:
+    - code_interpreter
+    - weather
+  instructions: Use the OpenMeteo weather tool to find the historical temperature of the given location.  Return whether the current temperature is hotter or colder.

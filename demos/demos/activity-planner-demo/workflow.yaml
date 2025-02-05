@@ -1,0 +1,20 @@
+apiVersion: beehive/v1alpha1
+kind: Workflow
+metadata:
+  name: beehive-deployment
+  labels:
+    app: activity-planner-demo
+spec:
+  strategy:
+    type: sequence
+    output: nonal
+  template:
+    metadata:
+      labels:
+        app: activity-planner-demo
+    agents:
+      - name: activity_planner.ActivityPlannerCrew.activity_crew
+  prompt: {"location": "San Francisco"}
+  steps:
+    - name: begin
+      agent: activity_planner.ActivityPlannerCrew.activity_crew
