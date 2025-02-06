@@ -1,7 +1,0 @@
-#! /bin/bash
-do=${1:-"none"}
-case "$do" in
-    run) DEFER_PYDANTIC_BUILD=false ./run_workflow.py "$2" ;;
-    create) ./create_agents.py "$2";;
-    none) echo "invalid option" ;;
-esac

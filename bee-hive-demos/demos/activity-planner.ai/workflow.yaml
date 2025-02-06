@@ -28,6 +28,6 @@ spec:
         agent: hot-or-not
         condition:
         - if: (input.find('hotter') != -1)
-          do: cold-activities
-          else: hot-activities
+          do: hot-activities
+          else: cold-activities
       - name: end
