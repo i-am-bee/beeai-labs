@@ -1,6 +1,6 @@
 # Summary.ai Example
 
-A multi-agent workflow using Bee-Hive to check if the current temperature in a location is hotter or colder than average.
+A multi-agent workflow using Bee-Hive: Allows an user to specify a topic from Arxiv they want to look at, choose a number of potential papers to summarize.
 
 ## Getting Started
 
@@ -17,7 +17,6 @@ A multi-agent workflow using Bee-Hive to check if the current temperature in a l
 * Set up the demo and create the agents: `./setup.sh`
 
 * Run the workflow: `./run.sh` (to run for a different topic, change the `prompt` field in `workflow.yaml`)
-
 
 ### NOTE: Custom Tools Required for this Demo:
 
