@@ -13,27 +13,27 @@ spec:
       labels:
         app: example
         use-case: test
-  agents:
-    - agent1
-    - agent2
-    - agent3
-  prompt: This is a prompt
-  start: step1
-  exception: step3
-  steps:
-    - name: step1
-      agent: agent1
-      condition:
-        - if: (in.some_condition == True)
-          then: step2
-          else: step3
-    - name: step2
-      agent: agent2
-    - name: step3
-      agent: agent3
-      condition:
-        - case: (in.some_condition == True)
-          do: step2
-        - case: (in.some_condition == False)
-          do: step3
-        - default: step3
+    agents:
+      - agent1
+      - agent2
+      - agent3
+    prompt: This is a prompt
+    start: step1
+    exception: step3
+    steps:
+      - name: step1
+        agent: agent1
+        condition:
+          - if: (in.some_condition == True)
+            then: step2
+            else: step3
+      - name: step2
+        agent: agent2
+      - name: step3
+        agent: agent3
+        condition:
+          - case: (in.some_condition == True)
+            do: step2
+          - case: (in.some_condition == False)
+            do: step3
+          - default: step3
