@@ -25,11 +25,6 @@ class MockAgent(Agent):
             agent_name (str): The name of the agent. 
         """
         super().__init__(agent)
-    
-        client = OpenAI(
-            base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
-        )
-        
         self.agent_tools = []
 
         tools = agent["spec"].get("tools")

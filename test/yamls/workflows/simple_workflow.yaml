@@ -13,15 +13,15 @@ spec:
       labels:
         app: example
         use-case: test
-    agents:
-      - agent1
-      - agent2
-      - agent3
-    exception: step4
-    steps:
-      - name: step1
-        agent: agent1
-      - name: step2
-        agent: agent2
-      - name: step3
-        agent: agent3
+  agents:
+    - test1
+    - test2
+    - test3
+  exception: step4
+  steps:
+    - name: step1
+      agent: test1
+    - name: step2
+      agent: test2
+    - name: step3
+      agent: test3
