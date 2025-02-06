@@ -15,17 +15,17 @@ spec:
     agents:
       - name: expert
       - name: colleague
-  prompt: Tell me a joke about IBM
-  steps:
-    - name: expert
-      agent: expert
-      condition:
-      - default:
-        do: colleague
-    - name: colleague
-      agent: colleague
-      condition:
-      - if: (input.find('funnier') != -1)
-        then: expert
-        else: end
-    - name: end
+    prompt: Tell me a joke about IBM
+    steps:
+      - name: expert
+        agent: expert
+        condition:
+        - default:
+          do: colleague
+      - name: colleague
+        agent: colleague
+        condition:
+        - if: (input.find('funnier') != -1)
+          then: expert
+          else: end
+      - name: end
