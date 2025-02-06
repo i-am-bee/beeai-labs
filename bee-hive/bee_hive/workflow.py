@@ -63,8 +63,8 @@ class Workflow:
             print("not supported yet")
             
     def _sequence(self):
-        prompt = self.workflow["spec"].get("prompt", "")
-        steps = self.workflow["spec"].get("steps", [])
+        prompt = self.workflow["spec"]["template"].get("prompt", "")
+        steps = self.workflow["spec"]["template"].get("steps", [])
         if not steps:
             raise ValueError("Workflow is missing required 'steps' key in 'spec'")
         step_results = {}
@@ -80,13 +80,13 @@ class Workflow:
         return step_results
 
     def _condition(self):
-        prompt = self.workflow["spec"]["prompt"]
-        steps = self.workflow["spec"]["steps"]
+        prompt = self.workflow["spec"]["template"]["prompt"]
+        steps = self.workflow["spec"]["template"]["steps"]
         for step in steps:
             if step.get("agent"):
                 step["agent"] = self.agents.get(step["agent"])
             self.steps[step["name"]] = Step(step)
-        current_step = self.workflow["spec"]["steps"][0]["name"]
+        current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
         while True:
             response = self.steps[current_step].run(prompt)
             prompt = response["prompt"]

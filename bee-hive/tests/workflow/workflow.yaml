@@ -15,11 +15,11 @@ spec:
     agents:
       - name: agent1
       - name: agent2
-  prompt: Start of the workflow
-  steps:
-    - name: step1
-      agent: agent1
-    - name: step2
-      agent: agent2
-    - name: step3
-      agent: agent1
+    prompt: Start of the workflow
+    steps:
+      - name: step1
+        agent: agent1
+      - name: step2
+        agent: agent2
+      - name: step3
+        agent: agent1

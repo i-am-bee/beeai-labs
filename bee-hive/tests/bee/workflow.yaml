@@ -14,7 +14,7 @@ spec:
         app: testapp
     agents:
       - name: beetest
-  prompt: Welcome
-  steps:
-    - name: begin
-      agent: beetest
+    prompt: Welcome
+    steps:
+      - name: begin
+        agent: beetest
