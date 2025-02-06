@@ -86,6 +86,7 @@ class ActivityPlannerCrew:
             process=Process.sequential,
             verbose=True,
         )
+        # TODO - returned content cannot be parsed by Workflow class.
 
 
 # Main for testing
@@ -93,3 +94,4 @@ if __name__ == "__main__":
     print("Running crew...")
     inputs = {"location": "San Francisco"}
     ActivityPlannerCrew().activity_crew().kickoff(inputs=inputs)
+    
