@@ -2,11 +2,12 @@
 
 import yaml
 import sys
+import os
 from bee_hive.workflow import Workflow
 
 
-# Add agent path to path explicitly - this should be found on path, but may require base change
-sys.path.append("agents/crewai/activity_planner")
+# TODO Add agent path to path explicitly - this should be found on path, but may require base change
+sys.path.append("bee-hive-demos/agents/crewai/activity_planner")
 
 def test_agent_runs() -> None:
     """
@@ -17,8 +18,8 @@ def test_agent_runs() -> None:
             yaml_data = list(yaml.safe_load_all(file))
         return yaml_data
 
-    agents_yaml = parse_yaml("demos/activity-planner-demo/agents.yaml")
-    workflow_yaml = parse_yaml("demos/activity-planner-demo/workflow.yaml")
+    agents_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"agents.yaml"))
+    workflow_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"workflow.yaml"))
     try:
         workflow = Workflow(agents_yaml, workflow_yaml[0])
     except Exception as excep:

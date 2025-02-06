@@ -14,7 +14,7 @@ spec:
         app: activity-planner-demo
     agents:
       - name: activity_planner.ActivityPlannerCrew.activity_crew
-  prompt: {"location": "San Francisco"}
-  steps:
-    - name: begin
-      agent: activity_planner.ActivityPlannerCrew.activity_crew
+    prompt: {"location": "San Francisco"}
+    steps:
+      - name: begin
+        agent: activity_planner.ActivityPlannerCrew.activity_crew
