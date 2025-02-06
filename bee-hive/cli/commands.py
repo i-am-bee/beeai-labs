@@ -15,7 +15,7 @@
 import yaml, json, jsonschema
 
 from jsonschema.exceptions import ValidationError
-from cli.common import Console
+from .common import Console
 
 # Base class for all commands
 class Command:

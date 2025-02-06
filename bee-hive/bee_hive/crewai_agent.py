@@ -1,7 +1,8 @@
+# SPDX-License-Identifier: Apache-2.0
 
 import importlib
 
-from bee_hive.agent import Agent
+from .agent import Agent
 
 class CrewAIAgent(Agent):
     """

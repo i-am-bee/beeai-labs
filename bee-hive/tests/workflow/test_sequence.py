@@ -6,8 +6,8 @@ from unittest import TestCase
 from pytest_mock import mocker
 import os
 
-from bee_hive.workflow import Workflow
-from bee_hive.bee_agent import BeeAgent
+from bee_hive import Workflow
+from bee_hive import BeeAgent
 
 dotenv.load_dotenv()
 

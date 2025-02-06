@@ -3,7 +3,7 @@
 import yaml
 import sys
 import os
-from bee_hive.workflow import Workflow
+from bee_hive import Workflow
 
 
 # TODO Add agent path to path explicitly - this should be found on path, but may require base change

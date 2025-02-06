@@ -8,7 +8,7 @@ from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
 from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
 
-from bee_hive.agent import Agent
+from .agent import Agent
 
 dotenv.load_dotenv()
 

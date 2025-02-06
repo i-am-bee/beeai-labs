@@ -1,16 +1,9 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-import json
-import os
-import sys
-
 import dotenv
-from openai import OpenAI
-import yaml
 
 dotenv.load_dotenv()
-from bee_hive.agent import Agent
 
 def eval_expression(expression, prompt):
     local = {}

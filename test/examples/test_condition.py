@@ -8,7 +8,7 @@ import sys
 import dotenv
 from openai import OpenAI
 import yaml
-from bee_hive.workflow import Workflow
+from bee_hive import Workflow
 
 dotenv.load_dotenv()
 

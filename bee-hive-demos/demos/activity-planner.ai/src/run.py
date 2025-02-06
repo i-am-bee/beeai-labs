@@ -2,7 +2,7 @@
 
 import sys
 import yaml
-from bee_hive.workflow import Workflow
+from bee_hive import Workflow
 import dotenv
 
 dotenv.load_dotenv()

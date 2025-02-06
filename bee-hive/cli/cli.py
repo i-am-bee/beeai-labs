@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cli.commands import Validate, Create, Run, Deploy
+from .commands import Validate, Create, Run, Deploy
 
 class CLI:
     def __init__(self, args):
