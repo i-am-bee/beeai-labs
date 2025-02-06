@@ -3,12 +3,13 @@ kind: Agent
 metadata:
   name: Search Arxiv
   labels:
-    type: retrieval  
+    app: mas-example 
 spec:
   model: llama3.1
   description: "Fetches the k most recent article titles from arXiv on a given topic."
-  instruction: "Execute the given query using only the fetch tool provided. In your output, only list out the output the function gave you and nothing else. Example output: ['title1', 'title2', .... ]"  
-  tools: ['fetch'] 
+  instructions: "Execute the given query using only the fetch tool provided. In your output, only list out the output the function gave you and nothing else. Example output: ['title1', 'title2', .... ]"  
+  tools: 
+    - 'fetch'
   code: |
         import urllib.request
 
@@ -32,20 +33,23 @@ metadata:
 spec:
   model: llama3.1
   description: "Combines the output of search agent with prompt of second agent"
-  instruction: "Output the following text exactly, replacing `{input_list}` with the given list: 'Use filtering tool using these as parameters: fetch_valid_arxiv_titles(titles=title_list), where title_list is: {input_list}' Do not process, explain, or modify the list in any way—just insert it and return the exact text. We will not be using any tools or functions, just want to print out the sentence."  
-
+  instructions: "Output the following text exactly, replacing `{input_list}` with the given list: 'Use filtering tool using these as parameters: fetch_valid_arxiv_titles(titles=title_list), where title_list is: {input_list}' Do not process, explain, or modify the list in any way—just insert it and return the exact text. We will not be using any tools or functions, just want to print out the sentence."  
+  tools:
+    - 'none'
+    
 ---
 apiVersion: beehive/v1alpha1
 kind: Agent
 metadata:
   name: Filter
   labels:
-    type: filter
+    app: mas-example
 spec:
   model: llama3.1
   description: "Filters and selects the most relevant papers based on abstract similarity to the topic."
-  instruction: "Execute the given query using only the filtering tool provided. In your output, only list out the output the function gave you and nothing else. Example output: ['title1', 'title2', .... ]"
-  tools: ['filtering']
+  instructions: "Execute the given query using only the filtering tool provided. In your output, only list out the output the function gave you and nothing else. Example output: ['title1', 'title2', .... ]"
+  tools: 
+    - 'filtering'
   code: |
         import urllib.request
         import urllib.parse
@@ -87,9 +91,10 @@ kind: Agent
 metadata:
   name: Summary
   labels:
-    type: summarization
+    app: mas-example
 spec:
   model: llama3.1
   description: "creates a summary of the arxiv paper"
-  instruction: "use the LLM tool to generate a high level summary for the given input text. Do not include anything related to code, merely provide descriptions, overviews, and introduction to what is being discussed."
-  tools: ["LLM"]
+  instructions: "use the LLM tool to generate a high level summary for the given input text. Do not include anything related to code, merely provide descriptions, overviews, and introduction to what is being discussed."
+  tools: 
+    - 'llm'

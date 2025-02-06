@@ -1,0 +1,58 @@
+apiVersion: beehive/v1alpha1
+kind: Workflow
+metadata:
+  name: beehive-deployment
+  labels:
+    app: mas-example
+spec:
+  strategy:
+    type: sequence
+    output: verbose
+  template:
+    metadata:
+      labels:
+        app: mas-example
+    agents:
+      - name: Search Arxiv
+      - name: Intermediary
+      - name: Filter
+      - name: Summary
+    prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
+
+# apiVersion: beehive/v1
+# kind: Workflow
+# metadata:
+#   name: beehive-deployment
+#   labels:
+#     app: mas-example
+# spec:
+#   strategy:
+#     type: condition
+#     output: nonal
+#   template:
+#     metadata:
+#       labels:
+#         app: mas-example
+#     agents:
+#       - name: Search Arxiv
+#       - name: Intermediary
+#       - name: Filter
+#       - name: Summary
+#     prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
+#     steps:
+#       - name: Search Arxiv
+#         agent: Search Arxiv
+#         condition:
+#           - default:
+#               do: Intermediary
+#       - name: Intermediary
+#         agent: Intermediary
+#         condition:
+#           - default:
+#               do: Filter
+#       - name: Filter
+#         agent: Filter
+#         condition:
+#           - default:
+#               do: Summary
+#       - name: end
