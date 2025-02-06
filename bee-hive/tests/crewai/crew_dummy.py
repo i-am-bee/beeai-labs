@@ -1,4 +1,5 @@
 # Dummy class for testing crewai loader
+# SPDX-License-Identifier: Apache-2.0
 
 class Crew:
     # TODO: kickoff actually takes & returns a dict[str,str]
