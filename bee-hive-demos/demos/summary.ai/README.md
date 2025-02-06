@@ -1,4 +1,4 @@
-# Weather-Checker Example
+# Summary.ai Example
 
 A multi-agent workflow using Bee-Hive to check if the current temperature in a location is hotter or colder than average.
 
