@@ -3,7 +3,7 @@
 from unittest import TestCase
 import dotenv
 import yaml
-
+import os
 from pytest_mock import mocker
 
 from bee_hive.workflow import Workflow
@@ -31,8 +31,8 @@ def test_agent_runs(mocker) -> None:
     mock_bee=BeeAgentMock()
     mocker.patch.object(BeeAgent, "__new__", return_value = mock_bee)
         
-    agents_yaml = parse_yaml("tests/bee/agents.yaml")
-    workflow_yaml = parse_yaml("tests/bee/workflow.yaml")
+    agents_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"agents.yaml"))
+    workflow_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"workflow.yaml"))
     try:
         workflow = Workflow(agents_yaml, workflow_yaml[0])
     except Exception as excep:

@@ -8,7 +8,7 @@ import sys
 import dotenv
 from openai import OpenAI
 import yaml
-from workflow import Workflow
+from bee_hive.workflow import Workflow
 
 dotenv.load_dotenv()
 
@@ -21,8 +21,8 @@ def parse_yaml(file_path):
 
 
 if __name__ == "__main__":
-    agents_yaml = parse_yaml("condition_agents.yaml")
-    workflow_yaml = parse_yaml("condition_workflow.yaml")
+    agents_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"condition_agents.yaml"))
+    workflow_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"condition_workflow.yaml"))
     try:
         workflow = Workflow(agents_yaml, workflow_yaml[0])
     except Exception as excep:

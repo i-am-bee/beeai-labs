@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [
     { include = "bee_hive", from = "bee-hive" },
     { include = "cli", from = "bee-hive" },
-    # TODO - do demos need packaging? Only if you want to run after pip instal.. If so scripts need adding/renaming
+    # TODO - Packaging demos allows them to be run after a pip install 
     #{ include = "activity_planner", from = "bee-hive-demos/agents/crewai" }
 ]
 
@@ -37,7 +37,9 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "-v -s"
+addopts = "-v -s --ignore=framework"
+#rootpath = "bee-hive"
 
 [tool.poetry.scripts]
 "beeAI" = "cli.beeAI:run_cli"
+# TODO Add scripts to run demos here

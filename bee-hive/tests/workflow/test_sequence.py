@@ -4,6 +4,7 @@ import yaml
 import dotenv
 from unittest import TestCase
 from pytest_mock import mocker
+import os
 
 from bee_hive.workflow import Workflow
 from bee_hive.bee_agent import BeeAgent
@@ -28,7 +29,7 @@ def test_sequence_method(mocker):
     mock_agent2 = MockAgent("agent2")
     mock_agents = {"agent1": mock_agent1, "agent2": mock_agent2}
     mocker.patch.object(BeeAgent, "__new__", side_effect=lambda name: mock_agents[name])
-    workflow_yaml = parse_yaml("tests/workflow/workflow.yaml")
+    workflow_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"workflow.yaml"))
     workflow_yaml[0]["spec"]["template"]["agents"] = []
     try:
         workflow = Workflow(agent_defs=[], workflow=workflow_yaml[0])

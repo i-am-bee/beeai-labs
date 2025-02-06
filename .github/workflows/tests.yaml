@@ -23,10 +23,8 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
-          cd bee-hive
           poetry install
 
       - name: Run unit tests
         run: |
-          cd bee-hive
           poetry run pytest
