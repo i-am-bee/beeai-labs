@@ -3,33 +3,29 @@
 AGENT_STORE="agent_store.json"
 AGENT_YAML="agents.yaml"
 
-# Function to extract agent names from agents.yaml
 get_required_agents() {
     awk '/metadata:/ {getline; print $2}' "$AGENT_YAML"
 }
 
 check_agents_exist() {
     REQUIRED_AGENTS=$(get_required_agents)
-
-    # Check if agent_store.json exists and is not empty
     if [[ ! -f "$AGENT_STORE" ]] || [[ $(jq 'length' "$AGENT_STORE") -eq 0 ]]; then
-        return 1  # Agents do not exist
+        return 1  
     fi
 
-    # Check if all required agents exist in agent_store.json
     for agent in $REQUIRED_AGENTS; do
         if ! jq -e "has(\"$agent\")" "$AGENT_STORE" > /dev/null; then
-            return 1  # At least one agent is missing
+            return 1 
         fi
     done
 
-    return 0  # All agents exist
+    return 0
 }
 
 do=${1:-"none"}
 case "$do" in
     create) 
-        ./create_agents.py "$2"
+        python3 src/create_agents.py "$2"
         echo "✅ Agents created! Please enable the required tools in the Bee UI before running the workflow."
         ;;
         
@@ -38,14 +34,14 @@ case "$do" in
             echo "✅ All required agents are found in agent_store.json. Skipping creation..."
         else
             echo "🚀 Missing agents detected! Running agent creation..."
-            ./create_agents.py "$AGENT_YAML"
+            python3 src/create_agents.py "$AGENT_YAML"  
             echo "✅ Agents created! Please enable the required tools in the Bee UI before running the workflow."
             read -p "Press Enter to continue after enabling tools..."
         fi
 
         echo "⚠️ Ensure all required tools are enabled in the Bee UI before proceeding!"
         read -p "Press Enter to continue..."  
-        DEFER_PYDANTIC_BUILD=false ./run_workflow.py "$2"
+        DEFER_PYDANTIC_BUILD=false python3 src/run_workflow.py "$2"
         ;;
         
     none) 

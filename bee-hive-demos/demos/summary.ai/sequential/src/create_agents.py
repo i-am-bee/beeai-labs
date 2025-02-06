@@ -14,7 +14,7 @@ dotenv.load_dotenv()
 def parse_yaml(file_path):
     """Loads agent definitions from a YAML file."""
     with open(file_path, "r") as file:
-        yaml_data = list(yaml.safe_load_all(file))  # Supports multi-document YAML
+        yaml_data = list(yaml.safe_load_all(file)) 
     return yaml_data
 
 
@@ -27,23 +27,21 @@ def create_agent(agent):
     agent_name = agent["metadata"]["name"]
     agent_model = agent["spec"]["model"]
     agent_desc = agent["spec"]["description"]
-    agent_instr = agent["spec"].get("instruction", "")  # FIX: Schema uses 'instruction'
+    agent_instr = agent["spec"].get("instruction", "")
     agent_tools = []
 
-    # Process tools
     for tool in agent["spec"].get("tools", []): 
         if tool == "code_interpreter":
             agent_tools.append({"type": tool})
         else:
             print(f"Enable the {tool} tool in the Bee UI")
 
-    # Create assistant with Bee API
     assistant = client.beta.assistants.create(
         name=agent_name,
         model=agent_model,
         description=agent_desc,
         tools=agent_tools,
-        instructions=agent_instr,  # FIX: Uses 'instruction' from schema
+        instructions=agent_instr,
     )
 
     return assistant.id
