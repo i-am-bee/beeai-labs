@@ -6,23 +6,31 @@ authors = ["IBM"]
 license = "Apache 2.0"
 readme = "README.md"
 packages = [
-    { include = "bee_hive", from = "." },
-    { include = "cli", from = "." }
+    { include = "bee_hive", from = "bee-hive" },
+    { include = "cli", from = "bee-hive" },
+    # TODO - do demos need packaging? Only if you want to run after pip instal.. If so scripts need adding/renaming
+    #{ include = "activity_planner", from = "bee-hive-demos/agents/crewai" }
 ]
 
 [tool.poetry.dependencies]
 python = ">= 3.11, < 3.13"
+openai = "^1.61.1"
 pyyaml = "^6.0.2"
-openai = "^1.56.2"
 python-dotenv = "^1.0.1"
 jsonschema = "^4.23.0"
 docopt-ng = "^0.9.0"
+# TODO Required by demos -- can split up, but then extra steps to install. See https://github.com/i-am-bee/bee-hive/issues/188
+langchain-community = "^0.3.16"
+duckduckgo-search = "^7.3.0"
+crewai = "^0.100.1"
+crewai-tools = "^0.33.0"
 
 [tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
 
 [tool.poetry.group.test.dependencies]
-pytest-mock = "^3.14.0"
 pytest = "^8.3.4"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]
