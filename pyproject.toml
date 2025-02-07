@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "bee_hive"
+name = "maestro"
 version = "0.1.0"
-description = "A multi-agent platform with the vision to facilitate deploy and run Bee agents."
+description = "A multi-agent platform with the vision to facilitate deploy and run AI agents."
 authors = ["IBM"]
 license = "Apache 2.0"
 readme = "README.md"
 packages = [
-    { include = "bee_hive", from = "bee-hive" },
-    { include = "cli", from = "bee-hive" },
-    # TODO - Packaging demos allows them to be run after a pip install 
+    { include = "maestro", from = "maestro" },
+    { include = "cli", from = "maestro" },
+    # TODO - Packaging demos allows them to be run after a pip install
     #{ include = "activity_planner", from = "bee-hive-demos/agents/crewai" }
 ]
 
