@@ -10,7 +10,7 @@ fi
 
 if [ "$1" == "build" ]; then
     echo "Building..."
-    $cmd build $flags -t bee-hive .
+    $cmd build $flags -t maestro .
 elif [ "$1" == "deploy" ]; then
     echo "Deploying..."
     env=""
@@ -18,18 +18,18 @@ elif [ "$1" == "deploy" ]; then
         env=$env" -e "$2" "
         shift
     done
-    $cmd run  -d $env -p $target:5000 bee-hive
+    $cmd run  -d $env -p $target:5000 maestro
 elif [ "$1" == "deploy-k" ]; then
     echo "Deploying (kubernetes)..."
-    cp bee-hive.yaml temp-bee-hive.yaml
+    cp maestro.yaml temp-maestro.yaml
     while [ "$2" != "" ]; do
         keyvalue=$2
 	name=$(echo $keyvalue | cut -d= -f1)
         value=$(echo $keyvalue | cut -d= -f2)
-        sed  -i -e "s#env:#env:\n        - name: $name\n          value: $value#" temp-bee-hive.yaml
+        sed  -i -e "s#env:#env:\n        - name: $name\n          value: $value#" temp-maestro.yaml
         shift
     done
-    kubectl apply -f temp-bee-hive.yaml
+    kubectl apply -f temp-maestro.yaml
 elif [ "$1" == "run" ]; then
     echo "Running..."
     agents=$2
@@ -37,6 +37,3 @@ elif [ "$1" == "run" ]; then
     curl -s -X POST -L http://$target/ -F "agents=@$agents" -F "workflow=@$workflow" | awk '{gsub(/\\n/,"\n")}1'
 
 fi
-
-
-
