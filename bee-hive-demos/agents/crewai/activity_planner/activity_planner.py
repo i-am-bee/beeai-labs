@@ -11,6 +11,10 @@ Usage:
 - Run the script to get a list of 5 activities to do in cole weather in San Francisco.
 """
 
+# TODO Make a more representative crew agent. This is simple
+# TODO decorators use config/agents.yaml & config/tasks.yaml. Former clashes in name which causes yaml validation error
+# TODO decorators cause PyLance errors
+
 from crewai import Agent, Crew, Task, Process, LLM
 from crewai.project import CrewBase, agent, task, crew
 from crewai.tools import tool
@@ -25,10 +29,11 @@ class ActivityPlannerCrew:
     Defines a class to manage a crew that finds activities to do in cold or wet weather.
     """
 
-    # setup LLM
+    # TODO Set model/URL from configuration
     llm = LLM(model="ollama/llama3.1", base_url="http://localhost:11434")
 
     @tool("DuckDuckGo")
+    # TODO PyLance issue - missing self() but fails with crewai decorators if added
     def ddg_search(question: str) -> str:
         """
         Defines a crew.ai tool which performs a web search using the
@@ -56,8 +61,7 @@ class ActivityPlannerCrew:
         return Agent(
             config=self.agents_config["activity_planner_agent"],
             tools=[self.ddg_search],  # Include the DuckDuckGo search tool
-            # Hardcode to ollama 3.1 running locally
-            llm=self.llm,
+            llm=self.llm,  # Use the locally running LLM (Ollama 3.1)
             verbose=True,
         )
 
@@ -84,14 +88,15 @@ class ActivityPlannerCrew:
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
+            # TODO: disable verbose when working well
             verbose=True,
         )
-        # TODO - returned content cannot be parsed by Workflow class.
-
 
 # Main for testing
 if __name__ == "__main__":
     print("Running crew...")
-    inputs = {"location": "San Francisco"}
-    ActivityPlannerCrew().activity_crew().kickoff(inputs=inputs)
+    inputs = {"prompt": "Show me some places to visit in cold weather in San Francisco"}
+    crew_output = ActivityPlannerCrew().activity_crew().kickoff(inputs=inputs)
+    print("\n====\n\nFinal raw output returned by agent:\n====\n\n")
+    print(crew_output.raw)
     

@@ -14,7 +14,7 @@ spec:
         app: activity-planner-demo
     agents:
       - activity_planner.ActivityPlannerCrew.activity_crew
-    prompt: {"location": "San Francisco"}
+    prompt: Show me some activities to do in London in cold weather
     steps:
       - name: begin
         agent: activity_planner.ActivityPlannerCrew.activity_crew

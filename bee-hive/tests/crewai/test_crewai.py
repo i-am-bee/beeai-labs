@@ -33,3 +33,7 @@ class CrewAITest(TestCase):
 
         assert result is not None
         assert result["final_prompt"] == "OK"
+
+if __name__ == "__main__":
+    crewtest = CrewAITest()
+    crewtest.test_agent_runs()

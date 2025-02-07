@@ -31,7 +31,7 @@ class CrewAIAgent(Agent):
             # Get the class object
             self.crew_agent_class = getattr(my_module, class_name)
             # Instantiate the class
-            self.instance = self.crew_agent_class()            
+            self.instance = self.crew_agent_class()          
             self.method_name = method_name
         except Exception as e:
             print(f"Failed to load agent {self.agent_name}: {e}")
@@ -53,9 +53,10 @@ class CrewAIAgent(Agent):
 
         try:
             method = getattr(self.instance, self.method_name)
-            output = method().kickoff(prompt)
-            return output
+            output = method().kickoff({ 'prompt': prompt})
+            return { 'prompt': output.raw }
 
+        # TODO address error handling
         except Exception as e:
             print(f"Failed to kickoff crew agent: {self.agent_name}: {e}")
             raise(e)
