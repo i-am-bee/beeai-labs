@@ -1,64 +1,118 @@
 > [!WARNING]
 > [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
-# Bee Hive
+# Maestro
 
-## Overview
+A multi-agent platform with the vision to facilitate deploy and run AI agents.
 
-**Bee Hive** is a multi-agent platform designed to build, deploy, and serve powerful agentic workflows at scale. This repository contains implementations for both [TypeScript](https://github.com/i-am-bee/bee-agent-framework) and [Python](https://github.com/i-am-bee/bee-hive/tree/main/framework/bee-py), enabling flexibility and interoperability for developers. The platform simplifies the creation and orchestration of AI agents powered by popular LLMs such as [Llama 3.x](https://ai.meta.com/blog/meta-llama-3-1/) and [IBM Granite](https://www.ibm.com/granite?adoper=255252_0_LS1).
+In this initial version you are going to find some examples how run a group of agents, that you can build using current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
-## Key Features
+## Usage
 
-* **🔓 Open Platform**: Run and orchestrate agents seamlessly on an open platform designed for experimentation and scalability.
+There are two steps to running a workflow: defining some agents and creating a workflow to run those agents.
 
-* **🤖 Flexible Agent Framework**: Write and experiment with agent and tool building in a flexible and modular framework.
+> Note: to run Maestro, you will need to [configure your local environment](#local-environment)
 
-* **⛓️‍💥 Versatile Agent Orchestration Capabilities**: Design multi-agent workflows tailored to your specific needs.
+### Agent Definition
 
-* **✨ Optimized for Open-Source Models**: Achieve best-in-class performance against open-source models like IBM Granite and Llama 3.x
+* You can define your Agent in a declarative way using a YAML file, where you can use the current Bee Agent implementation. With that, you can configure your agent or agents. For example, create an `agents.yaml` file containing the following:
 
-## Modules
-
-This repository includes the following key modules:
-
-1. Bee Agent Framework
-
-    1.1 TypeScript
-
-    The Typescript implementation of the Bee Agent Framework is available at: https://github.com/i-am-bee/bee-agent-framework
-
-    1.2 Python
-
-    The Python implementation of the Bee Agent Framework is available at: https://github.com/i-am-bee/bee-hive/tree/main/framework/bee-py
-
-2. Bee Hive
-
-    The Bee Hive module serves as a multi-agent platform for orchestrating workflows. It supports declarative agent definitions and YAML-based workflows. Refer to the Bee Hive [README](bee-hive/README.md) for detailed instructions.
-
-## Roadmap
-
-* **API 2.0**: a powerful and lightweight API to help you integrate your agents
-
-* **Dev UI**: build and optimize your agentic workflows in a developer-friendly UI
-
-* **Additional multi-agent workflows**: conditionals, looping, async, meta-agent orchestration
-
-* **Agent and tool library**: shareable assets to help you get started
-
-* **Streamlined experience**: integrate key developer functionality in one repository
-
-## Contributing
-
-We welcome contributions from the community! Please check our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines and our [Code of Conduct](CODE_OF_CONDUCT.md) for standards of behavior.
-
-## Reporting Issues
-
-Report bugs or feature requests via [GitHub Issues](https://github.com/i-am-bee/bee-hive/issues/new). Ensure to check for duplicates before filing a new issue.
-
-## Legal Notice
-
-All content in this repository is provided by IBM under the associated open source software license. IBM is under no obligation to provide enhancements, updates, or support for this code.
+```yaml
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: current-affairs
+  labels:
+    app: mas-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: Get the current weather
+  tools:
+    - code_interpreter
+    - weather
+  instructions: Get the current temperature for the location provided by the user. Return results in Fahrenheit.
 
 ---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: hot-or-not
+  labels:
+    app: mas-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: Is the current temperature hotter than usual?
+  tools:
+    - code_interpreter
+    - weather
+  instructions: The user will give you a temperature in Fahrenheit and a location. Use the OpenMateo weather tool to find the average monthly temperature for the location. Answer if the temperature provided by the user is hotter or colder than the average found by the tool.
+```
 
-Happy coding with Bee Hive 🚀
+* Create the agents by running the following command:
+
+```bash
+python create_agents.py agents.yaml
+```
+
+### Running a Workflow
+
+#### Sequential
+
+* Define a workflow in YAML listing the agents you wish to run. For example, create a `workflow.yaml` file containing the following:
+
+```yaml
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: maestro-deployment
+  labels:
+    app: mas-example
+spec:
+  strategy:
+    type: sequence
+    output: verbose
+  template:
+    metadata:
+      labels:
+        app: mas-example
+    agents:
+      - name: current-affairs
+      - name: hot-or-not
+    prompt: New York
+```
+
+* Execute the workflow:
+
+```bash
+python run_workflow workflow.yaml
+```
+
+## Local environment
+
+* Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
+
+* Install dependencies: `poetry shell && poetry install`
+
+* Configure environmental variables: `cp example.env .env`
+
+### Run workflow in local environment with container runtime (e.g. podman) or kubernetes cluster
+
+* Prepare required environments
+  * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
+  * `curl` is required for `run` command
+  * for Kubernetes, `kubectl` and `sed` are required
+  * set CONTAINER_CMD, TARGET_IP and BUILD_FLAGS environment variables to adjust maestro.sh script
+    * CONTAINER_CMD: docker, podman. nerdctl, etc..
+    * TARGET_IP: 127.0.0.1:"NodePort of the maestro service" for kubernetes deployment
+    * BUILD_FLAGS: image build command extra flag (e.g. "--namespace k8s.io" for nerdctl)
+
+* Build maestro container image: `./maestro.sh build` in maestro/maestro directory
+  * The built maestro:latest image need to be pushed/placed in the local retistry for kubernetes deployment
+
+* Deploy maestro: `./maestro.sh deploy BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
+  * To deploy to kubernetes cluster, user `deploy-k` instead `deploy` as the first argument
+  * The required environment variables can be provided at the end of command arguments (e.g. `BEE_API=http://192.168.86.45:4000`).
+
+* Prepare agent and workflow definition yaml files in the current directory (e.g. agent.yaml, workflow.yaml)
+
+* Run workflow: `./maestro.sh run agents.yaml workflow.yaml
