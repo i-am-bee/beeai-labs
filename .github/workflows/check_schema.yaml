@@ -1,0 +1,30 @@
+name: Check Schema
+
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  check-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup poetry
+        run: |
+          pipx ensurepath
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pipx install poetry
+          poetry self add poetry-plugin-shell
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Check schema
+        run: |
+          poetry run tools/ci/check-schemas.sh
