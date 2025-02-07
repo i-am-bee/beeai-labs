@@ -23,8 +23,10 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
+          cd maestro
           poetry install
 
       - name: Run unit tests
         run: |
+          cd maestro
           poetry run pytest
