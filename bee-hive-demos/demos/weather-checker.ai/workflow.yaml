@@ -13,6 +13,6 @@ spec:
       labels:
         app: mas-example
     agents:
-      - name: current-affairs
-      - name: hot-or-not
+      - current-affairs
+      - hot-or-not
     prompt: New York City

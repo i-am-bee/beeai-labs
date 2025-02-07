@@ -13,7 +13,7 @@ spec:
       labels:
         app: activity-planner-demo
     agents:
-      - name: activity_planner.ActivityPlannerCrew.activity_crew
+      - activity_planner.ActivityPlannerCrew.activity_crew
     prompt: {"location": "San Francisco"}
     steps:
       - name: begin

@@ -13,10 +13,10 @@ spec:
       labels:
         app: mas-example
     agents:
-      - name: current-affairs
-      - name: hot-or-not
-      - name: cold-activities
-      - name: hot-activities
+      - current-affairs
+      - hot-or-not
+      - cold-activities
+      - hot-activities
     prompt: New York City
     steps:
       - name: current-affairs

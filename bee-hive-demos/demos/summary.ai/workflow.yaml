@@ -13,9 +13,9 @@ spec:
       labels:
         app: mas-example
     agents:
-      - name: Search Arxiv
-      - name: Intermediary
-      - name: Filter
-      - name: Summary
+      - Search Arxiv
+      - Intermediary
+      - Filter
+      - Summary
     prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
 

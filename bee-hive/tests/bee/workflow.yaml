@@ -13,7 +13,7 @@ spec:
       labels:
         app: testapp
     agents:
-      - name: beetest
+      - beetest
     prompt: Welcome
     steps:
       - name: begin

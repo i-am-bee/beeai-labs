@@ -13,8 +13,8 @@ spec:
       labels:
         app: testapp
     agents:
-      - name: agent1
-      - name: agent2
+      - agent1
+      - agent2
     prompt: Start of the workflow
     steps:
       - name: step1
