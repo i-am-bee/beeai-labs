@@ -8,8 +8,8 @@ import os
 from pytest_mock import mocker
 
 # TODO consider moving to same directory as BeeAgent source
-from bee_hive import Workflow
-from bee_hive import BeeAgent
+from maestro import Workflow
+from maestro import BeeAgent
 
 dotenv.load_dotenv()
 
@@ -19,10 +19,10 @@ dotenv.load_dotenv()
 class BeeAgentMock:
     def __init__(self):
         pass
-        
+
     def run(self, prompt: str) -> str:
         return 'OK:'+prompt
-    
+
 def test_agent_runs(mocker) -> None:
     def parse_yaml(file_path):
         with open(file_path, "r", encoding="utf-8") as file:
@@ -32,7 +32,7 @@ def test_agent_runs(mocker) -> None:
     # setup mocks
     mock_bee=BeeAgentMock()
     mocker.patch.object(BeeAgent, "__new__", return_value = mock_bee)
-        
+
     agents_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"agents.yaml"))
     workflow_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"workflow.yaml"))
     try:
@@ -41,8 +41,7 @@ def test_agent_runs(mocker) -> None:
         raise RuntimeError("Unable to create agents") from excep
     result = workflow.run()
     print(result)
-       
+
     assert result is not None
     # This gets returned by the mock function which uses the prompt from the workflow
     assert (result["final_prompt"]=="OK:Welcome")
-

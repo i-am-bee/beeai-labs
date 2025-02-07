@@ -7,8 +7,8 @@ from unittest import TestCase
 from pytest_mock import mocker
 import os
 
-from bee_hive import Workflow
-from bee_hive import BeeAgent
+from maestro import Workflow
+from maestro import BeeAgent
 
 dotenv.load_dotenv()
 
@@ -17,8 +17,8 @@ def test_sequence_method(mocker):
         with open(file_path, "r", encoding="utf-8") as file:
             yaml_data = list(yaml.safe_load_all(file))
         return yaml_data
-    
-    execution_order = [] 
+
+    execution_order = []
     class MockAgent:
         def __init__(self, name):
             self.name = name
@@ -34,7 +34,7 @@ def test_sequence_method(mocker):
     workflow_yaml[0]["spec"]["template"]["agents"] = []
     try:
         workflow = Workflow(agent_defs=[], workflow=workflow_yaml[0])
-        workflow.agents = mock_agents 
+        workflow.agents = mock_agents
     except Exception as excep:
         raise RuntimeError("Unable to create workflow") from excep
     step_results = workflow._sequence()

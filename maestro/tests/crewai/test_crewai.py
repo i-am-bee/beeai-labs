@@ -6,7 +6,7 @@ import dotenv
 import os
 import yaml
 
-from bee_hive import Workflow
+from maestro import Workflow
 
 dotenv.load_dotenv()
 
