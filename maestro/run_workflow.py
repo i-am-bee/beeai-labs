@@ -9,7 +9,7 @@ import sys
 from openai import OpenAI
 import yaml
 import dotenv
-from bee_hive import Workflow
+from maestro import Workflow
 
 dotenv.load_dotenv()
 
@@ -23,7 +23,7 @@ def parse_yaml(file_path):
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        print("Usage: docker run bee-hive -e <env1=valuse1> -e <env2=value2> <agent yaml file mane> <workflow yaml file name>")
+        print("Usage: docker run maestro -e <env1=valuse1> -e <env2=value2> <agent yaml file mane> <workflow yaml file name>")
         sys.exit()
     agents_yaml = parse_yaml(sys.argv[1])
     workflow_yaml = parse_yaml(sys.argv[2])

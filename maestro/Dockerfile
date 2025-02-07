@@ -43,17 +43,16 @@ RUN python3.11 -m ensurepip --upgrade
 RUN python3.11 -m pip install openai pyyaml python-dotenv flask --no-cache-dir --upgrade && \
     python3.11 -m pip uninstall -y pip
 
-COPY bee_hive ./bee_hive
+COPY maestro ./maestro
 COPY entrypoint.sh .
 COPY run_workflow.py .
 COPY entrypoint_api.sh .
 COPY api.py .
-COPY bee-hive.html ./static/bee-hive.html
+COPY maestro.html ./static/maestro.html
 
 RUN chown -R 1000:100 /usr/src/app &&\
     mkdir /usr/src/app/media && chown 1000:100 /usr/src/app/media
 
 EXPOSE 5000
 USER 1000:100
-#ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 ENTRYPOINT ["/usr/src/app/entrypoint_api.sh"]

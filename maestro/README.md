@@ -1,9 +1,9 @@
 > [!WARNING]
 > [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
-# Bee Hive
+# Maestro
 
-A multi-agent platform with the vision to facilitate deploy and run Bee agents.
+A multi-agent platform with the vision to facilitate deploy and run AI agents.
 
 In this initial version you are going to find some examples how run a group of agents, that you can build using current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
@@ -11,14 +11,14 @@ In this initial version you are going to find some examples how run a group of a
 
 There are two steps to running a workflow: defining some agents and creating a workflow to run those agents.
 
-> Note: to run Bee Hive, you will need to [configure your local environment](#local-environment)
+> Note: to run Maestro, you will need to [configure your local environment](#local-environment)
 
 ### Agent Definition
 
 * You can define your Agent in a declarative way using a YAML file, where you can use the current Bee Agent implementation. With that, you can configure your agent or agents. For example, create an `agents.yaml` file containing the following:
 
 ```yaml
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: current-affairs
@@ -33,7 +33,7 @@ spec:
   instructions: Get the current temperature for the location provided by the user. Return results in Fahrenheit.
 
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: hot-or-not
@@ -61,10 +61,10 @@ python create_agents.py agents.yaml
 * Define a workflow in YAML listing the agents you wish to run. For example, create a `workflow.yaml` file containing the following:
 
 ```yaml
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: beehive-deployment
+  name: maestro-deployment
   labels:
     app: mas-example
 spec:
@@ -101,18 +101,18 @@ python run_workflow workflow.yaml
   * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
   * `curl` is required for `run` command
   * for Kubernetes, `kubectl` and `sed` are required
-  * set CONTAINER_CMD, TARGET_IP and BUILD_FLAGS environment variables to adjust bee-hive.sh script
+  * set CONTAINER_CMD, TARGET_IP and BUILD_FLAGS environment variables to adjust maestro.sh script
     * CONTAINER_CMD: docker, podman. nerdctl, etc..
-    * TARGET_IP: 127.0.0.1:"NodePort of the bee-hive service" for kubernetes deployment
+    * TARGET_IP: 127.0.0.1:"NodePort of the maestro service" for kubernetes deployment
     * BUILD_FLAGS: image build command extra flag (e.g. "--namespace k8s.io" for nerdctl)
 
-* Build bee-hive container image: `./bee-hive.sh build` in bee-hive/bee-hive directory
-  * The built bee-hive:latest image need to be pushed/placed in the local retistry for kubernetes deployment
+* Build maestro container image: `./maestro.sh build` in maestro/maestro directory
+  * The built maestro:latest image need to be pushed/placed in the local retistry for kubernetes deployment
 
-* Deploy bee-hive: `./bee-hive.sh deploy BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
+* Deploy maestro: `./maestro.sh deploy BEE_API=http://xxx.xxx.xxx.xxx:4000 BEE_API_KEY=sk-proj-testkey`
   * To deploy to kubernetes cluster, user `deploy-k` instead `deploy` as the first argument
   * The required environment variables can be provided at the end of command arguments (e.g. `BEE_API=http://192.168.86.45:4000`).
 
 * Prepare agent and workflow definition yaml files in the current directory (e.g. agent.yaml, workflow.yaml)
 
-* Run workflow: `./bee-hive.sh run agents.yaml workflow.yaml
+* Run workflow: `./maestro.sh run agents.yaml workflow.yaml

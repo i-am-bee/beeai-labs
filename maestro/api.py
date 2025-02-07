@@ -1,4 +1,4 @@
-# Assisted by watsonx Code Assistant 
+# Assisted by watsonx Code Assistant
 from flask import Flask, request, jsonify
 import os
 import json
@@ -6,7 +6,7 @@ import sys
 import io
 
 import yaml
-from bee_hive.workflow import Workflow
+from maestro.workflow import Workflow
 
 app = Flask(__name__)
 
@@ -67,4 +67,3 @@ def process_workflow():
             return html
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
-
