@@ -15,6 +15,7 @@ Usage:
 # TODO decorators use config/agents.yaml & config/tasks.yaml. Former clashes in name which causes yaml validation error
 # TODO decorators cause PyLance errors
 
+import os
 from crewai import Agent, Crew, Task, Process, LLM
 from crewai.project import CrewBase, agent, task, crew
 from crewai.tools import tool
@@ -30,8 +31,10 @@ class ActivityPlannerCrew:
     """
 
     # TODO Set model/URL from configuration
-    llm = LLM(model="ollama/llama3.1", base_url="http://localhost:11434")
-
+    llm = LLM(
+        model=os.getenv("MAESTRO_DEMO_OLLAMA_MODEL", "ollama/llama3.1"),
+        base_url=os.getenv("MAESTRO_DEMO_OLLAMA_URL", "http://localhost:11434")
+    )
     @tool("DuckDuckGo")
     # TODO PyLance issue - missing self() but fails with crewai decorators if added
     def ddg_search(question: str) -> str:
