@@ -39,5 +39,5 @@ jobs:
       - name: Run CrewAI workflow
         run: |
           cd maestro
-          poetry run demos/activity-planner-crewai.ai/run.sh
+          poetry run demos/demos/activity-planner-crewai.ai/run.sh
           # TODO: Add a way to check the output of the demo
