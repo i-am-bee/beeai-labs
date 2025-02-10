@@ -1,13 +1,17 @@
-name: Bee-Hive Tests
+name: Maestro Check Schema
 
 on:
   push:
     branches: [ 'main' ]
+    paths:
+    - 'maestro/**'
   pull_request:
     branches: [ 'main' ]
+    paths:
+    - 'maestro/**'
 
 jobs:
-  run-tests:
+  check-schema:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,8 +29,8 @@ jobs:
         run: |
           cd maestro
           poetry install
-
-      - name: Run unit tests
+      - name: Check schema
+        # Run from root to capture all projects - but poetry needs to run in maestro to pick up environment above
         run: |
           cd maestro
-          poetry run pytest
+          poetry run tools/check-schemas.sh

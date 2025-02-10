@@ -3,11 +3,13 @@
 import yaml
 import sys
 import os
-from bee_hive import Workflow
+from maestro import Workflow
 
 
-# TODO Add agent path to path explicitly - this should be found on path, but may require base change
-sys.path.append("bee-hive-demos/agents/crewai/activity_planner")
+# TODO Add agent path to path explicitly - for running from top level, or pyproject.toml directory. This module should instead be installed
+sys.path.append("maestro/demos/agents/crewai/activity_planner")
+sys.path.append("demos/agents/crewai/activity_planner")
+
 
 def test_agent_runs() -> None:
     """
@@ -26,7 +28,7 @@ def test_agent_runs() -> None:
         raise RuntimeError("Unable to create agents") from excep
     result = workflow.run()
     print(result)
-        
+
 if __name__ == "__main__":
     test_agent_runs()
 
