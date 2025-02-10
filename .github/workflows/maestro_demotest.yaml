@@ -41,3 +41,5 @@ jobs:
           cd maestro
           poetry run demos/demos/activity-planner-crewai.ai/run.py
           # TODO: Add a way to check the output of the demo
+        env:
+          MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
