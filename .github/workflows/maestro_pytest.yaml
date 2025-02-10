@@ -1,13 +1,17 @@
-name: Check Schema
+name: Maestro Tests
 
 on:
   push:
     branches: [ 'main' ]
+    paths:
+    - 'maestro/**'
   pull_request:
     branches: [ 'main' ]
+    paths:
+    - 'maestro/**'
 
 jobs:
-  check-schema:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,8 +27,10 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
+          cd maestro
           poetry install
 
-      - name: Check schema
+      - name: Run unit tests
         run: |
-          poetry run tools/ci/check-schemas.sh
+          cd maestro
+          poetry run pytest
