@@ -1,0 +1,45 @@
+name: Maestro Demo Test (ollama only)
+
+on:
+  push:
+    branches: [ 'main' ]
+    paths:
+    - 'maestro/**'
+  pull_request:
+    branches: [ 'main' ]
+    paths:
+    - 'maestro/**'
+    - '.github/workflows/**'
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup poetry
+        run: |
+          pipx ensurepath
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pipx install poetry
+          poetry self add poetry-plugin-shell
+      - name: Install dependencies
+        run: |
+          cd maestro
+          poetry install
+      - name: Install Ollama
+        uses: pydantic/ollama-action@v3
+        with:
+          # Small model - 7GB max in this runner
+          model: llama3.1:latest
+      # TODO: generalise for other demos 
+      - name: Run CrewAI workflow
+        run: |
+          cd maestro
+          poetry run demos/demos/activity-planner-crewai.ai/run.py
+          # TODO: Add a way to check the output of the demo
+        env:
+          MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
