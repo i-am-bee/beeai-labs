@@ -34,7 +34,7 @@ jobs:
         uses: pydantic/ollama-action@v3
         with:
           # Small model - 7GB max in this runner
-          model: llama3.1:8b
+          model: llama3.1:latest
       # TODO: generalise for other demos 
       - name: Run CrewAI workflow
         run: |
