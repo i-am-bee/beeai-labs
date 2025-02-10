@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "maestro_demos"
+version = "0.1.0"
+description = "Demos for maestro"
+authors = ["IBM"]
+license = "Apache 2.0"
+readme = "README.md"
+packages = [
+    # TODO - Packaging demos allows them to be run after a pip install 
+    { include = "activity_planner", from = "bee-hive-demos/agents/crewai" }
+]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">= 3.11, < 3.13"
+openai = "^1.61.1"
+pyyaml = "^6.0.2"
+python-dotenv = "^1.0.1"
+jsonschema = "^4.23.0"
+docopt-ng = "^0.9.0"
+# TODO Required by demos -- can split up, but then extra steps to install. See https://github.com/i-am-bee/bee-hive/issues/188
+langchain-community = "^0.3.16"
+duckduckgo-search = "^7.3.0"
+crewai = "^0.100.1"
+crewai-tools = "^0.33.0"
+# TODO Update to main repo (or path) after other changes merged
+# maestro = {path = "../maestro", develop = true}
+maestro = { git = "https://github.com/planetf1/beeai-labs.git", branch = "fixci", subdirectory = "maestro" }
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+pytest-mock = "^3.14.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "-v -s --ignore=framework"
+#rootpath = "bee-hive"
+
+[tool.poetry.scripts]
+# TODO Add scripts to run demos here
