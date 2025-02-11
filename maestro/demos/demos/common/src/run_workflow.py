@@ -49,7 +49,7 @@ def sequential_workflow(workflow):
     else:
         run_workflow = run_agent
     for agent in agents:
-        prompt = run_workflow(agent["name"], prompt)
+        prompt = run_workflow(agent, prompt)
     return prompt
 
 
