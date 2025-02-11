@@ -215,6 +215,7 @@ if __name__ == "__main__":
     runtime_strategy = workflow_yaml["spec"]["strategy"]["type"]
 
     if runtime_strategy == "sequence":
+        # note: change function here based on demo
         result= sequential_workflow_for_summary(workflow_yaml)
         print(f"🐝 Final answer: {result}")
     else:
