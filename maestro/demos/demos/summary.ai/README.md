@@ -2,6 +2,16 @@
 
 A multi-agent workflow using Bee-Hive: Allows an user to specify a topic from Arxiv they want to look at, choose a number of potential papers to summarize.
 
+## Setup
+
+There are 2 demos in this example, which is why we are using the custom workflow in the common/src folder.
+
+By default, in the `run_workflow_summary.py` file, in the main there is the default value of `result= sequential_workflow_for_summary(workflow_yaml)`. This is for the summary demo, which only requires 2 agents `Search Arxiv, Individual Summary` which are defined in the `agents.yaml` file.
+
+To test the full end to end workflow w/multiple agents, you can change in the workflow file to use the function `result=sequential_workflow_for_demo(workflow_yaml)` instead of the summary, and go to `agents.yaml` to uncomment the other agent definitions.
+
+Note, the file `run.sh` uses the custom `run_workflow.summary.py`file instead of the regular workflow to handle specific tooling and user inputs, which is already set by default so no changes are needed.
+
 ## Getting Started
 
 * Run a local instance of the [bee-stack](https://github.com/i-am-bee/bee-stack/blob/main/README.md)
