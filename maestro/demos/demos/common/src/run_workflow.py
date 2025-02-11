@@ -22,7 +22,6 @@ import dotenv
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
 from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
-import ast
 dotenv.load_dotenv()
 
 
@@ -51,37 +50,6 @@ def sequential_workflow(workflow):
     for agent in agents:
         prompt = run_workflow(agent, prompt)
     return prompt
-
-
-def sequential_workflow_for_demo(workflow):
-    """
-    Custom sequential workflow for the ArXiv summarization demo.
-    Identical to sequential_workflow(), except Summary iterates over a list.
-    """
-    prompt = workflow["spec"]["template"]["prompt"]
-    agents = workflow["spec"]["template"]["agents"]
-    if (
-        workflow_yaml["spec"]["strategy"]["output"]
-        and workflow_yaml["spec"]["strategy"]["output"] == "verbose"
-    ):
-        run_workflow = run_streaming_agent
-    else:
-        run_workflow = run_agent
-    for agent in agents:
-        if agent == "Individual Summary":
-            if isinstance(prompt, str) and prompt.startswith(("{", "[")):
-                prompt = ast.literal_eval(prompt)
-            else:
-                print('Filter agent failed')
-            for title in prompt:
-                summary_prompt = f"Summarize the paper: {title}"
-                summary = run_workflow(agent, summary_prompt)
-                print(f"Summary of {title}: {summary}")
-        else:
-            prompt = run_workflow(agent, prompt)
-
-    return prompt
-
 
 def run_agent(agent_name, prompt):
     print(f"🐝 Running {agent_name}...")
@@ -157,8 +125,7 @@ if __name__ == "__main__":
     runtime_strategy = workflow_yaml["spec"]["strategy"]["type"]
 
     if runtime_strategy == "sequence":
-        # result = sequential_workflow(workflow_yaml)
-        result= sequential_workflow_for_demo(workflow_yaml)
+        result = sequential_workflow(workflow_yaml)
         print(f"🐝 Final answer: {result}")
     else:
         raise ValueError("Invalid workflow strategy type: ", runtime_strategy)
