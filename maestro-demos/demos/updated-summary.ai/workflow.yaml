@@ -1,0 +1,26 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: summary-ai
+  labels:
+    project: maestro-demo
+spec:
+  strategy:
+    type: sequence
+  template:
+    metadata:
+      name: summary-ai
+      labels:
+        project: maestro-demo
+    agents:
+      - search_arxiv_agent
+      - filter_agent
+      - summary_agent
+    prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
+    steps:
+      - name: search
+        agent: search_arxiv_agent
+      - name: filter
+        agent: filter_agent
+      - name: summarize
+        agent: summary_agent
