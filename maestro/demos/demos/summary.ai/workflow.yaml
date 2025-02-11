@@ -12,10 +12,15 @@ spec:
     metadata:
       labels:
         app: mas-example
+    # this is for end to end demo example    
+    # agents:
+    #   - Search Arxiv
+    #   - Intermediary
+    #   - Filter
+    #   - Individual Summary
+    # this is for summary demo example
     agents:
       - Search Arxiv
-      - Intermediary
-      - Filter
       - Individual Summary
     prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
 
