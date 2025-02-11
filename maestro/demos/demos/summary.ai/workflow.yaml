@@ -7,7 +7,7 @@ metadata:
 spec:
   strategy:
     type: sequence
-    output: verbose
+    output: nonal
   template:
     metadata:
       labels:
@@ -16,6 +16,6 @@ spec:
       - Search Arxiv
       - Intermediary
       - Filter
-      - Summary
+      - Individual Summary
     prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
 

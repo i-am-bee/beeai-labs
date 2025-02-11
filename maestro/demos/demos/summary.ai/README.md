@@ -50,6 +50,7 @@ Code:
 import urllib.request
 import urllib.parse
 import re
+import time
 
 def fetch_valid_arxiv_titles(titles: list):
     """
@@ -67,17 +68,25 @@ def fetch_valid_arxiv_titles(titles: list):
     for title in titles:
         search_query = f'all:"{urllib.parse.quote(title)}"'
         url = f"{base_url}{search_query}&max_results=1"
-        try:
-            with urllib.request.urlopen(url) as response:
-                data = response.read().decode()
-        except Exception as e:
-            continue
+
+        for attempt in range(3):  # Retry mechanism (max 3 attempts)
+            try:
+                with urllib.request.urlopen(url) as response:
+                    data = response.read().decode()
+                break  # Exit loop on successful request
+            except Exception as e:
+                print(f"⚠️ Attempt {attempt+1} failed for '{title}': {e}")
+                time.sleep(2)  # Wait before retrying
+        else:
+            print(f"❌ Skipping '{title}' after 3 failed attempts.")
+            continue  # Skip to the next title after max retries
 
         abstract_match = re.search(r"<summary>(.*?)</summary>", data, re.DOTALL)
 
-        if abstract_match:
+        if abstract_match and abstract_match.group(1).strip():
             valid_titles.append(title)
         else:
             print(f"❌ No abstract found: {title}")
+
     return valid_titles
 ```
