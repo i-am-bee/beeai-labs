@@ -8,8 +8,8 @@ import os
 from pytest_mock import mocker
 
 # TODO consider moving to same directory as BeeAgent source
-from maestro import Workflow
-from maestro import BeeAgent
+from src import Workflow
+from src import BeeAgent
 
 dotenv.load_dotenv()
 

@@ -15,7 +15,7 @@
 import os, yaml, json, jsonschema
 
 from openai import OpenAI
-from maestro.workflow import Workflow
+from src.workflow import Workflow
 
 from jsonschema.exceptions import ValidationError
 
