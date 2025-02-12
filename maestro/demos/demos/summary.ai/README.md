@@ -62,6 +62,7 @@ import urllib.parse
 import re
 import time
 
+
 def fetch_valid_arxiv_titles(titles: list):
     """
     Fetches titles that have an available abstract on ArXiv.
@@ -78,7 +79,6 @@ def fetch_valid_arxiv_titles(titles: list):
     for title in titles:
         search_query = f'all:"{urllib.parse.quote(title)}"'
         url = f"{base_url}{search_query}&max_results=1"
-
         for attempt in range(3):  # Retry mechanism (max 3 attempts)
             try:
                 with urllib.request.urlopen(url) as response:
@@ -97,6 +97,5 @@ def fetch_valid_arxiv_titles(titles: list):
             valid_titles.append(title)
         else:
             print(f"❌ No abstract found: {title}")
-
     return valid_titles
 ```

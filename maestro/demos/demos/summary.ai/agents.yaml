@@ -36,6 +36,7 @@ spec:
   instructions: "Use the LLM tool to output the following text exactly, replacing `{input_list}` with the given list: 'Use filtering tool using these as parameters: fetch_valid_arxiv_titles(titles=title_list), where title_list is: {input_list}'. Do not process, explain, or modify the list in any way—just insert it and return the exact text. We will not be using any tools or functions, just want to print out the sentence."  
   tools:
     - 'LLM'
+
     
 ---
 apiVersion: beehive/v1alpha1
