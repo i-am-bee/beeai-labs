@@ -28,7 +28,7 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
-          cd maestro
+          cd src
           poetry install
       - name: Install Ollama
         uses: pydantic/ollama-action@v3
@@ -38,7 +38,7 @@ jobs:
       # TODO: generalise for other demos 
       - name: Run CrewAI workflow
         run: |
-          cd maestro
+          cd src
           poetry run demos/demos/activity-planner-crewai.ai/run.py
           # TODO: Add a way to check the output of the demo
         env:
