@@ -33,9 +33,9 @@ metadata:
 spec:
   model: llama3.1
   description: "Combines the output of search agent with prompt of second agent"
-  instructions: "Output the following text exactly, replacing `{input_list}` with the given list: 'Use filtering tool using these as parameters: fetch_valid_arxiv_titles(titles=title_list), where title_list is: {input_list}' Do not process, explain, or modify the list in any way—just insert it and return the exact text. We will not be using any tools or functions, just want to print out the sentence."  
+  instructions: "Use the LLM tool to output the following text exactly, replacing `{input_list}` with the given list: 'Use filtering tool using these as parameters: fetch_valid_arxiv_titles(titles=title_list), where title_list is: {input_list}'. Do not process, explain, or modify the list in any way—just insert it and return the exact text. We will not be using any tools or functions, just want to print out the sentence."  
   tools:
-    - 'none'
+    - 'LLM'
     
 ---
 apiVersion: beehive/v1alpha1
@@ -85,16 +85,30 @@ spec:
                     print(f"❌ No abstract found: {title}")
             return valid_titles
 
+# ---
+# apiVersion: beehive/v1alpha1
+# kind: Agent
+# metadata:
+#   name: Summary
+#   labels:
+#     app: mas-example
+# spec:
+#   model: llama3.1
+#   description: "creates a summary of the arxiv paper"
+#   instructions: "use the LLM tool to generate a high level summary for the given input text. Do not include anything related to code, merely provide descriptions, overviews, and introduction to what is being discussed."
+#   tools: 
+#     - 'llm'
+
 ---
 apiVersion: beehive/v1alpha1
 kind: Agent
 metadata:
-  name: Summary
+  name: Individual Summary
   labels:
     app: mas-example
 spec:
   model: llama3.1
-  description: "creates a summary of the arxiv paper"
-  instructions: "use the LLM tool to generate a high level summary for the given input text. Do not include anything related to code, merely provide descriptions, overviews, and introduction to what is being discussed."
+  description: "creates a summary of the arxiv paper given a title"
+  instructions: "You will be given the title of a research paper from ArXiv. Your task is to generate a detailed and confident summary of the core topics related to the title, even if the title is highly complex or abstract. You do not need to find the actual paper—just summarize the general subject area based on relevant knowledge. Do not include disclaimers such as 'I don't know' or 'It appears to be about.' Instead, provide a direct, authoritative explanation. If the title is highly technical, break it down into simpler components, explain each part clearly, and then summarize the overarching topic. The summary must be at least three paragraphs long and focus on key concepts, challenges, and potential applications."
   tools: 
     - 'llm'
