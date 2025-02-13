@@ -15,7 +15,7 @@
 import os, yaml, json, jsonschema
 
 from openai import OpenAI
-from maestro.workflow import Workflow
+from maestro.src.workflow import Workflow
 
 from jsonschema.exceptions import ValidationError
 
@@ -181,4 +181,4 @@ class Deploy(Command):
         try:
             return self.__deploy_agents_workflow(agents_yaml, workflow_yaml)
         except Exception as e:
-            raise RuntimeError("Unable to deploy workflow: {message}".format(message=str(e))) from e        
+            raise RuntimeError("Unable to deploy workflow: {message}".format(message=str(e))) from e
