@@ -15,11 +15,32 @@
 import os, yaml, json, jsonschema
 
 from openai import OpenAI
-from src.workflow import Workflow
-
 from jsonschema.exceptions import ValidationError
 
-from .common import Console, parse_yaml
+from common import Console, parse_yaml
+from src.workflow import Workflow
+
+# Root CLI class
+class CLI:
+    def __init__(self, args):
+        self.args = args
+        VERBOSE, DRY_RUN = False, False
+        if self.args['--verbose']:
+            VERBOSE = True
+        if self.args['--dry-run']:
+            DRY_RUN = True
+
+    def command(self):
+        if self.args.get('validate') and self.args['validate']:
+            return Validate(self.args)
+        elif self.args.get('create') and self.args['create']:
+            return Create(self.args)
+        elif self.args.get('run') and self.args['run']:
+            return Run(self.args)
+        elif self.args.get('deploy') and self.args['deploy']:
+            return Deploy(self.args)
+        else:
+            raise Exception("Invalid command")
 
 # Base class for all commands
 class Command:

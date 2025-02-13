@@ -8,8 +8,6 @@ readme = "README.md"
 packages = [
     {include = "src", from="."},
     {include = "cli", from="."},
-    #{ include = "activity_planner", from = "demos/agents/crewai" }
-    # TODO - Packaging demos allows them to be run after a pip install
 ]
 
 [tool.poetry.dependencies]

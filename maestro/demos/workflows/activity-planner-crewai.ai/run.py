@@ -10,7 +10,6 @@ from maestro import Workflow
 sys.path.append("maestro/demos/agents/crewai/activity_planner")
 sys.path.append("demos/agents/crewai/activity_planner")
 
-
 def test_agent_runs() -> None:
     """
     Verify the test agent runs correctly
