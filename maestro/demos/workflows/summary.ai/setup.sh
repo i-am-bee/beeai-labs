@@ -5,4 +5,4 @@ cd ../../../bee-hive
 poetry env activate
 poetry install
 cd -
-./../common/src/create_agents.py ./agents.yaml
+../common/src/create_agents.py ./agents.yaml
