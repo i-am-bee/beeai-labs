@@ -7,8 +7,8 @@ from unittest import TestCase
 from pytest_mock import mocker
 import os
 
-from maestro import Workflow
-from maestro import BeeAgent
+from src import Workflow
+from src import BeeAgent
 
 dotenv.load_dotenv()
 

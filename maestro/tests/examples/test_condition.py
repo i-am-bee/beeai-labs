@@ -8,7 +8,7 @@ import sys
 import dotenv
 from openai import OpenAI
 import yaml
-from maestro import Workflow
+from src import Workflow
 
 dotenv.load_dotenv()
 

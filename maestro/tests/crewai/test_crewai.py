@@ -6,7 +6,7 @@ import dotenv
 import os
 import yaml
 
-from maestro import Workflow
+from src import Workflow
 
 dotenv.load_dotenv()
 
