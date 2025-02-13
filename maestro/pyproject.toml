@@ -6,10 +6,8 @@ authors = ["IBM"]
 license = "Apache 2.0"
 readme = "README.md"
 packages = [
-    {include = "maestro", from="."},
+    {include = "src", from="."},
     {include = "cli", from="."},
-    #{ include = "activity_planner", from = "demos/agents/crewai" }
-    # TODO - Packaging demos allows them to be run after a pip install
 ]
 
 [tool.poetry.dependencies]

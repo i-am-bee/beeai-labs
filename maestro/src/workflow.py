@@ -1,25 +1,22 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-import os
-import dotenv
-from .step import Step
-from .agent_factory import AgentFramework
+import os, dotenv
 
-# TODO: Refactor later to factory or similar
-from .crewai_agent import CrewAIAgent
-from .bee_agent import BeeAgent
-from .mock_agent import MockAgent
-from .agent import restore_agent
+from src.step import Step
+from src.agent_factory import AgentFramework
+
+from src.crewai_agent import CrewAIAgent
+from src.bee_agent import BeeAgent
+from src.mock_agent import MockAgent
+from src.agent import restore_agent
 
 dotenv.load_dotenv()
-
 
 def find_index(steps, name):
     for step in steps:
         if step.get("name") == name:
             return steps.index(step)
-
 
 @staticmethod
 def get_agent_class(framework: str) -> type:
@@ -29,7 +26,6 @@ def get_agent_class(framework: str) -> type:
         return CrewAIAgent
     else:
         return BeeAgent
-
 
 class Workflow:
     agents = {}

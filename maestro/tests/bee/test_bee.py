@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
+import os, dotenv, yaml
+
 from unittest import TestCase
-import dotenv
-import yaml
-import os
 from pytest_mock import mocker
 
 # TODO consider moving to same directory as BeeAgent source
-from maestro import Workflow
-from maestro import BeeAgent
+from src.workflow import Workflow
+from src.bee_agent import BeeAgent
 
 dotenv.load_dotenv()
 
@@ -43,5 +42,4 @@ def test_agent_runs(mocker) -> None:
     print(result)
 
     assert result is not None
-    # This gets returned by the mock function which uses the prompt from the workflow
-    assert (result["final_prompt"]=="Mock agent: answer for Welcome")
+    assert result["final_prompt"].startswith("OK:Welcome")

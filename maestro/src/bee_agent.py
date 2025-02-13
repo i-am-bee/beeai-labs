@@ -1,14 +1,13 @@
 #! /usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-import os
+import os, dotenv
 
-import dotenv
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
 from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
 
-from .agent import Agent
+from src.agent import Agent
 
 dotenv.load_dotenv()
 

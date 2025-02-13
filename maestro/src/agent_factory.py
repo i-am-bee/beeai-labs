@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 from enum import Enum
 from typing import Callable, Type, Union
+
 from .bee_agent import BeeAgent
 from .crewai_agent import CrewAIAgent
 

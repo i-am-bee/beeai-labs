@@ -38,8 +38,8 @@ import sys
 
 from docopt import docopt
 
-from .cli import CLI
-from .common import Console
+from commands import CLI
+from common import Console
 
 def __execute(command):
     try:

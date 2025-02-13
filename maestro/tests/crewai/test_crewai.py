@@ -6,13 +6,12 @@ import dotenv
 import os
 import yaml
 
-from maestro import Workflow
+from src.workflow import Workflow
 
 dotenv.load_dotenv()
 
 # TODO: consider moving setup here
 # @pytest.fixture(scope="module")
-
 
 class CrewAITest(TestCase):
 
