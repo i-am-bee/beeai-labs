@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os, sys, yaml
-from workflow import Workflow
+from src.workflow import Workflow
 
 sys.path.append(os.path.realpath(__file__) + "/../../../src")
 sys.path.append(os.path.realpath(__file__) + "/../../agents/crewai/activity_planner")
