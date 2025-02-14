@@ -42,7 +42,7 @@
         },
         "tools": {
           "type": "array",
-          "description": "tool list of the agent"
+          "description": "tool list of the agent",
           "items": {
             "type": "string"
           }
