@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import os, sys, yaml
-from src.workflow import Workflow
+from workflow import Workflow
 
-sys.path.append(os.path.realpath(__file__)) + "/../../../src")
-sys.path.append(os.path.realpath(__file__)) + "/../../../demos/agents/crewai/activity_planner")
+sys.path.append(os.path.realpath(__file__) + "/../../../src")
+sys.path.append(os.path.realpath(__file__) + "/../../agents/crewai/activity_planner")
 
 def test_agent_runs() -> None:
     """
