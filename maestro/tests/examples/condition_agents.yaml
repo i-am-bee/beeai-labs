@@ -1,4 +1,4 @@
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: expert
@@ -10,7 +10,7 @@ spec:
   instructions: Say a joke.
 
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: colleague

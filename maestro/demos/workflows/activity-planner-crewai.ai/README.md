@@ -11,7 +11,7 @@ This is a simple demonstration of a workflow that uses a third party agent - in 
 
 # Running
 
-* Run `bee-hive-demos/demos/activity-planner-crewai.ai/run.py` via shell command line, or IDE such as vscode
+* Run `demos/activity-planner-crewai.ai/run.py` via shell command line, or IDE such as vscode
 
 # Caveats
 

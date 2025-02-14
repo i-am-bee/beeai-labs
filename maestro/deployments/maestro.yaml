@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bee-hive
+  name: maestro
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bee-hive
+      app: maestro
   template:
     metadata:
       labels:
-        app: bee-hive
+        app: maestro
     spec:
       containers:
-      - name: bee-hive
-        image: bee-hive:latest
+      - name: maestro
+        image: maestro:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
@@ -25,10 +25,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bee-hive
+  name: maestro
 spec:
   selector:
-    app: bee-hive
+    app: maestro
   ports:
     - protocol: TCP
       port: 80

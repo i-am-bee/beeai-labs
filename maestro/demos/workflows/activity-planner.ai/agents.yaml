@@ -1,4 +1,4 @@
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: current-affairs
@@ -12,7 +12,7 @@ spec:
     - weather
   instructions: An input is given of a location. Use the OpenMeteo tool to get today's current forecast for the location. Return results in the format - location, temperature in Fahrenheit, and date.
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: hot-or-not
@@ -26,7 +26,7 @@ spec:
     - weather
   instructions:  Use the OpenMeteo weather tool to find the historical temperature of the given location. Determine if the input temperature is warmer or colder than the historical temperature.  Respond with "hotter" or "colder" and include the location name.
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: cold-activities
@@ -40,7 +40,7 @@ spec:
     - web_search
   instructions:  The input a location that is currently colder than normal.  Perform a web search to find fun activities to do in the colder near the location and recommend five.
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: hot-activities

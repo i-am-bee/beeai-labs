@@ -1,6 +1,6 @@
 # Summary.ai Example
 
-A multi-agent workflow using Bee-Hive: Allows an user to specify a topic from Arxiv they want to look at, choose a number of potential papers to summarize.
+A multi-agent workflow using Maestro: Allows an user to specify a topic from Arxiv they want to look at, choose a number of potential papers to summarize.
 
 ## Getting Started
 
@@ -8,7 +8,7 @@ A multi-agent workflow using Bee-Hive: Allows an user to specify a topic from Ar
 
 * Verify a valid llm is available to bee-stack
 
-* Install [bee-hive](https://github.com/i-am-bee/bee-hive) dependencies: `cd ../../../bee-hive/bee-hive && poetry shell && poetry install && cd -`
+* Install [maestro](https://github.com/i-am-bee/beeai-labs) dependencies: `cd ../../../maestro && poetry shell && poetry install && cd -`
 
 * Configure environmental variables: `cp example.env .env`
 

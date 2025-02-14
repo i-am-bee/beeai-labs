@@ -1,4 +1,4 @@
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: Search Arxiv
@@ -24,7 +24,7 @@ spec:
           return titles
 
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: Intermediary
@@ -38,7 +38,7 @@ spec:
     - 'none'
     
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: Filter
@@ -86,7 +86,7 @@ spec:
             return valid_titles
 
 ---
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: Summary
