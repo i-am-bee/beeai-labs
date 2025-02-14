@@ -1,7 +1,7 @@
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: beehive-deployment
+  name: maestro-deployment
   labels:
     app: activity-planner-demo
 spec:

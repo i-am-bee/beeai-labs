@@ -1,5 +1,5 @@
-# bee-hive-demos
-Demos and use cases of bee hive
+# maestro-demos
+Demos and use cases of Maestro
 
 ## Example environment setup using Podman Desktop, docker-compose, bee-stack, and local Ollama
 ### bee-stack setup

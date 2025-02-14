@@ -1,7 +1,7 @@
 #! /bin/bash
 cp example.env .env
 cp .env ./../common/src
-cd ../../../bee-hive
+cd ../../../maestro
 poetry env activate
 poetry install
 cd -

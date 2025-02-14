@@ -1,7 +1,7 @@
-apiVersion: beehive/v1
+apiVersion: maestro/v1
 kind: Workflow
 metadata:
-  name: beehive-deployment
+  name: maestro-deployment
   labels:
     app: example2
 spec:
@@ -9,7 +9,7 @@ spec:
     type: sequence
   template:
     metadata:
-      name: beehive-deployment
+      name: maestro-deployment
       labels:
         app: example
         use-case: test

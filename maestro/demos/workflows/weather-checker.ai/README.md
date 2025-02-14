@@ -1,6 +1,6 @@
 # Weather-Checker Example
 
-A multi-agent workflow using Bee-Hive to check if the current temperature in a location is hotter or colder than average.
+A multi-agent workflow using Maestro to check if the current temperature in a location is hotter or colder than average.
 
 ## Getting Started
 
@@ -8,7 +8,7 @@ A multi-agent workflow using Bee-Hive to check if the current temperature in a l
 
 * Verify a valid llm is available to bee-stack
 
-* Install [bee-hive](https://github.com/i-am-bee/bee-hive) dependencies: `cd ../../../bee-hive/bee-hive && poetry shell && poetry install && cd -`
+* Install [maestro](https://github.com/i-am-bee/beeai-labs) dependencies: `cd ../../../maestro && poetry shell && poetry install && cd -`
 
 * Configure environmental variables: `cp example.env .env`
 

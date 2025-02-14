@@ -20,7 +20,7 @@ echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
 # TODO Consolidate duplication
 for f in $WORKFLOW_FILES
 do
-    if ! maestro validate schemas/workflow_schema.json "$f"
+    if ! maestro validate --verbose schemas/workflow_schema.json "$f"
     then
       RESULT="FAIL ❌"
       fail+=1
@@ -33,7 +33,7 @@ done
 # Check agents
 for f in $AGENT_FILES
 do
-    if ! maestro validate schemas/agent_schema.json "$f"
+    if ! maestro validate --verbose schemas/agent_schema.json "$f"
     then
       RESULT="FAIL ❌"
       fail+=1

@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/i-am-bee/maestro/schemas/workflow.schema.json",
-  "title": "BeeAI Hive",
-  "description": "A schema for defining Bee Hive workflows in YAML or JSON",
+  "title": "BeeAI Maestro",
+  "description": "A schema for defining Maestro workflows in YAML or JSON",
   "type": "object",
   "properties": {
     "metadata": {
       "apiVersion": {
         "type": "string",
-        "description": "beehive/v1"
+        "description": "maestro/v1"
       },
       "kind": {
         "type": "string",

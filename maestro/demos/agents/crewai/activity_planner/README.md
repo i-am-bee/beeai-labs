@@ -2,7 +2,7 @@
 
 Simple agent which given a prompt including a city, will suggest things to do in the cold or wet weather
 
-Primarily this is to support a demonstration of how a Crew.AI Crew can be integrated into beehive.  Note that a crew can be composed of multiple agents
+Primarily this is to support a demonstration of how a Crew.AI Crew can be integrated into Maestro.  Note that a crew can be composed of multiple agents
 
 # Requirements
 
@@ -13,7 +13,7 @@ Primarily this is to support a demonstration of how a Crew.AI Crew can be integr
 
 # Running
 
-* Run `bee-hive-demos/agents/crewai/activity_planner.py` via shell command line, or IDE such as vscode
+* Run `demos/agents/crewai/activity_planner.py` via shell command line, or IDE such as vscode
 
 ## Future enhancements
 

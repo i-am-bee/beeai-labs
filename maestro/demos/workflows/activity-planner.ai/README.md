@@ -2,7 +2,7 @@ TODO the demo does not currently function out of the box as the workflow schema 
 
 # Activity-Planner example
 
-A multi-agent workflow using Bee-Hive to check if the current temperature in a location is hotter or colder than average and recommend activities to do based on the weather.
+A multi-agent workflow using Maestro to check if the current temperature in a location is hotter or colder than average and recommend activities to do based on the weather.
 
 ## Getting Started
 
@@ -10,7 +10,7 @@ A multi-agent workflow using Bee-Hive to check if the current temperature in a l
 
 * Verify a valid llm is available to bee-stack
 
-* Install [bee-hive](https://github.com/i-am-bee/bee-hive) dependencies: `cd ../../../bee-hive/bee-hive && poetry shell && poetry install && cd -`
+* Install [maestro](https://github.com/i-am-bee/beeai-labs) dependencies: `cd ../../../maestro && poetry shell && poetry install && cd -`
 
 * Configure environmental variables: `cp example.env .env`
 

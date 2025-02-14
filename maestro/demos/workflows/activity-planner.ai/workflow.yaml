@@ -1,7 +1,7 @@
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: beehive-deployment
+  name: maestro-deployment
   labels:
     app: mas-example
 spec:
@@ -21,13 +21,13 @@ spec:
     steps:
       - name: current-affairs
         agent: current-affairs
-        condition:
-        - default:
-          do: hot-or-not
+        condition: 
+        - case: (input.find('hotter') != -1)
+          do: hot-activities
+        - default: cold-activities
       - name: hot-or-not
         agent: hot-or-not
         condition:
         - if: (input.find('hotter') != -1)
           do: hot-activities
           else: cold-activities
-      - name: end
