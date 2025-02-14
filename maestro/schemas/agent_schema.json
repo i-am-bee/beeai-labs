@@ -42,6 +42,7 @@
         },
         "tools": {
           "type": "array",
+          "description": "tool list of the agent",
           "items": {
             "type": "string"
           }
@@ -53,6 +54,14 @@
         "code": {
           "type": "string",
           "description": "The (optional) code defintion for the agent"
+        },
+        "input": {
+          "type": "string",
+          "description": "instructions for the agent"
+        },
+        "output": {
+          "type": "string",
+          "description": "instructions for the agent"
         }
       },
       "required": [
