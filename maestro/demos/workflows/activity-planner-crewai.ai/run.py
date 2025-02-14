@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 
-import yaml
-import sys
-import os
-from maestro import Workflow
+import os, sys, yaml
+from src.workflow import Workflow
 
-
-# TODO Add agent path to path explicitly - for running from top level, or pyproject.toml directory. This module should instead be installed
-sys.path.append("maestro/demos/agents/crewai/activity_planner")
-sys.path.append("demos/agents/crewai/activity_planner")
+sys.path.append(os.path.realpath(__file__)) + "/../../../src")
+sys.path.append(os.path.realpath(__file__)) + "/../../../demos/agents/crewai/activity_planner")
 
 def test_agent_runs() -> None:
     """
