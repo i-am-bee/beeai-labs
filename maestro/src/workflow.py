@@ -22,9 +22,26 @@ from src.agent_factory import AgentFramework
 from src.crewai_agent import CrewAIAgent
 from src.bee_agent import BeeAgent
 from src.mock_agent import MockAgent
-from src.agent import restore_agent
+from src.agent import save_agent, restore_agent
 
 dotenv.load_dotenv() #TODO is this needed now that __init__.py in package runs this?
+
+def get_agent_class(framework: str) -> type:
+    if os.getenv("DRY_RUN"):
+        return MockAgent
+    if framework == "crewai":
+        return CrewAIAgent
+    else:
+        return BeeAgent
+
+def create_agents(agent_defs):
+    for agent_def in agent_defs:
+        # Use 'bee' if this value isn't set
+        #
+        agent_def["spec"]["framework"] = agent_def["spec"].get(
+            "framework", AgentFramework.BEE
+        )
+        save_agent(get_agent_class(agent_def["spec"]["framework"])(agent_def))
 
 class Workflow:
     def __init__(self, agent_defs={}, workflow={}):
@@ -41,7 +58,7 @@ class Workflow:
 
     def run(self):
         """Execute workflow."""
-        self.create_agents(self.agent_defs, self.workflow)
+        self.create_or_restore_agents(self.agent_defs, self.workflow)
         if self.workflow["spec"]["strategy"]["type"] == "sequence":
             return self._sequence()
         elif self.workflow["spec"]["strategy"]["type"] == "condition":
@@ -49,33 +66,23 @@ class Workflow:
         else:
             print("not supported yet")
 
-    def create_agents(self, agent_defs, workflow):
+    # private methods
+    def create_or_restore_agents(self, agent_defs, workflow):
         if agent_defs:
-            for agent_def in agent_defs:
-                if type(agent_def) == str:
-                    self.agents[agent_def] = restore_agent(agent_def)
-                else:
-                    # Use 'bee' if this value isn't set
-                    #
-                    agent_def["spec"]["framework"] = agent_def["spec"].get(
-                        "framework", AgentFramework.BEE
-                    )
-                    self.agents[agent_def["metadata"]["name"]] = self.get_agent_class(agent_def["spec"]["framework"])(agent_def)
+            if type(agent_defs[0]) == str:
+                for agent_name in agent_defs:
+                    self.agents[agent_name] = restore_agent(agent_def)
+            else:
+                for agent_def in agent_defs:
+                  # Use 'bee' if this value isn't set
+                  #
+                  agent_def["spec"]["framework"] = agent_def["spec"].get(
+                      "framework", AgentFramework.BEE
+                  )
+                  self.agents[agent_def["metadata"]["name"]] = get_agent_class(agent_def["spec"]["framework"])(agent_def)
         else:
             for agent in workflow["spec"]["template"]["agents"]:
-                self.agents[agent["name"]] = restore_agent(agent["name"])        
-
-    # class methods
-    @staticmethod
-    def get_agent_class(framework: str) -> type:
-        if os.getenv("DRY_RUN"):
-            return MockAgent
-        if framework == "crewai":
-            return CrewAIAgent
-        else:
-            return BeeAgent    
-    
-    # private methods
+                self.agents[agent] = restore_agent(agent)
     
     def find_index(self, steps, name):
         for step in steps:
@@ -116,5 +123,5 @@ class Workflow:
                 if current_step == steps[len(steps)-1].get("name"):
                     break
                 else:
-                    current_step = self._find_index(steps, current_step)
+                    current_step = self.find_index(steps, current_step)
         return prompt

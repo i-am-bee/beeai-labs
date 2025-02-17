@@ -17,7 +17,7 @@ import os, yaml, json, jsonschema, traceback
 from openai import OpenAI
 from jsonschema.exceptions import ValidationError, SchemaError
 
-from src.workflow import Workflow
+from src.workflow import Workflow, create_agents
 from cli.common import Console, parse_yaml
 
 # Root CLI class
@@ -139,10 +139,9 @@ class Create(Command):
         self.args = args
         super().__init__(self.args)
 
-    def __create_agents(self, agents_yaml, workflow_yaml):
+    def __create_agents(self, agents_yaml):
         try:
-            workflow = Workflow()
-            workflow.create_agents(agents_yaml, workflow_yaml[0])
+            create_agents(agents_yaml)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError("Unable to create agens=ts workflow: {message}".format(message=str(e)))
@@ -150,17 +149,13 @@ class Create(Command):
     def AGENTS_FILE(self):
         return self.args['AGENTS_FILE']
 
-    def WORKFLOW_FILE(self):
-        return self.args['WORKFLOW_FILE']
-
     def name(self):
       return "create"
 
     def create(self):
         agents_yaml = parse_yaml(self.AGENTS_FILE())
-        workflow_yaml = parse_yaml( self.WORKFLOW_FILE())        
         try:
-            self.__create_agents(agents_yaml, workflow_yaml)
+            self.__create_agents(agents_yaml)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError("Unable to create agents: {message}".format(message=str(e))) from e
@@ -191,10 +186,12 @@ class Run(Command):
       return "run"
 
     def run(self):
-        agents_yaml = parse_yaml( self.AGENTS_FILE())
+        agent_yaml = None
+        if self.AGENTS_FILE() != "None":
+            agent_yaml = parse_yaml( self.AGENTS_FILE())
         workflow_yaml = parse_yaml( self.WORKFLOW_FILE())
         try:
-            self.__run_agents_workflow(agents_yaml, workflow_yaml)
+            self.__run_agents_workflow(agent_yaml, workflow_yaml)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError("Unable to run workflow: {message}".format(message=str(e))) from e
