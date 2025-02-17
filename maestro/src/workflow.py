@@ -123,5 +123,5 @@ class Workflow:
                 if current_step == steps[len(steps)-1].get("name"):
                     break
                 else:
-                    current_step = self.find_index(steps, current_step)
+                    current_step = steps[self.find_index(steps, current_step)+1].get("name")
         return prompt
