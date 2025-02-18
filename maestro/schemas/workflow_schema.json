@@ -95,7 +95,7 @@
                           "description": "template string for next prompt, {prompt} and {respomse} are replaced by the previos prompt and the user response"
                       }
                     }
-                  }
+                  },
                   "condition": {
                     "type": "array",
                     "description": "if/then/else or case/do/default condition",
@@ -125,8 +125,7 @@
                   }
                 },
                 "required": [
-                    "name",
-                    "agent"
+                    "name"
                 ]
               }
             }
