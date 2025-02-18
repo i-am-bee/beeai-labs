@@ -15,12 +15,16 @@ class Step:
     def __init__(self, step):
         self.step_name = step["name"]
         self.step_agent = step.get("agent")
+        self.step_input = step.get("input")
         self.step_condition = step.get("condition")
 
     def run(self, prompt):
         output = {"prompt": prompt}
         if self.step_agent:
             prompt = self.step_agent.run(prompt)
+            output["prompt"] = prompt
+        if self.step_input:
+            prompt = self.input(prompt)
             output["prompt"] = prompt
         if self.step_condition:
             next = self.evaluate_condition(prompt)
@@ -50,3 +54,9 @@ class Step:
             else:
                 default = condition.get("do")
         return default
+
+    def input(self, prompt):
+        user_prompt = self.step_input.get("prompt")
+        response = input(user_prompt)
+        template = self.step_input.get("template")
+        return template.replace("{prompt}", prompt).replace("{response}", response) 
