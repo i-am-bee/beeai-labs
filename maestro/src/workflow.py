@@ -90,21 +90,29 @@ class Workflow:
                 return steps.index(step)
     
     def _sequence(self):
-        prompt = self.workflow["spec"]["template"].get("prompt", "")
-        steps = self.workflow["spec"]["template"].get("steps", [])
-        if not steps:
-            raise ValueError("Workflow is missing required 'steps' key in 'spec'")
-        step_results = {}
-        for i, step in enumerate(steps):
-            agent_name = step["agent"]
-            agent_instance = self.agents.get(agent_name)
-            if not agent_instance:
-                raise ValueError(f"Agent {agent_name} not found for step {step['name']}")
-            step_results[f"step_{i}"] = prompt
-            response = agent_instance.run(prompt)
-            prompt = response if isinstance(response, str) else response.get("prompt", prompt)
-        step_results["final_prompt"] = prompt
-        return step_results
+            prompt = self.workflow["spec"]["template"].get("prompt", "")
+            steps = self.workflow["spec"]["template"].get("steps", [])
+            if not steps:
+                raise ValueError("Workflow is missing required 'steps' key in 'spec'")
+            step_results = {}
+            for i, step in enumerate(steps):
+                agent_name = step.get("agent")
+                input_step = step.get("input")
+                if agent_name:
+                    agent_instance = self.agents.get(agent_name)
+                    if not agent_instance:
+                        raise ValueError(f"Agent {agent_name} not found for step {step['name']}")
+                    step_results[f"step_{i}"] = prompt
+                    response = agent_instance.run(prompt)
+                elif input_step:
+                    user_prompt = input_step["prompt"].replace("{prompt}", prompt)
+                    response = input(user_prompt)
+                    response = input_step["template"].replace("{response}", response)
+                else:
+                    raise ValueError(f"Step {step['name']} must have either 'agent' or 'input'.")
+                prompt = response if isinstance(response, str) else response.get("prompt", prompt)
+            step_results["final_prompt"] = prompt
+            return step_results
 
     def _condition(self):
         prompt = self.workflow["spec"]["template"]["prompt"]
