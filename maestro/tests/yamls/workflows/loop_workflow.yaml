@@ -1,28 +1,27 @@
 apiVersion: maestro/v1
 kind: Workflow
 metadata:
-  name: simple workflow
+  name: loop workflow
   labels:
-    app: example2
+    app: example
 spec:
   strategy:
     type: sequence
   template:
     metadata:
-      name: maestro-deployment
+      name: loop-workflow
       labels:
         app: example
         use-case: test
     agents:
         - test1
         - test2
-        - test3
-    prompt: This is a test input
-    exception: step4
+    prompt: Tell me a joke
     steps:
       - name: step1
         agent: test1
+        loop: 
+            step: step2
+            until: (input.happy == True)
       - name: step2
-        agent: test2
-      - name: step3
-        agent: test3
+        agent: test2        

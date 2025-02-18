@@ -66,7 +66,6 @@ class Workflow:
         else:
             print("not supported yet")
 
-    # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
         if agent_defs:
             if type(agent_defs[0]) == str:
@@ -89,6 +88,8 @@ class Workflow:
             if step.get("name") == name:
                 return steps.index(step)
     
+    # private methods
+
     def _sequence(self):
         prompt = self.workflow["spec"]["template"].get("prompt", "")
         steps = self.workflow["spec"]["template"].get("steps", [])
