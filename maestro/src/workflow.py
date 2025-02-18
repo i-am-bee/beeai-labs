@@ -89,57 +89,20 @@ class Workflow:
             if step.get("name") == name:
                 return steps.index(step)
     
-    # def _sequence(self):
-    #     prompt = self.workflow["spec"]["template"].get("prompt", "")
-    #     steps = self.workflow["spec"]["template"].get("steps", [])
-    #     if not steps:
-    #         raise ValueError("Workflow is missing required 'steps' key in 'spec'")
-    #     step_results = {}
-    #     for i, step in enumerate(steps):
-    #         agent_name = step["agent"]
-    #         agent_instance = self.agents.get(agent_name)
-    #         if not agent_instance:
-    #             raise ValueError(f"Agent {agent_name} not found for step {step['name']}")
-    #         step_results[f"step_{i}"] = prompt
-    #         response = agent_instance.run(prompt)
-    #         prompt = response if isinstance(response, str) else response.get("prompt", prompt)
-    #     step_results["final_prompt"] = prompt
-    #     return step_results
-    
     def _sequence(self):
         prompt = self.workflow["spec"]["template"].get("prompt", "")
         steps = self.workflow["spec"]["template"].get("steps", [])
         if not steps:
             raise ValueError("Workflow is missing required 'steps' key in 'spec'")
-
         step_results = {}
-
         for i, step in enumerate(steps):
             agent_name = step["agent"]
             agent_instance = self.agents.get(agent_name)
             if not agent_instance:
                 raise ValueError(f"Agent {agent_name} not found for step {step['name']}")
-
             step_results[f"step_{i}"] = prompt
             response = agent_instance.run(prompt)
-
-            # Detect if response is a stringified list and convert it
-            if isinstance(response, str) and response.startswith("[") and response.endswith("]"):
-                try:
-                    import ast
-                    response = ast.literal_eval(response)
-                    if not isinstance(response, list):
-                        raise ValueError("Extracted response is not a valid list")
-                except (ValueError, SyntaxError):
-                    raise ValueError(f"Could not parse list from response: {response}")
-
-            # If response is a list, process each item with the next agent
-            if isinstance(response, list) and i + 1 < len(steps):
-                next_agent_name = steps[i + 1]["agent"]
-                return self._split_and_run(response, next_agent_name)
-
             prompt = response if isinstance(response, str) else response.get("prompt", prompt)
-
         step_results["final_prompt"] = prompt
         return step_results
 
@@ -163,39 +126,3 @@ class Workflow:
                     current_step = steps[self.find_index(steps, current_step)+1].get("name")
         return prompt
     
-
-    def _split_and_run(self, data, next_agent_name):
-        """
-        Runs the next agent for each item in a list separately.
-
-        Args:
-            data (str or list): The list (or string representation of a list) to be processed.
-            next_agent_name (str): The agent that should process each item.
-
-        Returns:
-            str: Aggregated responses from all individual runs.
-        """
-        import ast
-        if isinstance(data, str):
-            try:
-                data_list = ast.literal_eval(data)
-                if not isinstance(data_list, list):
-                    raise ValueError("Extracted data is not a list")
-            except (ValueError, SyntaxError):
-                raise ValueError(f"Could not parse list from string: {data}")
-        elif isinstance(data, list):
-            data_list = data
-        else:
-            raise ValueError("Expected a string or a list as input for _split_and_run()")
-
-        agent_instance = self.agents.get(next_agent_name)
-        if not agent_instance:
-            raise ValueError(f"Agent '{next_agent_name}' not found")
-
-        results = []
-        for item in data_list:
-            print(f"🔍 Processing {next_agent_name} for: {item}")
-            response = agent_instance.run(item)
-            results.append(f"Input: {item}\nResponse: {response}\n")
-
-        return "\n".join(results)
