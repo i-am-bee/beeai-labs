@@ -14,11 +14,37 @@ A multi-agent workflow using Maestro: Allows an user to specify a topic from Arx
 
 * Copy `.env` to common directory: `cp .env ./../common/src`
 
+### Allowing maestro to be run from anywhere
+
+Modify wrapper script: `nano ~/.local/bin/maestro`
+Set the script path to run relative to your location, whereever in the terminal:
+
+```bash
+#!/bin/bash
+export PYTHONPATH="/Users/gliu/Desktop/work/bee-hive:$PYTHONPATH"
+python3 -m maestro.cli.maestro "$@"
+```
+
+Make sure the script is executable: `chmod +x ~/.local/bin/maestro`
+Verify maestro is running properly: `maestro --help`
+
 * Set up the demo and create the agents: `./setup.sh`
 
 * Run the workflow: `./run.sh` (to run for a different topic, change the `prompt` field in `workflow.yaml`)
 
-### NOTE: Custom Tools Required for this Demo:
+Assuming you are in maestro top level:
+
+* Creating the agents(with the ability to manually add tools): `maestro create ./demos/workflows/summary.ai/test_yaml/agents.yaml`
+
+* Running the workflow: (to run for a different topic, change the `prompt` field in `workflow.yaml`):
+
+- If you already created the agents and enabled the tool: `maestro run None ./demos/workflows/summary.ai/test_yaml/workflow.yaml`
+
+OR
+
+- Directly run the workflow: `maestro run ./demos/workflows/summary.ai/test_yaml/agents.yaml ./demos/workflows/summary.ai/test_yaml/workflow.yaml`
+
+### NOTE: Custom Tools Required for this Demo
 
 Go into the UI and make 2 tools for this demo:
 
@@ -27,7 +53,8 @@ Go into the UI and make 2 tools for this demo:
 Name: Fetch
 
 Code:
-```
+
+```Python
 import urllib.request
 
 def fetch_arxiv_titles(topic: str, k: int = 10):
@@ -46,7 +73,8 @@ def fetch_arxiv_titles(topic: str, k: int = 10):
 Name: Filter
 
 Code:
-```
+
+```Python
 import urllib.request
 import urllib.parse
 import re
