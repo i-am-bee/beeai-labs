@@ -23,7 +23,7 @@ spec:
         agent: test1
       - name: input
         input:
-          prompt: "Gess the number 1 through 6: "
+          prompt: "Guess the number 1 through 6: "
           template: Is the number {prompt} is same as {response}?  
       - name: compare
         agent: test2
