@@ -1,0 +1,29 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: input_workflow
+  labels:
+    app: input
+spec:
+  strategy:
+    type: condition
+  template:
+    metadata:
+      name: input_workflow
+      labels:
+        app: example
+        use-case: test
+    agents:
+        - test1
+        - test2
+    prompt: Select a number 1 through 6
+    exception: step4
+    steps:
+      - name: select
+        agent: test1
+      - name: input
+        input:
+          prompt: "Guess the number 1 through 6: "
+          template: Is the number {prompt} is same as {response}?  
+      - name: compare
+        agent: test2
