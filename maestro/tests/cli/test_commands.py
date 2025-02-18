@@ -97,7 +97,7 @@ class CreateCommand(TestCommand):
                         '--version': False,
                         'AGENTS_FILE': self.get_fixture('yamls/agents/simple_agent.yaml'),
                         'SCHEMA_FILE': None,
-                        'WORKFLOW_FILE': self.get_fixture('yamls/workflows/simple_workflow.yaml'),
+                        'WORKFLOW_FILE': None,
                         'YAML_FILE': None,
                         'deploy': False,
                         'create': True,
@@ -112,6 +112,44 @@ class CreateCommand(TestCommand):
         
     def test_run__dry_run(self):
         self.assertTrue(self.command.name() == 'create')
+        self.assertTrue(self.command.execute() == 0)
+
+# `create` and `run` commmand tests
+class CreateAndRunCommand(TestCommand):
+    def setUp(self):
+        self.args = {
+                        '--dry-run': True,
+                        '--help': False,
+                        '--verbose': False,
+                        '--version': False,
+                        'AGENTS_FILE': self.get_fixture('yamls/agents/simple_agent.yaml'),
+                        'SCHEMA_FILE': None,
+                        'WORKFLOW_FILE': self.get_fixture('yamls/workflows/simple_workflow.yaml'),
+                        'YAML_FILE': None,
+                        'deploy': False,
+                        'create': True,
+                        'run': False,
+                        'validate': False
+                    }
+
+    def tearDown(self):
+        self.args = {}
+        self.command = None
+
+    def test_create_dry_run(self):
+        self.args['create'] = True
+        self.args['run'] = False
+        self.args['WORKFLOW_FILE'] = None
+        self.command = CLI(self.args).command()
+        self.assertTrue(self.command.name() == 'create')
+        self.assertTrue(self.command.execute() == 0)
+
+    def test_run_dry_run(self):
+        self.args['create'] = False
+        self.args['run'] = True
+        self.args['AGENTS_FILE'] = "None"
+        self.command = CLI(self.args).command()
+        self.assertTrue(self.command.name() == 'run')
         self.assertTrue(self.command.execute() == 0)
 
 # `validate` commmand tests
