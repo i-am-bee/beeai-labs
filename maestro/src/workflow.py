@@ -92,6 +92,7 @@ class Workflow:
                 step["agent"] = self.agents.get(step["agent"])
             self.steps[step["name"]] = Step(step)
         current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
+        step_results = {}
         while True:
             response = self.steps[current_step].run(prompt)
             prompt = response["prompt"]
@@ -102,4 +103,5 @@ class Workflow:
                     break
                 else:
                     current_step = steps[self.find_index(steps, current_step)+1].get("name")
-        return prompt
+        step_results["final_prompt"] = prompt
+        return step_results
