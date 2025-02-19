@@ -56,7 +56,8 @@ class Step:
         return default
 
     def input(self, prompt):
-        user_prompt = self.step_input.get("prompt")
-        response = input(user_prompt)
+        user_prompt = self.step_input.get("prompt").replace("{prompt}", str(prompt)) 
+        response = input(user_prompt) 
         template = self.step_input.get("template")
-        return template.replace("{prompt}", prompt).replace("{response}", response) 
+        formatted_response = template.replace("{prompt}", prompt).replace("{response}", response)
+        return formatted_response
