@@ -59,12 +59,7 @@ class Workflow:
     def run(self):
         """Execute workflow."""
         self.create_or_restore_agents(self.agent_defs, self.workflow)
-        if self.workflow["spec"]["strategy"]["type"] == "sequence":
-            return self._sequence()
-        elif self.workflow["spec"]["strategy"]["type"] == "condition":
-            return self._condition()
-        else:
-            print("not supported yet")
+        return self._condition()
 
     # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
@@ -89,23 +84,6 @@ class Workflow:
             if step.get("name") == name:
                 return steps.index(step)
     
-    def _sequence(self):
-        prompt = self.workflow["spec"]["template"].get("prompt", "")
-        steps = self.workflow["spec"]["template"].get("steps", [])
-        if not steps:
-            raise ValueError("Workflow is missing required 'steps' key in 'spec'")
-        step_results = {}
-        for i, step in enumerate(steps):
-            agent_name = step["agent"]
-            agent_instance = self.agents.get(agent_name)
-            if not agent_instance:
-                raise ValueError(f"Agent {agent_name} not found for step {step['name']}")
-            step_results[f"step_{i}"] = prompt
-            response = agent_instance.run(prompt)
-            prompt = response if isinstance(response, str) else response.get("prompt", prompt)
-        step_results["final_prompt"] = prompt
-        return step_results
-
     def _condition(self):
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
@@ -114,6 +92,7 @@ class Workflow:
                 step["agent"] = self.agents.get(step["agent"])
             self.steps[step["name"]] = Step(step)
         current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
+        step_results = {}
         while True:
             response = self.steps[current_step].run(prompt)
             prompt = response["prompt"]
@@ -124,5 +103,5 @@ class Workflow:
                     break
                 else:
                     current_step = steps[self.find_index(steps, current_step)+1].get("name")
-        return prompt
-    
+        step_results["final_prompt"] = prompt
+        return step_results

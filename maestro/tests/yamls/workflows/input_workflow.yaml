@@ -5,8 +5,6 @@ metadata:
   labels:
     app: input
 spec:
-  strategy:
-    type: condition
   template:
     metadata:
       name: input_workflow

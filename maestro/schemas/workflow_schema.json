@@ -32,15 +32,6 @@
     "spec": {
       "type": "object",
       "properties": {
-        "strategy": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "description": "sequence, condition"
-            }
-          }
-        },
         "template": {
           "type": "object",
           "properties": {
