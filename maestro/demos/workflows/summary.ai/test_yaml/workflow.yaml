@@ -6,7 +6,7 @@ metadata:
     project: maestro-demo
 spec:
   strategy:
-    type: sequence
+    type: condition
   template:
     metadata:
       name: summary-ai
@@ -19,5 +19,9 @@ spec:
     steps:
       - name: Search Arxiv
         agent: Search Arxiv
+      - name: input
+        input: 
+          prompt: "Here are the retrieved papers:\n{prompt}\n\nSelect the papers you want to summarize by entering the full title name (comma-separated):"
+          template: "{response}"
       - name: Individual Summary
         agent: Individual Summary
