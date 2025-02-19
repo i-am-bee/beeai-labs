@@ -40,3 +40,10 @@ jobs:
           demos/workflows/weather-checker.ai/test.sh
         env:
           MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
+      - name: Run summary.ai workflow
+        run: |
+          cd maestro
+          demos/workflows/summary.ai/test_yaml/doctor.sh
+          demos/workflows/summary.ai/test_yaml/test.sh
+        env:
+          MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
