@@ -5,9 +5,6 @@ metadata:
   labels:
     app: crewtest
 spec:
-  strategy:
-    type: sequence
-    output: nonal
   template:
     metadata:
       labels:

@@ -5,9 +5,6 @@ metadata:
   labels:
     app: mas-example
 spec:
-  strategy:
-    type: sequence
-    output: verbose
   template:
     metadata:
       labels:
@@ -16,3 +13,8 @@ spec:
       - current-affairs
       - hot-or-not
     prompt: New York City
+    steps:
+      - name: current-affairs
+        agent: current-affairs
+      - name: hot-or-not
+        agent: hot-or-not
