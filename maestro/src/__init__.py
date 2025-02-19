@@ -19,7 +19,9 @@ dotenv.load_dotenv()
 from .workflow import Workflow
 from .bee_agent import BeeAgent
 from .agent import save_agent, restore_agent, remove_agent
+from .deploy import Deploy
 
 __all__ = {
-    "Workflow"
+    "Workflow",
+    "Deploy"
 }

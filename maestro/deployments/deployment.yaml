@@ -21,16 +21,4 @@ spec:
         env:
         - name: DUMMY
           value: dummyvalue
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: maestro
-spec:
-  selector:
-    app: maestro
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5000
-  type: NodePort
+

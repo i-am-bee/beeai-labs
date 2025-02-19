@@ -10,7 +10,7 @@ fi
 
 if [ "$1" == "build" ]; then
     echo "Building..."
-    $cmd build $flags -t maestro .
+    $cmd build $flags -t maestro -f Dockerfile ..
 elif [ "$1" == "deploy" ]; then
     echo "Deploying..."
     env=""

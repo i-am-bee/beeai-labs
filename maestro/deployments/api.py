@@ -6,7 +6,7 @@ import sys
 import io
 
 import yaml
-from maestro.workflow import Workflow
+from src.workflow import Workflow
 
 app = Flask(__name__)
 
@@ -15,36 +15,11 @@ def parse_yaml(file_path):
         yaml_data = list(yaml.safe_load_all(file))
     return yaml_data
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET'])
 def process_workflow():
-    if request.method == 'POST':
-        # Check if a file was uploaded
-        if 'agents' not in request.files:
-            return 'No agent definition'
-
-        agents = request.files['agents']
-
-        # Check if the file has a filename
-        if agents.filename == '':
-            return 'No agents file name'
-
-        # Save the file to the server
-        agents.save("agents")
-
-        if 'workflow' not in request.files:
-            return 'No agent definition'
-
-        workflow = request.files['workflow']
-
-        # Check if the file has a filename
-        if workflow.filename == '':
-            return 'No workflow file name'
-
-        # Save the file to the server
-        workflow.save("workflow")
-
-        agents_yaml = parse_yaml("agents")
-        workflow_yaml = parse_yaml("workflow")
+    if request.method == 'GET':
+        agents_yaml = parse_yaml("src/agents.yaml")
+        workflow_yaml = parse_yaml("src/workflow.yaml")
         try:
             workflow_instance = Workflow(agents_yaml, workflow_yaml[0])
         except Exception as excep:
@@ -56,14 +31,11 @@ def process_workflow():
         sys.stdout = sys.__stdout__
 
         response = {
-            'workflow': workflow.filename,
-            'agents': agents.filename,
             'output': output.getvalue()
         }
         if os.getenv("DEBUG"):
             return response
         else:
-            html = "<html><style>div { white-space: pre-wrap;}</style> <div>"+ output.getvalue()+"</div></html>"
-            return html
+            return output.getvalue()
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

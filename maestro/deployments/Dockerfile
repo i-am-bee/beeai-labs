@@ -43,12 +43,12 @@ RUN python3.11 -m ensurepip --upgrade
 RUN python3.11 -m pip install openai pyyaml python-dotenv flask --no-cache-dir --upgrade && \
     python3.11 -m pip uninstall -y pip
 
-COPY maestro ./maestro
-COPY entrypoint.sh .
-COPY run_workflow.py .
-COPY entrypoint_api.sh .
-COPY api.py .
-COPY maestro.html ./static/maestro.html
+COPY src ./src
+COPY tmp/entrypoint_api.sh .
+COPY tmp/api.py .
+COPY tmp/maestro.html ./static/maestro.html
+COPY tmp/agents.yaml ./src/agents.yaml
+COPY tmp/workflow.yaml ./src/workflow.yaml
 
 RUN chown -R 1000:100 /usr/src/app &&\
     mkdir /usr/src/app/media && chown 1000:100 /usr/src/app/media

@@ -4,23 +4,24 @@
     <title>Maestro</title>
 </head>
 <style>
-    body {color: black; background-color: lightblue;}
+    body {color: black; background-color: lightgreen;}
+    frame {
+        border: 1px solid black;
+        background-color: yellow;
+    }
 </style>
 <body>
-    <h1>
-        Maestro
-    </h1>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <h2>Select an agent definition file</h2>
-        <div style="display: flex;">
-            <input type="file" name="agents"  placeholder="Agent definition" style="color: blue;">
-        </div>
-        <h2>Select a workflow definition file</h2>
-        <div style="display: flex;">
-            <input type="file" name="workflow"  placeholder="Workflow definition" style="color: blue;">
-        </div>
-        <h2>Run workflow</h2>
-        <input type="submit" value="Ececute" style="color: green;">
+    <div id="output"></div>
+    <form action="/static/maestro.html" method="get">
+        <input type="submit" value="Re-run">
     </form>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/');
+            const data = await response.text();
+            document.getElementById('output').innerText = data;
+        }
+        fetchData();
+    </script>
 </body>
 </html>
