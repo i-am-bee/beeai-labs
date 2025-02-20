@@ -1,9 +1,20 @@
 #! /bin/bash
-echo "validate 🗒️ agents.yaml"
-maestro validate ../../../schemas/agent_schema.json ./agents.yaml
 
-echo "validate 🗒️ workflow.yaml"
-maestro validate ../../../schemas/workflow_schema.json  ./workflow.yaml
+cd "$(dirname "$0")/../../../../" || exit 1
+echo "📂 Running from: $(pwd)"
+export PYTHONPATH="$(pwd):$(pwd)/src"
+echo "🐍 PYTHONPATH set to: $PYTHONPATH"
+if ! command -v maestro &> /dev/null
+then
+    echo "⚠️  Maestro CLI not found, installing..."
+    pip install --user maestro
+fi
 
-echo "run 🏃🏽‍♂️‍➡️ workflow.yaml"
-../maestro run ./agents.yaml ./workflow.yaml
+echo "📝 Validating agents.yaml..."
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/agent_schema.json ./demos/workflows/weather-checker.ai/agents.yaml
+
+echo "📝 Validating workflow.yaml..."
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/workflow_schema.json ./demos/workflows/weather-checker.ai/workflow.yaml
+
+echo "🚀 Running workflow..."
+PYTHONPATH=$PYTHONPATH maestro run ./demos/workflows/weather-checker.ai/agents.yaml ./demos/workflows/weather-checker.ai/workflow.yaml
