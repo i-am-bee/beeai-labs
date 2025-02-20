@@ -41,31 +41,3 @@ jobs:
         run: |
           cd maestro
           bash ./tools/run-demos.sh
-      # - name: Run activity-planner.ai workflow
-      #   run: |
-      #     cd maestro
-      #     poetry run demos/workflows/activity-planner.ai/doctor.sh
-      #     poetry run demos/workflows/activity-planner.ai/test.sh
-      #   env:
-      #     MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
-      # - name: Run activity-planner-crewai.ai workflow
-      #   run: |
-      #     cd maestro
-      #     poetry run demos/workflows/activity-planner-crewai.ai/doctor.sh
-      #     poetry run demos/workflows/activity-planner-crewai.ai/test.sh
-      #   env:
-      #     MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
-      # - name: Run weather.ai workflow
-      #   run: |
-      #     cd maestro
-      #     poetry run demos/workflows/weather-checker.ai/doctor.sh
-      #     poetry run demos/workflows/weather-checker.ai/test.sh
-      #   env:
-      #     MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
-      # - name: Run summary.ai workflow
-      #   run: |
-      #     cd maestro
-      #     poetry run ./demos/workflows/summary.ai/test_yaml/doctor.sh
-      #     poetry run ./demos/workflows/summary.ai/test_yaml/test.sh
-      #   env:
-      #     MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
