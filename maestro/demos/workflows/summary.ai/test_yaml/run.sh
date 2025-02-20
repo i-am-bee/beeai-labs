@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# TODO: remove one level of cd once we move out test_yaml folder
 cd "$(dirname "$0")/../../../../" || exit 1
 echo "📂 Running from: $(pwd)"
 export PYTHONPATH="$(pwd):$(pwd)/src"

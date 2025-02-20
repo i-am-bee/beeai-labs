@@ -2,8 +2,8 @@
 
 # test.sh: Validate and test the workflow using dry-run inside Poetry.
 
-# Navigate to the maestro root directory
-cd "$(dirname "$0")/../../../../" || exit 1
+# TODO: remove one level of cd once we move out test_yaml folder
+cd "$(dirname "$0")/../../../../" || exit 1  
 
 echo "📂 Running from: $(pwd)"
 
