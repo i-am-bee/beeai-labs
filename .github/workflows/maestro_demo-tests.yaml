@@ -39,7 +39,8 @@ jobs:
           model: llama3.1:latest
       - name: Run and tests all demo workflows
         run: |
-          bash tools/run-demos.sh
+          cd maestro
+          bash ./tools/run-demos.sh
       # - name: Run activity-planner.ai workflow
       #   run: |
       #     cd maestro
