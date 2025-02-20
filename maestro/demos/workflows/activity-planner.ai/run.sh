@@ -1,2 +1,20 @@
 #! /bin/bash
-# TODO automation of the run is pending the workflow schema and agent/workflow split work
+
+cd "$(dirname "$0")/../../../" || exit 1
+echo "📂 Running from: $(pwd)"
+export PYTHONPATH="$(pwd):$(pwd)/src"
+echo "🐍 PYTHONPATH set to: $PYTHONPATH"
+if ! command -v maestro &> /dev/null
+then
+    echo "⚠️  Maestro CLI not found, installing..."
+    pip install --user maestro
+fi
+
+echo "📝 Validating agents.yaml..."
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/agent_schema.json ./demos/workflows/activity-planner.ai/agents.yaml
+
+echo "📝 Validating workflow.yaml..."
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/workflow_schema.json ./demos/workflows/activity-planner.ai/workflow.yaml
+
+echo "🚀 Running workflow..."
+PYTHONPATH=$PYTHONPATH maestro run ./demos/workflows/activity-planner.ai/agents.yaml ./demos/workflows/activity-planner.ai/workflow.yaml
