@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd "$(dirname "$0")/../../../../" || exit 1
+cd "$(dirname "$0")/../../../" || exit 1
 echo "📂 Running from: $(pwd)"
 export PYTHONPATH="$(pwd):$(pwd)/src"
 echo "🐍 PYTHONPATH set to: $PYTHONPATH"
