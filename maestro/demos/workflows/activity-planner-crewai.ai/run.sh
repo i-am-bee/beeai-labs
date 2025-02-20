@@ -1,2 +1,20 @@
 #! /bin/bash
-# TODO break down the maestro shell script into two pieces - commands required to run the demo go here
+
+cd "$(dirname "$0")/../../../" || exit 1
+echo "📂 Running from: $(pwd)"
+export PYTHONPATH="$(pwd):$(pwd)/src"
+echo "🐍 PYTHONPATH set to: $PYTHONPATH"
+if ! command -v maestro &> /dev/null
+then
+    echo "⚠️  Maestro CLI not found, installing..."
+    pip install --user maestro
+fi
+
+echo "📝 Validating agents.yaml..."
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/agent_schema.json ./demos/workflows/activity-planner-crewai.ai/agents.yaml
+
+echo "📝 Validating workflow.yaml..."
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/workflow_schema.json ./demos/workflows/activity-planner-crewai.ai/workflow.yaml
+
+echo "🚀 Running workflow..."
+PYTHONPATH=$PYTHONPATH maestro run ./demos/workflows/activity-planner-crewai.ai/agents.yaml ./demos/workflows/activity-planner-crewai.ai/workflow.yaml
