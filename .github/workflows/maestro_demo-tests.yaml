@@ -40,8 +40,8 @@ jobs:
       - name: Run weather.ai workflow
         run: |
           cd maestro
-          demos/workflows/weather-checker.ai/doctor.sh
-          demos/workflows/weather-checker.ai/test.sh
+          poetry run demos/workflows/weather-checker.ai/doctor.sh
+          poetry run demos/workflows/weather-checker.ai/test.sh
         env:
           MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
       - name: Run summary.ai workflow
