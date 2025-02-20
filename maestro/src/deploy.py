@@ -93,7 +93,7 @@ class Deploy:
         subprocess.run(["kubectl", "apply", "-f", "deployment.yaml"])
         subprocess.run(["kubectl", "apply", "-f", "service.yaml"])
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     #deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000", "127.0.0.1:5000")
     #deploy.deploy_to_docker()
     #deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000")
