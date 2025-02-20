@@ -31,7 +31,8 @@ for demo in $(find "$WORKFLOWS_DIR" -mindepth 1 -maxdepth 1 -type d); do
 
     if [[ -f "$test_dir/doctor.sh" ]]; then
         echo "🩺 Running doctor.sh in $test_dir..."
-        bash "$test_dir/doctor.sh" || { echo "❌ doctor.sh failed in $test_dir"; exit 1; }
+        cd "$REPO_ROOT/maestro"
+        poetry run bash "$test_dir/doctor.sh" || { echo "❌ doctor.sh failed in $test_dir"; exit 1; }
         ((TEST_COUNT++))
     else
         echo "⚠️ Warning: doctor.sh not found in $test_dir"
@@ -39,7 +40,8 @@ for demo in $(find "$WORKFLOWS_DIR" -mindepth 1 -maxdepth 1 -type d); do
 
     if [[ -f "$test_dir/test.sh" ]]; then
         echo "🧪 Running test.sh in $test_dir..."
-        bash "$test_dir/test.sh" || { echo "❌ test.sh failed in $test_dir"; exit 1; }
+        cd "$REPO_ROOT/maestro"
+        env MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" poetry run bash "$test_dir/test.sh" || { echo "❌ test.sh failed in $test_dir"; exit 1; }
         ((TEST_COUNT++))
     else
         echo "⚠️ Warning: test.sh not found in $test_dir"
