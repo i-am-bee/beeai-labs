@@ -37,6 +37,13 @@ jobs:
         with:
           # Small model - 7GB max in this runner
           model: llama3.1:latest
+      - name: Run activity-planner.ai workflow
+        run: |
+          cd maestro
+          poetry run demos/workflows/activity-planner.ai/doctor.sh
+          poetry run demos/workflows/activity-planner.ai/test.sh
+        env:
+          MAESTRO_DEMO_OLLAMA_MODEL: ollama/llama3.2:3b
       - name: Run weather.ai workflow
         run: |
           cd maestro
