@@ -34,6 +34,8 @@ Assuming you are in maestro top level:
 
 * Creating the agents(with the ability to manually add tools): `maestro create ./demos/workflows/summary.ai/test_yaml/agents.yaml`
 
+To run the workflow:
+
 If you already created the agents and enabled the tool: `maestro run None ./demos/workflows/summary.ai/test_yaml/workflow.yaml`
 
 OR
