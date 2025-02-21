@@ -19,7 +19,7 @@ function check_status() {
 }
 
 echo "🩺 Running environment check..."
-poetry run ./demos/workflows/summary.ai/test_yaml/doctor.sh || exit 1  # ✅ Fix: Use `poetry run`
+poetry run ./demos/workflows/summary.ai/test_yaml/doctor.sh || exit 1
 
 echo "📝 Validating agents.yaml..."
 poetry run maestro validate ./schemas/agent_schema.json ./demos/workflows/summary.ai/test_yaml/agents.yaml
