@@ -90,6 +90,12 @@ class Deploy:
     def deploy_to_kubernetes(self):
         self.build_image(self.agent, self.workflow)
         update_yaml("deployment.yaml", self.env)
+        image_tag_command  = os.getenv("IMAGE_TAG_CMD")
+        if image_tag_command:
+            subprocess.run(image_tag_command.split())
+        image_push_command  = os.getenv("IMAGE_PUSH_CMD")
+        if image_push_command:
+            subprocess.run(image_push_command.split())
         subprocess.run(["kubectl", "apply", "-f", "deployment.yaml"])
         subprocess.run(["kubectl", "apply", "-f", "service.yaml"])
 
