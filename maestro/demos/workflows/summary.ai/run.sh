@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# TODO: remove one level of cd once we move out test_yaml folder
-cd "$(dirname "$0")/../../../../" || exit 1
+cd "$(dirname "$0")/../../../" || exit 1
 echo "📂 Running from: $(pwd)"
 export PYTHONPATH="$(pwd):$(pwd)/src"
 echo "🐍 PYTHONPATH set to: $PYTHONPATH"
@@ -12,10 +11,10 @@ then
 fi
 
 echo "📝 Validating agents.yaml..."
-PYTHONPATH=$PYTHONPATH maestro validate ./schemas/agent_schema.json ./demos/workflows/summary.ai/test_yaml/agents.yaml
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/agent_schema.json ./demos/workflows/summary.ai/agents.yaml
 
 echo "📝 Validating workflow.yaml..."
-PYTHONPATH=$PYTHONPATH maestro validate ./schemas/workflow_schema.json ./demos/workflows/summary.ai/test_yaml/workflow.yaml
+PYTHONPATH=$PYTHONPATH maestro validate ./schemas/workflow_schema.json ./demos/workflows/summary.ai/workflow.yaml
 
 echo "🚀 Running workflow..."
-PYTHONPATH=$PYTHONPATH maestro run ./demos/workflows/summary.ai/test_yaml/agents.yaml ./demos/workflows/summary.ai/test_yaml/workflow.yaml
+PYTHONPATH=$PYTHONPATH maestro run ./demos/workflows/summary.ai/agents.yaml ./demos/workflows/summary.ai/workflow.yaml

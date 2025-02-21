@@ -12,17 +12,27 @@ if [[ ! -d "$WORKFLOWS_DIR" ]]; then
     exit 1
 fi
 
+echo "🔍 Verifying Maestro installation..."
+cd "$REPO_ROOT/maestro"
+
+if poetry run maestro --help &>/dev/null; then
+    MAESTRO_CMD="poetry run maestro"
+elif maestro --help &>/dev/null; then
+    MAESTRO_CMD="maestro"
+else
+    echo "❌ Error: maestro is not running correctly!"
+    exit 1
+fi
+
+echo "✅ Maestro is running correctly using: $MAESTRO_CMD"
+
 EXPECTED_TESTS=0
 TEST_COUNT=0
 
 for demo in $(find "$WORKFLOWS_DIR" -mindepth 1 -maxdepth 1 -type d); do
     echo "🔍 Looking for test scripts in $demo"
 
-    test_dir=$(find "$demo" -type f \( -name "doctor.sh" -o -name "test.sh" \) -exec dirname {} \; | sort -u | head -n 1)
-
-    if [[ -z "$test_dir" ]]; then
-        test_dir="$demo"
-    fi
+    test_dir="$demo"
 
     echo "📂 Using test directory: $test_dir"
 
