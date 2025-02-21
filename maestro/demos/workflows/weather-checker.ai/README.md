@@ -14,6 +14,19 @@ A multi-agent workflow using Maestro to check if the current temperature in a lo
 
 * Copy `.env` to common directory: `cp .env ./../common/src`
 
-* Set up the demo and create the agents: `./setup.sh`
+## Running workflow
 
-* Run the workflow: `./run.sh` (to run for a different city, change the `prompt` field in `workflow.yaml`)
+Assuming you are in maestro level:
+
+Create the agents (and enable the tools): `maestro create ./demos/workflows/weather-checker.ai/agents.yaml`
+
+To run the workflow:
+
+If you already created the agents and enabled the tool: `maestro run None ./demos/workflows/weather-checker.ai/workflow.yaml`
+
+OR
+
+Directly run the workflow: `maestro run ./demos/workflows/weather-checker.ai/agents.yaml ./demos/workflows/weather-checker.ai/workflow.yaml`
+
+If in the actual weather demo directory, you can also directly run using: `./run.sh`.
+(To run for a different city, change the `prompt` field in `workflow.yaml`)
