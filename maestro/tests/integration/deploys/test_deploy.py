@@ -26,12 +26,10 @@ from src.deploy import Deploy
 class test_deploy(TestCase):
     def setUp(self):        
         self.cwd = os.getcwd()
-        os.chdir("src")
-        self.deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000 DRY_RUN=1")
+        self.deploy = Deploy("tests/examples/condition_agents.yaml", "tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000 DRY_RUN=1")
         
     def tearDown(self):
         self.deploy = None
-        os.chdir(self.cwd)
 
     @pytest.mark.skipif(os.getenv('DEPLOY_KUBERNETES_TEST') != "1", reason="Kubernetes deploy skipped")
     def test_deploy_to_kubernetes(self):
