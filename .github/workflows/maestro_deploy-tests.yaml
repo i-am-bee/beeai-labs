@@ -21,7 +21,7 @@ jobs:
           which kind
       - name: Create Kind cluster
         run: |
-          kind create cluster --config maestro/tests/integration/kind-config.yaml 
+          kind create cluster --config maestro/tests/integration/deploys/kind-config.yaml 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -43,4 +43,5 @@ jobs:
           export IMAGE_TAG_CMD='docker tag localhost/maestro:latest docker.io/library/maestro:latest'
           export DEPLOY_DOCKER_TEST=1
           export DEPLOY_KUBERNETES_TEST=1
+          export IN_GITHUB_ACTION=1
           poetry run pytest

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#/usr/bin/env python3
 
 # Copyright © 2025 IBM
 #
@@ -28,7 +28,6 @@ class test_deploy(TestCase):
         self.cwd = os.getcwd()
         os.chdir("src")
         self.deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000 DRY_RUN=1")
-        #self.deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000")
         
     def tearDown(self):
         self.deploy = None
@@ -37,21 +36,19 @@ class test_deploy(TestCase):
     @pytest.mark.skipif(os.getenv('DEPLOY_KUBERNETES_TEST') != "1", reason="Kubernetes deploy skipped")
     def test_deploy_to_kubernetes(self):
         self.deploy.deploy_to_kubernetes()
-        #response = requests.get("http://127.0.0.1:30051/").text
-        #self.assertTrue(response.find("Running expert...") != -1)
-        #self.assertTrue(response.find("Running colleague...") != -1)
+        if os.getenv('IN_GITHUB_ACTION') != "1":
+            response = requests.get("http://127.0.0.1:30051/").text
+            self.assertTrue(response.find("Running expert...") != -1)
+            self.assertTrue(response.find("Running colleague...") != -1)
 
     @pytest.mark.skipif(os.getenv('DEPLOY_DOCKER_TEST') != "1", reason="Docker deploy skipped")
     def test_deploy_to_docker(self):
         self.deploy.deploy_to_docker()
-        #response = requests.get("http://127.0.0.1:5000/").text
-        #self.assertTrue(response.find("Running expert...") != -1)
-        #self.assertTrue(response.find("Running colleague...") != -1)
+        if os.getenv('IN_GITHUB_ACTION') != "1":
+            response = requests.get("http://127.0.0.1:5000/").text
+            self.assertTrue(response.find("Running expert...") != -1)
+            self.assertTrue(response.find("Running colleague...") != -1)
 
 if __name__ == '__main__':
     unittest.main()
 
-#deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000", "127.0.0.1:5000")
-#deploy.deploy_to_docker()
-#deploy = Deploy("../tests/examples/condition_agents.yaml", "../tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000 DRY_RUN=1")
-#deploy.deploy_to_kubernetes()
