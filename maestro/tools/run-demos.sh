@@ -36,22 +36,26 @@ echo "✅ Maestro is running correctly using: $MAESTRO_CMD"
 EXPECTED_TESTS=0
 TEST_COUNT=0
 
-# Find all workflow demo folders inside `maestro/demos/workflows/`, skiip the common directory
+# Find all workflow demo folders inside `maestro/demos/workflows/`, skip the common directory
 for demo in $(find "$WORKFLOWS_DIR" -mindepth 1 -maxdepth 1 -type d); do
     if [[ "$demo" == "$COMMON_DIR" ]]; then
         echo "⚠️ Skipping common/ directory..."
         continue
     fi
 
+    DEMO_NAME=$(basename "$demo")
+    echo -e "\n========================================"
+    echo "====== Running demo: $DEMO_NAME ======"
+    echo "========================================\n"
+
     echo "🔍 Running tests for $demo"
     ((EXPECTED_TESTS++))
-
     echo "🩺 Running common doctor.sh for $demo..."
     cd "$REPO_ROOT/maestro"
     poetry run bash "$COMMON_DIR/doctor.sh" || { echo "❌ doctor.sh failed for $demo"; exit 1; }
     echo "🧪 Running common test.sh for $demo..."
     cd "$REPO_ROOT/maestro"
-    env MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" echo "" | poetry run bash "$COMMON_DIR/test.sh" "$demo" || { echo "❌ test.sh failed for $demo"; exit 1; }
+    env MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" echo "" | poetry run bash "$COMMON_DIR/test.sh" "$demo" || { echo "❌ test.sh failed for $demo"; exit 1; } 
     ((TEST_COUNT++))
 done
 
