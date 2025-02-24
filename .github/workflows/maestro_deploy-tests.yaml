@@ -36,7 +36,7 @@ jobs:
         run: |
           cd maestro
           poetry install
-      - name: Run unit tests
+      - name: Run deploy integration tests/
         run: |
           cd maestro
           export IMAGE_PUSH_CMD='kind load docker-image docker.io/library/maestro:latest'
@@ -44,4 +44,4 @@ jobs:
           export DEPLOY_DOCKER_TEST=1
           export DEPLOY_KUBERNETES_TEST=1
           export IN_GITHUB_ACTION=1
-          poetry run pytest
+          poetry run pytest tests/integration/deploys

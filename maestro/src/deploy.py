@@ -18,6 +18,7 @@ import os, dotenv, inspect
 import shutil
 import subprocess
 import yaml
+import tempfile
 
 dotenv.load_dotenv()
 
@@ -47,7 +48,6 @@ def create_docker_args(cmd, target, env):
 def create_build_args(cmd, flags):
     arg = [f"{cmd}", "build"]
     if flags:
-        print(flags)
         arg.extend(flag_array_build(flags))
     arg.extend(["-t", "maestro", "-f", "Dockerfile", ".."])
     return arg
@@ -74,32 +74,35 @@ class Deploy:
     def build_image(self, agent, workflow):
         module_path = os.path.abspath(inspect.getsourcefile(lambda:0))
         module_dir = os.path.dirname(module_path)
-
-        shutil.copytree(os.path.join(module_dir, "../deployments"), os.path.join(module_dir, "../tmp"), dirs_exist_ok=True)
-        shutil.copy(agent, os.path.join(module_dir, "../tmp/agents.yaml"))
-        shutil.copy(workflow, os.path.join(module_dir, "../tmp/workflow.yaml"))
+        self.tmp_dir = os.path.join(os.getcwd(), "tmp2")
+        shutil.copytree(os.path.join(module_dir, ".."), self.tmp_dir, dirs_exist_ok=True)
+        shutil.copytree(os.path.join(module_dir, "../deployments"), os.path.join(self.tmp_dir, "tmp"), dirs_exist_ok=True)
+        shutil.copy(agent, os.path.join(self.tmp_dir, "tmp/agents.yaml"))
+        shutil.copy(workflow, os.path.join(self.tmp_dir, "tmp/workflow.yaml"))
 
         cwd = os.getcwd()
-        os.chdir(os.path.join(module_dir, "../tmp"))
+        os.chdir(os.path.join(self.tmp_dir, "tmp"))
         subprocess.run(create_build_args(self.cmd, self.flags))
         os.chdir(cwd)
 
     def deploy_to_docker(self):
         self.build_image(self.agent, self.workflow)
         subprocess.run(create_docker_args(self.cmd, self.target, self.env))
+        shutil.rmtree(self.tmp_dir)
 
     def deploy_to_kubernetes(self):
         module_path = os.path.abspath(inspect.getsourcefile(lambda:0))
         module_dir = os.path.dirname(module_path)
 
         self.build_image(self.agent, self.workflow)
-        update_yaml(os.path.join(module_dir, "../tmp/deployment.yaml"), self.env)
+        update_yaml(os.path.join(self.tmp_dir, "tmp/deployment.yaml"), self.env)
         image_tag_command  = os.getenv("IMAGE_TAG_CMD")
         if image_tag_command:
             subprocess.run(image_tag_command.split())
         image_push_command  = os.getenv("IMAGE_PUSH_CMD")
         if image_push_command:
             subprocess.run(image_push_command.split())
-        subprocess.run(["kubectl", "apply", "-f", os.path.join(module_dir, "../tmp/deployment.yaml")])
-        subprocess.run(["kubectl", "apply", "-f", os.path.join(module_dir, "../tmp/service.yaml")])
+        subprocess.run(["kubectl", "apply", "-f", os.path.join(self.tmp_dir, "tmp/deployment.yaml")])
+        subprocess.run(["kubectl", "apply", "-f", os.path.join(self.tmp_dir, "tmp/service.yaml")])
+        shutil.rmtree(self.tmp_dir)
 
