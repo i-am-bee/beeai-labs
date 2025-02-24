@@ -4,6 +4,7 @@ import os
 import json
 import sys
 import io
+import asyncio
 
 import yaml
 from src.workflow import Workflow
@@ -27,7 +28,7 @@ def process_workflow():
 
         output = io.StringIO()
         sys.stdout = output
-        workflow_instance.run()
+        asyncio.run(workflow_instance.run())
         sys.stdout = sys.__stdout__
 
         response = {
