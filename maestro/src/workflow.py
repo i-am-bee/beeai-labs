@@ -56,10 +56,10 @@ class Workflow:
         self.agent_defs = agent_defs
         self.workflow = workflow
 
-    def run(self):
+    async def run(self):
         """Execute workflow."""
         self.create_or_restore_agents(self.agent_defs, self.workflow)
-        return self._condition()
+        return await self._condition()
 
     # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
@@ -84,17 +84,22 @@ class Workflow:
             if step.get("name") == name:
                 return steps.index(step)
     
-    def _condition(self):
+    async def _condition(self):
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
         for step in steps:
             if step.get("agent"):
                 step["agent"] = self.agents.get(step["agent"])
+            if step.get("parallel"):
+                agents = []
+                for agent in step.get("parallel"):
+                    agents.append(self.agents.get(agent))
+                step["parallel"] = agents
             self.steps[step["name"]] = Step(step)
         current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
         step_results = {}
         while True:
-            response = self.steps[current_step].run(prompt)
+            response = await self.steps[current_step].run(prompt)
             prompt = response["prompt"]
             if response.get("next"):
                 current_step = response["next"]

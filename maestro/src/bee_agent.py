@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os, dotenv
+import asyncio
 
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
@@ -49,7 +50,7 @@ class BeeAgent(Agent):
 
         self.agent_id = assistant.id
 
-    def run(self, prompt: str) -> str:
+    async def run(self, prompt: str) -> str:
         """
         Runs the bee agent with the given prompt.
         Args:

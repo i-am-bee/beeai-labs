@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import importlib
+import asyncio
 
 from .agent import Agent
 
@@ -38,7 +39,7 @@ class CrewAIAgent(Agent):
             raise(e)
 
 
-    def run(self, prompt: str) -> str:
+    async def run(self, prompt: str) -> str:
         """
         Executes the CrewAI agent with the given prompt. The agent's `kickoff` method is called with the input.
        

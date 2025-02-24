@@ -1,0 +1,31 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: input_workflow
+  labels:
+    app: input
+spec:
+  template:
+    metadata:
+      name: input_workflow
+      labels:
+        app: example
+        use-case: test
+    agents:
+        - test1
+        - test2
+        - test3
+        - test4
+        - test5
+    prompt: Select a number 1 through 6
+    exception: step4
+    steps:
+      - name: list
+        agent: test1
+      - name: parallel
+        parallel:
+        - test2
+        - test3
+        - test4
+      - name: result
+        agent: test5

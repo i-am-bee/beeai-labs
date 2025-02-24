@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import dotenv
+import asyncio
 
 dotenv.load_dotenv()
 
@@ -17,11 +18,12 @@ class Step:
         self.step_agent = step.get("agent")
         self.step_input = step.get("input")
         self.step_condition = step.get("condition")
+        self.step_parallel = step.get("parallel")
 
-    def run(self, prompt):
+    async def run(self, prompt):
         output = {"prompt": prompt}
         if self.step_agent:
-            prompt = self.step_agent.run(prompt)
+            prompt = await self.step_agent.run(prompt)
             output["prompt"] = prompt
         if self.step_input:
             prompt = self.input(prompt)
@@ -29,6 +31,9 @@ class Step:
         if self.step_condition:
             next = self.evaluate_condition(prompt)
             output["next"] = next
+        if self.step_parallel:
+            prompt = await self.parallel(prompt)
+            output["prompt"] = prompt
         return output
 
     def evaluate_condition(self, prompt):
@@ -61,3 +66,18 @@ class Step:
         template = self.step_input.get("template")
         formatted_response = template.replace("{prompt}", prompt).replace("{response}", response)
         return formatted_response
+
+    async def parallel(self, prompt):
+        #results = await asyncio.gather(*[asyncio.create_task(agent.run(prompt)) for agent in self.step_parallel])
+        results = []
+        for agent in self.step_parallel:
+            results.append(asyncio.create_task(agent.run(prompt)))
+        for r in results:
+            y =await r
+            print(y)
+
+        #result_array = []
+        #for result in results:
+        #    result_array.append(result)
+        #return str(result_array)
+

@@ -4,6 +4,7 @@
 from abc import abstractmethod
 import os
 import pickle
+import asyncio
 
 class Agent:
     """
@@ -28,7 +29,7 @@ class Agent:
         self.instructions = f"{self.instructions} Output must be in format: {self.agent_output}" if self.agent_output else self.instructions
 
     @abstractmethod
-    def run(self, prompt: str) -> str:
+    async def run(self, prompt: str) -> str:
         """
         Runs the agent with the given prompt.
         Args:
@@ -36,7 +37,7 @@ class Agent:
         """
 
     @abstractmethod
-    def run_streaming(self, prompt: str) -> str:
+    async def run_streaming(self, prompt: str) -> str:
         """
         Runs the agent in streaming mode with the given prompt.
         Args:
