@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os
+import asyncio
 
 import dotenv
 from openai import AssistantEventHandler, OpenAI
@@ -35,7 +36,7 @@ class MockAgent(Agent):
         print(f"Mock agent: name={self.agent_name}, model={self.agent_model}, description={self.agent_desc}, tools={self.agent_tools}, instructions={self.instructions}")
         self.agent_id = self.agent_name
 
-    def run(self, prompt: str) -> str:
+    async def run(self, prompt: str) -> str:
         """
         Runs the bee agent with the given prompt.
         Args:

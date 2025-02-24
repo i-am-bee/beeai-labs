@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os, dotenv, yaml
+import asyncio
 
 from unittest import TestCase
 from pytest_mock import mocker
@@ -29,7 +30,7 @@ class BeeAgentMock:
     def __init__(self):
         pass
 
-    def run(self, prompt: str) -> str:
+    async def run(self, prompt: str) -> str:
         return 'OK:'+prompt
 
 def test_agent_runs(mocker) -> None:
@@ -48,7 +49,7 @@ def test_agent_runs(mocker) -> None:
         workflow = Workflow(agents_yaml, workflow_yaml[0])
     except Exception as excep:
         raise RuntimeError("Unable to create agents") from excep
-    result = workflow.run()
+    result = asyncio.run(workflow.run())
     print(result)
 
     assert result is not None
