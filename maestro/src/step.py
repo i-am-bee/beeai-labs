@@ -69,15 +69,11 @@ class Step:
 
     async def parallel(self, prompt):
         #results = await asyncio.gather(*[asyncio.create_task(agent.run(prompt)) for agent in self.step_parallel])
-        results = []
+        waits = []
         for agent in self.step_parallel:
-            results.append(asyncio.create_task(agent.run(prompt)))
-        for r in results:
-            y =await r
-            print(y)
-
-        #result_array = []
-        #for result in results:
-        #    result_array.append(result)
-        #return str(result_array)
+            waits.append(asyncio.create_task(agent.run(prompt)))
+        results = []
+        for wait in waits:
+            results.append(await wait)
+        return str(results)
 
