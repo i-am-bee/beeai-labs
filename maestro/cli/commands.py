@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os, yaml, json, jsonschema, traceback
+import asyncio
 
 from openai import OpenAI
 from jsonschema.exceptions import ValidationError, SchemaError
@@ -171,7 +172,7 @@ class Run(Command):
     def __run_agents_workflow(self, agents_yaml, workflow_yaml):
         try:
             workflow = Workflow(agents_yaml, workflow_yaml[0])
-            workflow.run()
+            asyncio.run(workflow.run())
         except Exception as e:
             self._check_verbose()
             raise RuntimeError("Unable to run workflow: {message}".format(message=str(e)))
