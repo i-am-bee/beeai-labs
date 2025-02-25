@@ -18,6 +18,7 @@ import asyncio
 from openai import OpenAI
 from jsonschema.exceptions import ValidationError, SchemaError
 
+from src.deploy import Deploy
 from src.workflow import Workflow, create_agents
 from cli.common import Console, parse_yaml
 
@@ -33,13 +34,13 @@ class CLI:
 
     def command(self):
         if self.args.get('validate') and self.args['validate']:
-            return Validate(self.args)
+            return ValidateCmd(self.args)
         elif self.args.get('create') and self.args['create']:
-            return Create(self.args)
+            return CreateCmd(self.args)
         elif self.args.get('run') and self.args['run']:
-            return Run(self.args)
+            return RunCmd(self.args)
         elif self.args.get('deploy') and self.args['deploy']:
-            return Deploy(self.args)
+            return DeployCmd(self.args)
         else:
             raise Exception("Invalid command")
 
@@ -98,7 +99,7 @@ class Command:
 
 # validate command group
 #  maestro validate SCHEMA_FILE YAML_FILE [options]
-class Validate(Command):
+class ValidateCmd(Command):
     def __init__(self, args):
         self.args = args
         super().__init__(self.args)
@@ -135,7 +136,7 @@ class Validate(Command):
 
 # Create command group
 #  maestro create AGENTS_FILE [options]
-class Create(Command):
+class CreateCmd(Command):
     def __init__(self, args):
         self.args = args
         super().__init__(self.args)
@@ -164,7 +165,7 @@ class Create(Command):
 
 # Run command group
 #  maestro run AGENTS_FILE WORKFLOW_FILE [options]
-class Run(Command):
+class RunCmd(Command):
     def __init__(self, args):
         self.args = args
         super().__init__(self.args)
@@ -202,14 +203,42 @@ class Run(Command):
         
 # Deploy command group
 #  maestro deploy AGENTS_FILE WORKFLOW_FILE [options]
-class Deploy(Command):
+class DeployCmd(Command):
     def __init__(self, args):
         self.args = args
         super().__init__(self.args)
     
     def __deploy_agents_workflow(self, agents_yaml, workflow_yaml):
-        # TODO: complete this
-        pass
+        bee_api_key = os.getenv("BEE_API_KEY")
+        bee_api = os.getenv("BEE_API_KEY", "http://192.168.86.45:4000")
+        
+        try:
+            if self.docker():
+                deploy = Deploy(agents_yaml, workflow_yaml, bee_api_key, bee_api, self.url())
+                deploy.deploy_to_docker()            
+            elif self.k8s():
+                deploy = Deploy(agents_yaml, workflow_yaml, )
+                deploy.deploy_to_kubernetes()
+            else:
+                Console.error("Need to specify --docker or --k8s | --kubernetes")
+            Console,ok(f"Workflow deployed: {self.url}")
+        except Exception as e:
+            self._check_verbose()
+            raise RuntimeError(f"Unable to run workflow: {str(e)}") from e
+        return 0            
+
+    def url(self):
+        if self.args['--url'] == "" or self.args['--url'] == None:
+            return "127.0.0.1:5000"
+        return self.args['--url'] 
+
+    def k8s(self):
+        if self.args['--k8s'] != "":
+            return self.args['--k8s']
+        return self.args['--kubernetes'] 
+
+    def docker(self):
+        return self.args['--docker']
 
     def AGENTS_FILE(self):
         return self.args['AGENTS_FILE']
