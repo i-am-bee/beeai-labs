@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/i-am-bee/maestro/schemas/workflow.schema.json",
+  "$id": "https://github.com/i-am-bee/beeai-labs/maestro/schemas/workflow_schema.json",
   "title": "BeeAI Maestro",
   "description": "A schema for defining Maestro workflows in YAML or JSON",
   "type": "object",
@@ -50,7 +50,7 @@
             },
             "agents": {
               "type": "array",
-                "items": {
+              "items": {
                 "type": "string"
               }
             },
@@ -83,7 +83,19 @@
                       },
                       "template": {
                         "type": "string",
-                          "description": "template string for next prompt, {prompt} and {respomse} are replaced by the previos prompt and the user response"
+                        "description": "template string for next prompt, {prompt} and {respomse} are replaced by the previos prompt and the user response"
+                      }
+                    }
+                  },
+                  "loop": {
+                    "type": "object",
+                    "description": "looping construct",
+                    "properties": {
+                      "step": {
+                        "type": "string"
+                      },
+                      "until": {
+                        "type": "string"
                       }
                     }
                   },
@@ -123,7 +135,7 @@
                   }
                 },
                 "required": [
-                    "name"
+                  "name"
                 ]
               }
             }
