@@ -74,7 +74,7 @@ class Deploy:
     def build_image(self, agent, workflow):
         module_path = os.path.abspath(inspect.getsourcefile(lambda:0))
         module_dir = os.path.dirname(module_path)
-        self.tmp_dir = os.path.join(os.getcwd(), "tmp2")
+        self.tmp_dir = os.path.join(tempfile.gettempdir(), "maestro")
         shutil.copytree(os.path.join(module_dir, ".."), self.tmp_dir, dirs_exist_ok=True)
         shutil.copytree(os.path.join(module_dir, "../deployments"), os.path.join(self.tmp_dir, "tmp"), dirs_exist_ok=True)
         shutil.copy(agent, os.path.join(self.tmp_dir, "tmp/agents.yaml"))
