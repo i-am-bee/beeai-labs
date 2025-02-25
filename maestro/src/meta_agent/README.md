@@ -21,9 +21,9 @@ OR
 
 Directly run the workflow: `./src/meta_agent/agents.yaml ./src/meta_agent/workflow.yaml`
 
-## Prompt
+## Prompts
 
-Prompt Used in Create-Agent-YAML tool:
+Prompt Used in Create-Agent-YAML agent:
 
 ```Markdown
 Build an agents.yaml file using the agent_schema() tool as a reference.
@@ -35,6 +35,25 @@ temperature_comparator – Compares the retrieved temperature with historical av
 Ensure both agents are correctly formatted using the schema.
 ```
 
+Prompt Used in Create-Workflow-YAML agent:
+
+```Markdown
+Build a structured workflow using the workflow_schema tool as a reference.
+
+I have two agents in agents.yaml:
+weather_fetcher – Retrieves weather data for a given location using the OpenMeteo tool.
+temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+
+Requirements:
+
+Ensure the workflow follows the workflow.schema.json format.
+Each step must:
+Reference a valid agent from agents.yaml.
+Have a name that describes its function.
+The final output should be a valid structured workflow in YAML format, please make it easily readble in a code block
+```
+
 ### Tools Needed to be Created
 
 agent_schema tool: create by copying the code portion in the agents.yaml file into the tool.
+workflow_schema tool: create by copying the code portion in the agents.yaml file into the tool.
