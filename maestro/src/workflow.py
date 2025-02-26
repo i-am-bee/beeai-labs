@@ -61,6 +61,7 @@ class Workflow:
         self.create_or_restore_agents(self.agent_defs, self.workflow)
         return await self._condition()
 
+    # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
         if agent_defs:
             if type(agent_defs[0]) == str:
@@ -82,25 +83,6 @@ class Workflow:
         for step in steps:
             if step.get("name") == name:
                 return steps.index(step)
-    
-    # private methods
-
-    def _sequence(self):
-        prompt = self.workflow["spec"]["template"].get("prompt", "")
-        steps = self.workflow["spec"]["template"].get("steps", [])
-        if not steps:
-            raise ValueError("Workflow is missing required 'steps' key in 'spec'")
-        step_results = {}
-        for i, step in enumerate(steps):
-            agent_name = step["agent"]
-            agent_instance = self.agents.get(agent_name)
-            if not agent_instance:
-                raise ValueError(f"Agent {agent_name} not found for step {step['name']}")
-            step_results[f"step_{i}"] = prompt
-            response = agent_instance.run(prompt)
-            prompt = response if isinstance(response, str) else response.get("prompt", prompt)
-        step_results["final_prompt"] = prompt
-        return step_results
 
     async def _condition(self):
         prompt = self.workflow["spec"]["template"]["prompt"]
@@ -113,6 +95,8 @@ class Workflow:
                 for agent in step.get("parallel"):
                     agents.append(self.agents.get(agent))
                 step["parallel"] = agents
+            if step.get("loop"):
+                step["loop"]["agent"] = self.agents.get(step["loop"]["agent"])
             self.steps[step["name"]] = Step(step)
         current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
         step_results = {}

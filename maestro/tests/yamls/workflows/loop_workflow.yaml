@@ -14,14 +14,14 @@ spec:
         app: example
         use-case: test
     agents:
-        - test1
-        - test2
-    prompt: Tell me a joke
+        - generate1-10
+        - countdown
+    prompt: Generate a number
     steps:
       - name: step1
-        agent: test1
-        loop: 
-            step: step2
-            until: (input.happy == True)
+        agent: generate1-10
       - name: step2
-        agent: test2        
+        loop: 
+            agent: countdown
+            until: (input.find("happy") != -1)
+

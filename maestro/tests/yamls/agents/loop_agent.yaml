@@ -1,0 +1,29 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: generate1-10
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  description: 
+  tools:
+    - code_interpreter
+    - test
+  instructions: genereate a number between 1 and 10 and just output the number
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: countdown
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: you get a nunber.  Dicrease the number by 1 and if the number becomes 0, output "happy" otherwise output the new number.
