@@ -65,9 +65,10 @@ class Step:
         return default
 
     def input(self, prompt):
-        user_prompt = self.step_input.get("prompt").replace("{prompt}", str(prompt)) 
-        response = input(user_prompt) 
+        user_prompt = self.step_input.get("prompt").replace("{prompt}", str(prompt))
         template = self.step_input.get("template")
+        if "{CONNECTOR}" in template: return prompt
+        response = input(user_prompt) 
         formatted_response = template.replace("{prompt}", prompt).replace("{response}", response)
         return formatted_response
 
