@@ -1,0 +1,112 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Create Agent YAML
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "Create the necessary agents (for weather example in this case), outputting an agent.yaml file that is executable by Maestro"
+  instructions: |
+                "You are an **AI agent definition generator** specializing in creating `agents.yaml` files.
+
+                - Your job is to define agents **explicitly based on user requests**.
+                - Use the `agent_schema` tool to fetch the latest schema from GitHub.
+                - Ensure all generated agents conform **strictly** to the schema.
+                - Each agent should have:
+                  - `name`
+                  - `model`
+                  - `instructions`
+                  - Any required `tools`
+                - If the request includes **specific tools**, include them in the agent definition.
+                - The `instructions` should be the context or role that the agent should take, and you can write it as seen fit.
+                - The output should be a **fully-formed `agents.yaml` file**."  
+  tools: 
+    - 'agent_schema'
+  code: |
+        import requests
+
+        def get_agent_schema():
+            """Fetches the agent schema from the GitHub repository and ensures the response matches the expected format."""
+            url = "https://raw.githubusercontent.com/i-am-bee/beeai-labs/main/maestro/schemas/agent_schema.json"
+            
+            try:
+                response = requests.get(url)
+                response.raise_for_status()  # Raise an error for HTTP issues
+                
+                schema = response.json()
+                
+                # Ensure the schema matches the expected format
+                return {"schema": schema}  # Wrapping inside a dictionary to avoid schema mismatches
+            
+            except requests.exceptions.RequestException as e:
+                print(f"⚠️ Error fetching schema: {e}")
+                return {"schema": {}} # Return an empty schema in case of error
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Create Workflow YAML
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "Generates a structured workflow based on available agents"
+  instructions: |
+                "You are an **AI workflow definition generator** specializing in creating `workflow.json` files.
+
+                    - Your job is to define a **valid workflow** based on the agents given as input.
+                    - Use the `workflow_schema` tool to fetch the latest schema from GitHub.
+                    - Ensure the generated workflow **strictly follows the schema**.
+                    - The workflow must include:
+                      - `name` → A descriptive workflow name.
+                      - `agents` → List of agent names from user input
+                      - `steps` → The **ordered sequence of actions**.
+                    - Each **step** must:
+                      - Reference a valid agent from the input
+                      - Have a `name` describing the action.
+                Optional Parameters in **step**: (NOTE: most times, this is not necessary. If possible keep as simple as possible). Because they are optional, if not needed we don't need to write this in the workflow.
+                      (Optional): Include `input` and `input.prompt` where necessary (if we want some human input in between agent execution).
+                      (Optional): Define any necessary `condition` or `parallel` execution logic.
+
+                The output should be a **fully-formed workflow structure in YAML format**, and here is a final version of a workflow for reference:
+                apiVersion: maestro/v1alpha1
+                kind: Workflow
+                metadata:
+                  name: maestro-deployment
+                  labels:
+                    app: mas-example
+                spec:
+                  template:
+                    metadata:
+                      labels:
+                        app: mas-example
+                    agents:
+                      - current-affairs
+                      - hot-or-not
+                    prompt: New York City
+                    steps:
+                      - name: current-affairs
+                        agent: current-affairs
+                      - name: hot-or-not
+                        agent: hot-or-not"
+  tools:
+    - 'workflow_schema'
+  code: |
+        import requests
+
+        def get_workflow_schema():
+            """Fetches the workflow schema from the GitHub repository."""
+            url = "https://raw.githubusercontent.com/i-am-bee/beeai-labs/main/maestro/schemas/workflow_schema.json"
+            
+            try:
+                response = requests.get(url)
+                response.raise_for_status()  # Raise an error for HTTP issues
+                
+                schema = response.json()
+                return {"schema": schema}  # Ensure the response matches the expected format
+            
+            except requests.exceptions.RequestException as e:
+                print(f"⚠️ Error fetching schema: {e}")
+                return {"schema": {}}  # Return an empty schema if fetching fails
