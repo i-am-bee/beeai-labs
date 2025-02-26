@@ -1,0 +1,86 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test1
+  labels:
+    app: test-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: "print(5)"
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test2
+  labels:
+    app: test-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    import time
+    time.sleep(15)
+    input = "test2" 
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test3
+  labels:
+    app: test-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    import time
+    time.sleep(5)
+    input = "test3" 
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test4
+  labels:
+    app: test-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    import time
+    time.sleep(10)
+    input = "test4" 
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test5
+  labels:
+    app: test-example
+spec:
+  model: meta-llama/llama-3-1-70b-instruct
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: "print(input)"
