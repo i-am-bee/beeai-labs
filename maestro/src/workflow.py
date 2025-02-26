@@ -61,6 +61,7 @@ class Workflow:
         self.create_or_restore_agents(self.agent_defs, self.workflow)
         return await self._condition()
 
+    # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
         if agent_defs:
             if type(agent_defs[0]) == str:
