@@ -19,6 +19,7 @@ class Step:
         self.step_input = step.get("input")
         self.step_condition = step.get("condition")
         self.step_parallel = step.get("parallel")
+        self.step_loop = step.get("loop")
 
     async def run(self, prompt):
         output = {"prompt": prompt}
@@ -33,6 +34,9 @@ class Step:
             output["next"] = next
         if self.step_parallel:
             prompt = await self.parallel(prompt)
+            output["prompt"] = prompt
+        if self.step_loop:
+            prompt = await self.loop(prompt)
             output["prompt"] = prompt
         return output
 
@@ -77,3 +81,10 @@ class Step:
             results.append(await wait)
         return str(results)
 
+    async def loop(self, prompt):
+        until = self.step_loop.get ("until")
+        agent = self.step_loop.get("agent")
+        while True:
+            prompt = await agent.run(prompt)
+            if eval_expression(until, prompt):
+                return prompt
