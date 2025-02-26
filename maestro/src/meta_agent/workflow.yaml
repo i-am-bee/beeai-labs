@@ -40,6 +40,6 @@ spec:
                   Reference a valid agent from agents.yaml.
                   Have a name that describes its function.
                   The final output should be a valid structured workflow in YAML format, please make it easily readble in a code block
-          template: "{response}"
+          template: "{CONNECTOR}"
       - name: Create Workflow YAML
         agent: Create Workflow YAML
