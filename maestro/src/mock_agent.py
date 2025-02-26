@@ -17,7 +17,10 @@ dotenv.load_dotenv()
 def eval_expression(expression, prompt):
     local = {}
     local["input"] = prompt
-    exec(expression, local)
+    try:
+      exec(expression, local)
+    except Exception:
+      print("mock exception")
     return local["input"]
 
 class MockAgent(Agent):
