@@ -15,7 +15,7 @@ Creating the agents(with the ability to manually add tools): `maestro create ./s
 
 To run the workflow:
 
-If you already created the agents and enabled the tool: `maestro run None ./src/meta_agent/agents.yaml`
+If you already created the agents and enabled the tool: `maestro run None ./src/meta_agent/workflow.yaml`
 
 OR
 
@@ -26,7 +26,7 @@ Directly run the workflow: `./src/meta_agent/agents.yaml ./src/meta_agent/workfl
 Prompt Used in Create-Agent-YAML agent:
 
 ```Markdown
-Build an agents.yaml file using the agent_schema() tool as a reference.
+Build an agents.yaml file using the agent_schema tool as a reference.
 
 I want two agents, both using the llama3.1 model:
 
