@@ -17,12 +17,12 @@
 import os, dotenv
 
 from src.step import Step
-from src.agent_factory import AgentFramework
+from src.agents.agent_factory import AgentFramework
 
-from src.crewai_agent import CrewAIAgent
-from src.bee_agent import BeeAgent
-from src.mock_agent import MockAgent
-from src.agent import save_agent, restore_agent
+from src.agents.crewai_agent import CrewAIAgent
+from src.agents.bee_agent import BeeAgent
+from src.agents.mock_agent import MockAgent
+from src.agents.agent import save_agent, restore_agent
 
 dotenv.load_dotenv() #TODO is this needed now that __init__.py in package runs this?
 
