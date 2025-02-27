@@ -6,6 +6,7 @@ metadata:
     app: test-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
+  framework: bee
   description: this is a test
   tools:
     - code_interpreter
@@ -22,6 +23,7 @@ metadata:
     app: test-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
+  framework: bee
   description: this is a test
   tools:
     - code_interpreter
@@ -41,6 +43,7 @@ metadata:
     app: test-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
+  framework: bee
   description: this is a test
   tools:
     - code_interpreter
@@ -60,6 +63,7 @@ metadata:
     app: test-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
+  framework: bee
   description: this is a test
   tools:
     - code_interpreter
@@ -79,6 +83,7 @@ metadata:
     app: test-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
+  framework: bee
   description: this is a test
   tools:
     - code_interpreter

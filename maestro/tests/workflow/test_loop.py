@@ -26,7 +26,6 @@ def parse_yaml(file_path):
         yaml_data = list(yaml.safe_load_all(file))
     return yaml_data
 
-
 # `loop` tests
 class TestLoop(TestCase):
     def setUp(self):        
@@ -43,7 +42,6 @@ class TestLoop(TestCase):
     def test_loop(self):
         response = asyncio.run(self.workflow.run())
         assert "happy" in response["final_prompt"]
-
 
 if __name__ == '__main__':
     unittest.main()

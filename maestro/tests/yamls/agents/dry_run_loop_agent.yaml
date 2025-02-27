@@ -6,6 +6,7 @@ metadata:
     app: test-example
 spec:
   model: "llama3.1:latest"
+  framework: bee
   description: 
   tools:
     - code_interpreter
@@ -24,6 +25,7 @@ metadata:
     app: test-example
 spec:
   model: "llama3.1:latest"
+  framework: bee
   description: this is a test
   tools:
     - code_interpreter
