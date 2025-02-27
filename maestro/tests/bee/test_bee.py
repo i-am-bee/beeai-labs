@@ -19,7 +19,7 @@ from unittest import TestCase
 from pytest_mock import mocker
 
 from src.workflow import Workflow
-from src.bee_agent import BeeAgent
+from src.agents.bee_agent import BeeAgent
 
 dotenv.load_dotenv()
 
