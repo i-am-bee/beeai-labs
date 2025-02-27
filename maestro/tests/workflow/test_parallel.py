@@ -26,7 +26,6 @@ def parse_yaml(file_path):
         yaml_data = list(yaml.safe_load_all(file))
     return yaml_data
 
-
 # `parallel` tests
 class TestParallel(TestCase):
     def setUp(self):        
