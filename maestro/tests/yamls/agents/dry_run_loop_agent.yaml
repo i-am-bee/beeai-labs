@@ -1,0 +1,43 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: generate1-10
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  framework: bee
+  description: 
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    import random
+    input = random.randint(1, 10)
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: countdown
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  framework: bee
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    input = int(input)
+    input = input-1
+    if input == 0:
+      input = "happy"
+    else:
+      input = str(input)
+      print(type(input))
+      print(input)
+
+

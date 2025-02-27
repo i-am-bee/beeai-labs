@@ -7,5 +7,5 @@ metadata:
 spec:
   model: "llama3.1:latest"
   description: test
-  instructions: Welcome me
+  instructions: input = 'Mock agent:'
   framework: bee

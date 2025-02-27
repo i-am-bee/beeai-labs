@@ -11,7 +11,7 @@ spec:
   tools:
     - code_interpreter
     - test
-  instructions: print("this is a test.")
+  instructions: "print(5)"
 
 ---
 
@@ -28,7 +28,10 @@ spec:
   tools:
     - code_interpreter
     - test
-  instructions: print("this is a test.")
+  instructions: |
+    import time
+    time.sleep(15)
+    input = "test2" 
 
 ---
 
@@ -45,7 +48,10 @@ spec:
   tools:
     - code_interpreter
     - test
-  instructions: print("this is a test.")
+  instructions: |
+    import time
+    time.sleep(5)
+    input = "test3" 
 
 ---
 
@@ -62,7 +68,10 @@ spec:
   tools:
     - code_interpreter
     - test
-  instructions: print("this is a test.")
+  instructions: |
+    import time
+    time.sleep(10)
+    input = "test4" 
 
 ---
 
@@ -79,4 +88,4 @@ spec:
   tools:
     - code_interpreter
     - test
-  instructions: print("this is a test.")
+  instructions: "print(input)"

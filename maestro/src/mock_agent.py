@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os
+import time
 import asyncio
 
 import dotenv
@@ -12,6 +13,15 @@ from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
 from .agent import Agent
 
 dotenv.load_dotenv()
+
+def eval_expression(expression, prompt):
+    local = {}
+    local["input"] = prompt
+    try:
+      exec(expression, local)
+    except Exception:
+      print("mock exception")
+    return local["input"]
 
 class MockAgent(Agent):
     """
@@ -44,6 +54,8 @@ class MockAgent(Agent):
         """
         print(f"🐝 Running {self.agent_name}...")
         answer = f"Mock agent: answer for {prompt}" 
+        if self.instructions:
+            answer = eval_expression(self.instructions, prompt)
         print(f"🐝 Response from {self.agent_name}: {answer}")
         return answer
 
