@@ -11,17 +11,16 @@ spec:
       labels:
         project: maestro-demo
     agents:
+      - Format Input Agent
       - Create Agent YAML
       - Create Workflow YAML
     prompt: |
-            Build an agents.yaml file using the agent_schema tool as a reference.
-
-            I want two agents, both using the llama3.1 model:
-
-            weather_fetcher – Retrieves weather data for a given location using the OpenMeteo tool.
-            temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
-            Ensure both agents are correctly formatted using the schema.
+            number of agents: 2
+            agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo.
+            agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
     steps:
+      - name: Format Input
+        agent: Format Input Agent
       - name: Create Agent YAML
         agent: Create Agent YAML
       - name: input
