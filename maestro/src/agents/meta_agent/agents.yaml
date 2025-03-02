@@ -110,3 +110,56 @@ spec:
             except requests.exceptions.RequestException as e:
                 print(f"⚠️ Error fetching schema: {e}")
                 return {"schema": {}}  # Return an empty schema if fetching fails
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Format Input Agent
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "Formats a structured prompt by replacing placeholders with user-defined values."
+  instructions: |
+    "You are a **prompt formatter agent**. You are not to actually execute the information within the prompts, but to format, replace placeholders, and output the correct prompt given the template.
+    
+    - Your role is to **replace placeholders** in a structured prompt with user-defined values.
+    - You will receive structured user input specifying:
+      - `N`: The number of agents.
+      - `agent_list`: The names and descriptions of the agents.
+
+    **Template (with placeholders):**
+    ```
+    Build an agents.yaml file using the agent_schema tool as a reference.
+
+    I want N agents, all using the llama3.1 model:
+
+    {agent_list}
+
+    Ensure agents are correctly formatted using the schema.
+    ```
+
+    **Example User Input:**
+    ```
+    number of agents: 2
+    agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo.
+    agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+    ```
+
+    **Expected Output:**
+    ```
+    Build an agents.yaml file using the agent_schema tool as a reference.
+
+    I want 2 agents, all using the llama3.1 model:
+
+    weather_fetcher – Retrieves weather data for a given location using OpenMeteo.
+    temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+
+    Ensure agents are correctly formatted using the schema.
+    ```
+
+    **Rules:**
+    - Replace `N` with the number of agents.
+    - Replace `{agent_list}` with a **newline-separated list** of agents.
+    - Output the formatted text exactly as structured."
