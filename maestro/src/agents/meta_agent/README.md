@@ -28,7 +28,7 @@ workflow_schema tool: create by copying the code portion in the agents.yaml file
 
 Note:
 The agents.yaml file currently is generalized, but workflow.yaml needs to specify the agents inside the prompt.
-Specifically, the prompt last prompt of creating the workflow.
+Specifically, the last prompt which creates the workflow.
 
 2 solutions:
 
