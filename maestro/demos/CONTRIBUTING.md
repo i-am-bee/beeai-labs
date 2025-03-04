@@ -9,11 +9,6 @@ Thank you for your interest in contributing to **Bee Hive**! This document outli
 ```markdown
 /maestro
 │── /src                    # Source code for core functionalities
-│   │── agent.py            # Base class for defining agents
-│   │── bee_agent.py        # Implementation of BeeAgent
-│   │── create_agents.py    # Creates agents from YAML definitions
-│   │── run_workflow.py     # Executes workflows sequentially
-│   │── step.py             # Step execution logic for workflows
 │   │── /schemas            # JSON schema definitions for agents and workflows
 │       │── agent_schema.json
 │       │── workflow_schema.json
@@ -83,7 +78,7 @@ If you have already created the agents and enabled the tools:
 maestro run None ./src/agents/meta_agent/workflow.yaml
 ```
 
-OR run the workflow directly:
+OR create the agents and run workflow in the same step:
 
 ```bash
 maestro run ./src/agents/meta_agent/agents.yaml ./src/agents/meta_agent/workflow.yaml
@@ -157,7 +152,6 @@ spec:
 
 ## Code Style and Best Practices
 
-- Follow **PEP8** coding conventions.
 - Use **docstrings** for all functions and classes.
 - Write **meaningful commit messages**:
 
