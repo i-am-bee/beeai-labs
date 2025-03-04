@@ -79,6 +79,7 @@ class Workflow:
             for agent in workflow["spec"]["template"]["agents"]:
                 self.agents[agent] = restore_agent(agent)
     
+    #TODO: why is this public? It should be private by naming: _find_index(...) @aki
     def find_index(self, steps, name):
         for step in steps:
             if step.get("name") == name:
