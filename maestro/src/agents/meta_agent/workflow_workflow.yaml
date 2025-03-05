@@ -1,0 +1,24 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: meta_agent_workflow
+  labels:
+    project: maestro-demo
+spec:
+  template:
+    metadata:
+      name: meta_agent_workflow
+      labels:
+        project: maestro-demo
+    agents:
+      - Format Workflow Agent
+      - Create Workflow YAML
+    prompt: |
+            number of agents: 2
+            agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo.
+            agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+    steps:
+      - name: Format Workflow Agent
+        agent: Format Workflow Agent
+      - name: Create Workflow YAML
+        agent: Create Workflow YAML

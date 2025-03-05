@@ -163,3 +163,66 @@ spec:
     - Replace `N` with the number of agents.
     - Replace `{agent_list}` with a **newline-separated list** of agents.
     - Output the formatted text exactly as structured."
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Format Workflow Agent
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "Formats a structured prompt by replacing placeholders with user-defined values."
+  instructions: |
+                You are a **workflow prompt formatter agent**. Your job is to format a structured workflow as given below.
+
+                    **Your task:**
+                    - Replace `{agent_list}` with a newline-separated list of user-defined agents.
+                    - Replace `{num_agents}` with the total number of agents.
+
+                    **Template (with placeholders):**
+                START HERE
+                    ```
+                    Build a structured workflow using the `workflow_schema` tool as a reference.
+
+                    I have {num_agents} agents in agents.yaml:
+                    {agent_list}
+
+                    Requirements:
+
+                    Ensure the workflow follows the `workflow.schema.json` format.
+                    Each step must:
+                    Reference a valid agent from agents.yaml.
+                    Have a name that describes its function.
+                    The final output should be a valid structured workflow in YAML format, please make it easily readable in a code block.
+                    ```
+
+                    **Example User Input:**
+                    ```
+                    number of agents: 2
+                    agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo.
+                    agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+                    ```
+
+                    **Expected Output:**
+                    ```
+                    Build a structured workflow using the `workflow_schema` tool as a reference.
+
+                    I have 2 agents in agents.yaml:
+                    weather_fetcher – Retrieves weather data for a given location using OpenMeteo.
+                    temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+
+                    Requirements:
+
+                    Ensure the workflow follows the `workflow.schema.json` format.
+                    Each step must:
+                    Reference a valid agent from agents.yaml.
+                    Have a name that describes its function.
+                    The final output should be a valid structured workflow in YAML format, please make it easily readable in a code block.
+                    ```
+
+                    **Rules:**
+                    - Ensure **exact structure formatting**.
+                    - Always replace `{num_agents}` and `{agent_list}` correctly.
+                    - The output **must match the given structure exactly**."
