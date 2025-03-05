@@ -30,7 +30,7 @@ spec:
     - test
   instructions: |
     import time
-    time.sleep(15)
+    time.sleep(5)
     input = "test2" 
 
 ---
@@ -50,7 +50,7 @@ spec:
     - test
   instructions: |
     import time
-    time.sleep(5)
+    time.sleep(1)
     input = "test3" 
 
 ---
@@ -70,7 +70,7 @@ spec:
     - test
   instructions: |
     import time
-    time.sleep(10)
+    time.sleep(3)
     input = "test4" 
 
 ---
