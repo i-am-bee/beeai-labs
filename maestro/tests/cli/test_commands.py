@@ -36,8 +36,12 @@ class DeployCommand(TestCommand):
         self.args = {
                         '--dry-run': True,
                         '--help': False,
-                        '--verbose': False,
+                        '--verbose': True,
                         '--version': False,
+                        '--url': "127.0.0.1:5000",
+                        '--k8s': False,
+                        '--kubernetes': False,
+                        '--docker': False,
                         'AGENTS_FILE': self.get_fixture('yamls/agents/simple_agent.yaml'),
                         'SCHEMA_FILE': None,
                         'WORKFLOW_FILE': self.get_fixture('yamls/workflows/simple_workflow.yaml'),
@@ -53,9 +57,22 @@ class DeployCommand(TestCommand):
         self.args = {}
         self.command = None
         
-    def test_deploy__dry_run(self):
+    def test_deploy__dry_run_k8s(self):
+        self.args["--k8s"] = True
+        self.command = CLI(self.args).command()
         self.assertTrue(self.command.name() == 'deploy')
-        #TODO: complete test for deploy and check deployment server
+        self.assertTrue(self.command.execute() == 0)
+
+    def test_deploy__dry_run_kubernetes(self):
+        self.args["--kubernetes"] = True
+        self.command = CLI(self.args).command()
+        self.assertTrue(self.command.name() == 'deploy')
+        self.assertTrue(self.command.execute() == 0)
+        
+    def test_deploy__dry_run_docker(self):
+        self.args["--docker"] = True
+        self.command = CLI(self.args).command()
+        self.assertTrue(self.command.name() == 'deploy')
         self.assertTrue(self.command.execute() == 0)
 
 # `run` commmand tests
