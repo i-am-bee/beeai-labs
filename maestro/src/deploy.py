@@ -63,7 +63,7 @@ def update_yaml(yaml_file, str_envs):
         yaml.safe_dump(data, f)
 
 class Deploy:
-    def __init__(self, agent_defs, workflow_defs, env=None, target=None):
+    def __init__(self, agent_defs, workflow_defs, env="", target=None):
         self.agent = agent_defs
         self.workflow = workflow_defs
         self.env = env
