@@ -226,3 +226,31 @@ spec:
                     - Ensure **exact structure formatting**.
                     - Always replace `{num_agents}` and `{agent_list}` correctly.
                     - The output **must match the given structure exactly**."
+# TEMPORARY AGENTS TO PASS TESTS
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Run Workflow Agent
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "Executes workflow_agent.yaml."
+  instruction: |
+    "Your task is to run `workflow_agent.yaml` using the provided user input."
+  tools: []
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Run Workflow Workflow
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "Executes workflow_workflow.yaml."
+  instruction: |
+    "Your task is to run `workflow_workflow.yaml` using the provided user input."
+  tools: []

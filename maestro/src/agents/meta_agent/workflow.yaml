@@ -1,0 +1,24 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: meta_agent_combined
+  labels:
+    project: maestro-demo
+spec:
+  template:
+    metadata:
+      name: meta_agent_combined
+      labels:
+        project: maestro-demo
+    agents:
+      - Run Workflow Agent
+      - Run Workflow Workflow
+    prompt: |
+      number of agents: 2
+      agent1: weather_fetcher – Retrieves weather data using OpenMeteo.
+      agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo.
+    steps:
+      - name: Run Workflow Agent
+        agent: Run Workflow Agent
+      - name: Run Workflow Workflow
+        agent: Run Workflow Workflow
