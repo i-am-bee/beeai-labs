@@ -35,14 +35,10 @@ echo "🩺 Running doctor.sh for meta_agent..."
 cd "$META_AGENT_DIR"
 bash doctor.sh || { echo "❌ doctor.sh failed"; exit 1; }
 
-# Loop through all workflow YAML files in the meta_agent directory
-for WORKFLOW_FILE in "$META_AGENT_DIR"/workflow*.yaml; do
-    if [[ -f "$WORKFLOW_FILE" ]]; then
-        echo "🧪 Running test.sh for $WORKFLOW_FILE..."
-        bash "$META_AGENT_DIR/test.sh" "$WORKFLOW_FILE" || { echo "❌ test.sh failed for $WORKFLOW_FILE"; exit 1; }
-        ((TEST_COUNT++))
-    fi
-done
+# Run test.sh only once with the directory, instead of looping over workflow files
+echo "🧪 Running test.sh for meta_agent directory..."
+bash "$META_AGENT_DIR/test.sh" "$META_AGENT_DIR" || { echo "❌ test.sh failed"; exit 1; }
+((TEST_COUNT++))
 
 if [[ "$TEST_COUNT" -gt 0 ]]; then
     echo "✅ All meta-agent workflow tests completed successfully!"
