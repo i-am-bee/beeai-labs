@@ -237,7 +237,7 @@ metadata:
 spec:
   model: llama3.1
   description: "Executes workflow_agent.yaml."
-  instruction: |
+  instructions: |
     "Your task is to run `workflow_agent.yaml` using the provided user input."
   tools: []
 
@@ -251,6 +251,6 @@ metadata:
 spec:
   model: llama3.1
   description: "Executes workflow_workflow.yaml."
-  instruction: |
+  instructions: |
     "Your task is to run `workflow_workflow.yaml` using the provided user input."
   tools: []
