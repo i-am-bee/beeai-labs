@@ -1,6 +1,6 @@
 # META AGENT
 
-Our goal is to create an agent that can create the relevant agents/workflow.yaml files necessary for you to delegate your tasks.
+Our goal is to create an agent that can create the relevant agents/workflow.yaml files necessary for you to delegate your tasks. Currently, because we are process of generalizing our prompts, currently the workflow is split into 2 files, `workflow_agent.yaml` and `workflow_workflow.yaml`.
 
 ## Validating/Creating Agents/Workflow files
 
@@ -13,7 +13,7 @@ Validating the YAML file adheres to the schema:
 
 Creating the agents(with the ability to manually add tools): `maestro create ./src/agents/meta_agent/agents.yaml`
 
-To run the workflow:
+To run the workflow: (Replace `workflow.yaml` with the desired workflow for now)
 
 If you already created the agents and enabled the tool: `maestro run None ./src/agents/meta_agent/workflow.yaml`
 
