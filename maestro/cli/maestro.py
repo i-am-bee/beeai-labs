@@ -20,7 +20,7 @@ Usage:
   maestro validate SCHEMA_FILE YAML_FILE [options]
   maestro create AGENTS_FILE [options]
   maestro run AGENTS_FILE WORKFLOW_FILE [options]
-  maestro deploy AGENTS_FILE WORKFLOW_FILE [options]
+  maestro deploy AGENTS_FILE WORKFLOW_FILE [options] [ENV...]
 
   maestro (-h | --help)
   maestro (-v | --version)

@@ -208,13 +208,13 @@ class DeployCmd(Command):
         self.args = args
         super().__init__(self.args)
     
-    def __deploy_agents_workflow(self, agents_yaml, workflow_yaml):
+    def __deploy_agents_workflow(self, agents_yaml, workflow_yaml, env):
         try:
             if self.docker():
-                deploy = Deploy(agents_yaml, workflow_yaml)
+                deploy = Deploy(agents_yaml, workflow_yaml, env)
                 deploy.deploy_to_docker()            
             elif self.k8s():
-                deploy = Deploy(agents_yaml, workflow_yaml, )
+                deploy = Deploy(agents_yaml, workflow_yaml, env)
                 deploy.deploy_to_kubernetes()
             else:
                 Console.error("Need to specify --docker or --k8s | --kubernetes")
@@ -243,12 +243,15 @@ class DeployCmd(Command):
     def WORKFLOW_FILE(self):
         return self.args['WORKFLOW_FILE']
 
+    def ENV(self):
+        return " ".join(self.args['ENV'])
+
     def name(self):
       return "deploy"
 
     def deploy(self):
         try:
-            self.__deploy_agents_workflow(self.AGENTS_FILE(), self.WORKFLOW_FILE())
+            self.__deploy_agents_workflow(self.AGENTS_FILE(), self.WORKFLOW_FILE(), self.ENV())
         except Exception as e:
             self._check_verbose()
             print(traceback.format_exc())
