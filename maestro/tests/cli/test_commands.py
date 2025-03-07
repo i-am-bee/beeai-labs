@@ -46,6 +46,7 @@ class DeployCommand(TestCommand):
                         'SCHEMA_FILE': None,
                         'WORKFLOW_FILE': self.get_fixture('yamls/workflows/simple_workflow.yaml'),
                         'YAML_FILE': None,
+                        'ENV': "",
                         'deploy': True,
                         'run': False,
                         'create': False,
