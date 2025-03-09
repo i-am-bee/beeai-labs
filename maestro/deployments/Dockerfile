@@ -46,7 +46,7 @@ RUN python3.11 -m pip install openai pyyaml python-dotenv flask --no-cache-dir -
 COPY src ./src
 COPY tmp/entrypoint_api.sh .
 COPY tmp/api.py .
-COPY tmp/maestro.html ./static/maestro.html
+COPY tmp/maestro.html ./templates/index.html
 COPY tmp/agents.yaml ./src/agents.yaml
 COPY tmp/workflow.yaml ./src/workflow.yaml
 

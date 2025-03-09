@@ -1,5 +1,5 @@
 # Assisted by watsonx Code Assistant
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import os
 import json
 import sys
@@ -10,6 +10,7 @@ import yaml
 from src.workflow import Workflow
 
 app = Flask(__name__)
+history = ""
 
 def parse_yaml(file_path):
     with open(file_path, "r") as file:
@@ -18,13 +19,20 @@ def parse_yaml(file_path):
 
 @app.route('/', methods=['GET'])
 def process_workflow():
+    global history
     if request.method == 'GET':
         agents_yaml = parse_yaml("src/agents.yaml")
         workflow_yaml = parse_yaml("src/workflow.yaml")
+        prompt = request.args.get("Prompt")
+        if prompt:
+            workflow_yaml[0]["spec"]["template"]["prompt"] = prompt
         try:
             workflow_instance = Workflow(agents_yaml, workflow_yaml[0])
         except Exception as excep:
             raise RuntimeError("Unable to create agents") from excep
+        clear = request.args.get("Clear Output")
+        if clear:
+            history = ""
 
         output = io.StringIO()
         sys.stdout = output
@@ -37,6 +45,8 @@ def process_workflow():
         if os.getenv("DEBUG"):
             return response
         else:
-            return output.getvalue()
+            history = history + output.getvalue()
+            name = workflow_yaml[0]["metadata"]["name"]
+            return render_template('index.html', result=history, title=name)
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

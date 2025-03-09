@@ -3,7 +3,7 @@
 <head>
     <title>Maestro</title>
 </head>
-<style>
+<style> 
     body {color: black; background-color: lightgreen;}
     frame {
         border: 1px solid black;
@@ -11,17 +11,17 @@
     }
 </style>
 <body>
-    <div id="output"></div>
-    <form action="/static/maestro.html" method="get">
+    <div id="title"></div>
+        <h1>Workflow: {{ title }}</h1>
+    <div id="output" style="height: 500px; overflow: scroll;">
+        {% for line in result.splitlines() %}
+        <p>{{ line }}
+        {% endfor %}
+    </div>
+    <form action="/" method="get">
+        <input type="text" name="Prompt" placeholder="Enter your prompt here">
+        <input type="checkbox" name="Clear Output" value="true"> Clear Output
         <input type="submit" value="Re-run">
     </form>
-    <script>
-        async function fetchData() {
-            const response = await fetch('/');
-            const data = await response.text();
-            document.getElementById('output').innerText = data;
-        }
-        fetchData();
-    </script>
 </body>
 </html>
