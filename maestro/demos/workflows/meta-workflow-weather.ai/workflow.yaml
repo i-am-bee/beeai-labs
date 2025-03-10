@@ -14,7 +14,7 @@ spec:
       - NLP Agent Planner
       - Format Workflow Agent
       - Create Workflow YAML
-    prompt: I want to compare the current weather with the historical averages. To do this, I probably will need 2 agents, one to retrieve the weather and one to compare to the historical average.
+    prompt: I want to compare the current weather with the historical averages. To do this, I will need 2 agents, one to retrieve the weather and one to compare to the historical average.
     steps:
       - name: NLP Agent Planner
         agent: NLP Agent Planner
