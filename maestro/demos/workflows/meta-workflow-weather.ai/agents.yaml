@@ -172,5 +172,3 @@ spec:
     number of agents: 2 
     agent1: stock_fetcher – Retrieves stock price data from financial APIs. 
     agent2: trend_analyzer – Analyzes trends and compares them to the market average.
-  tools:
-    - 'LLM'
