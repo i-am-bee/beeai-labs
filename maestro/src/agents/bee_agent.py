@@ -3,6 +3,7 @@
 
 import os, dotenv
 import asyncio
+import requests
 
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
@@ -26,29 +27,15 @@ class BeeAgent(Agent):
         """
         super().__init__(agent)
     
-        client = OpenAI(
-            base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
-        )
-        
-        self.agent_tools = []
-
-        tools = agent["spec"].get("tools")
-        if tools:
-            for tool in tools:
-                if tool == "code_interpreter":
-                    self.agent_tools.append({"type": tool})
-                else:
-                    print(f"Enable the {tool} tool in the Bee UI")
-
-        assistant = client.beta.assistants.create(
-            name=self.agent_name,
-            model=self.agent_model,
-            description=self.agent_desc,
-            tools=self.agent_tools,
-            instructions=self.instructions,
-        )
-
-        self.agent_id = assistant.id
+        url = f'{os.getenv("BEE_API")}/v1/assistants'
+        payload = f'{{"tools": [{{"type": "code_interpreter"}},{{"type": "system","system": {{"id": "web_search"}}}},{{"type": "system","system": {{"id": "weather"}}}}],"name": "{self.agent_name}","description": "{self.agent_desc}","instructions": "{self.instructions}","metadata": {{}},"model": "{self.agent_model}","agent": "bee","top_p": 1,"temperature": 0.1}}'
+        headers = {
+            'accept': "application/json",
+            'Authorization': "Bearer sk-proj-testkey",
+            'Content-Type': "application/json"
+        }
+        response = requests.request("POST", url, headers=headers, data=payload).json()
+        self.agent_id = response["id"]
 
     async def run(self, prompt: str) -> str:
         """

@@ -40,7 +40,7 @@ ENV PYTHONUNBUFFERED=1
 # Install pip
 RUN python3.11 -m ensurepip --upgrade
 # Install dependencies and update then uninstall pip (not needed in final image)
-RUN python3.11 -m pip install openai pyyaml python-dotenv flask --no-cache-dir --upgrade && \
+RUN python3.11 -m pip install openai pyyaml python-dotenv requests flask --no-cache-dir --upgrade && \
     python3.11 -m pip uninstall -y pip
 
 COPY src ./src
