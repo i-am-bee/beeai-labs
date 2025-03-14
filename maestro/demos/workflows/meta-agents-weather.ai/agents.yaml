@@ -21,6 +21,37 @@ spec:
                 - If the request includes **specific tools**, include them in the agent definition.
                 - The `instructions` should be the context or role that the agent should take, and you can write it as seen fit.
                 - The output should be a **fully-formed `agents.yaml` file**."  
+                
+                An example output with a format you can follow is something like this:
+                ```
+                apiVersion: maestro/v1alpha1
+                kind: Agent
+                metadata:
+                  name: current-affairs
+                  labels:
+                    app: mas-example
+                spec:
+                  model: "llama3.1:latest"
+                  description: Get the current weather
+                  tools:
+                    - code_interpreter
+                    - weather
+                  instructions: An input is given of a location.  Use the OpenMeteo tool to get today's current forecast for the location. Return results in the format - location, temperature in Fahrenheit, and date.
+                ---
+                apiVersion: maestro/v1alpha1
+                kind: Agent
+                metadata:
+                  name: hot-or-not
+                  labels:
+                    app: mas-example
+                spec:
+                  model: "llama3.1:latest"
+                  description: Is the current temperature hotter than usual?
+                  tools:
+                    - code_interpreter
+                    - weather
+                  instructions: Use the OpenMeteo weather tool to find the historical temperature of the given location.  Return whether the current temperature is hotter or colder.
+                ```
   tools: 
     - 'agent_schema'
   code: |
@@ -141,5 +172,3 @@ spec:
     number of agents: 2 
     agent1: stock_fetcher – Retrieves stock price data from financial APIs. 
     agent2: trend_analyzer – Analyzes trends and compares them to the market average.
-  tools:
-    - 'LLM'
