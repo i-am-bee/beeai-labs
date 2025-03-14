@@ -12,7 +12,8 @@
 </style>
 <body>
     <div id="title"></div>
-        <h1>Workflow: {{ title }}</h1>
+        <h1>Workflow: <a href="static/workflow.yaml">maestro-deployment</a></h1>
+        <p><a href="static/agents.yaml">Agent definitions</a></h1>
     <div id="output" style="height: 500px; overflow: scroll;">
         {% for line in result.splitlines() %}
         <p>{{ line }}

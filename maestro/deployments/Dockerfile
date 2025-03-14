@@ -40,7 +40,7 @@ ENV PYTHONUNBUFFERED=1
 # Install pip
 RUN python3.11 -m ensurepip --upgrade
 # Install dependencies and update then uninstall pip (not needed in final image)
-RUN python3.11 -m pip install openai pyyaml python-dotenv flask --no-cache-dir --upgrade && \
+RUN python3.11 -m pip install openai pyyaml python-dotenv requests flask --no-cache-dir --upgrade && \
     python3.11 -m pip uninstall -y pip
 
 COPY src ./src
@@ -49,6 +49,8 @@ COPY tmp/api.py .
 COPY tmp/maestro.html ./templates/index.html
 COPY tmp/agents.yaml ./src/agents.yaml
 COPY tmp/workflow.yaml ./src/workflow.yaml
+COPY tmp/workflow.yaml ./static/workflow.yaml
+COPY tmp/agents.yaml ./static/agents.yaml
 
 RUN chown -R 1000:100 /usr/src/app &&\
     mkdir /usr/src/app/media && chown 1000:100 /usr/src/app/media
