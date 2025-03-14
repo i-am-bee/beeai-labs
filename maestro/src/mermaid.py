@@ -59,12 +59,26 @@ class Mermaid:
         for step in steps:
             agentL = step.get('agent').replace("-", "_")
             agentR = None
+            
+            # figure out agentR
             if i < (len(steps) - 1):
                 agentR = steps[i+1].get('agent').replace("-", "_")
             if agentR != None:
                 sb += f"{agentL}->>{agentR}: {step['name']}\n"
             else:
                 sb += f"{agentL}->>{agentL}: {step['name']}\n"
+            
+            # if step has condition then add additional links
+            if step.get('condition') != None:
+                for condition in step['condition']:
+                    condition_expr, do = '', ''
+                    if condition.get('case'):
+                        condition_expr = condition['case']
+                        do = condition['do']
+                    else:
+                        condition_expr = 'default'
+                        do = condition['default']                        
+                    sb += f"{agentL}->>{agentR}: {do} {condition_expr}\n"
             i = i + 1
         return sb
 
