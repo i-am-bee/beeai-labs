@@ -33,12 +33,9 @@
             {% endfor %}
         </div>
         <div class="mermaid-container">
-            <pre><code class="language-mermaid">graph LR
-                 A--&gt;B
-            </code></pre>
-            <div class="mermaid">graph LR
-                 A--&gt;B
-            </div>
+          <pre><code class="language-mermaid">
+	      {{ diagram }}
+           </code></pre>
         </div>
     </div>
     <form action="/" method="get">

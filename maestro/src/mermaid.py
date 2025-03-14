@@ -53,13 +53,14 @@ class Mermaid:
     def __to_sequenceDiagram(self, sb):
         sb += "sequenceDiagram\n"
         for agent in self.workflow['spec']['template']['agents']:
+            agent = agent.replace("-", "_")
             sb += f"participant {agent}\n"
         steps, i = self.workflow['spec']['template']['steps'], 0
         for step in steps:
-            agentL = step.get('agent')
+            agentL = step.get('agent').replace("-", "_")
             agentR = None
             if i < (len(steps) - 1):
-                agentR = steps[i+1].get('agent')
+                agentR = steps[i+1].get('agent').replace("-", "_")
             if agentR != None:
                 sb += f"{agentL}->>{agentR}: {step['name']}\n"
             else:
