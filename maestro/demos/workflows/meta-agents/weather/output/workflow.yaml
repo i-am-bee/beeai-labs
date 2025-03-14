@@ -1,0 +1,20 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: weather-workflow
+  labels:
+    app: mas-example
+spec:
+  template:
+    metadata:
+      labels:
+        app: mas-example
+    agents:
+      - A
+      - B
+    prompt: San Jose
+    steps:
+      - name: fetch_weather
+        agent: A
+      - name: compare_temperature
+        agent: B
