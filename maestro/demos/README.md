@@ -52,7 +52,7 @@ Connect Podman with docker-compose, set as rootful, allocate enough memory (8GB 
 - `podman machine set --memory=12288`\
 - `podman machine start`
 
-Setup bee-stack:
+Setup bee-stack: (Note: if you already have setup before and have created agents, skip this step and directly to start the stack)
 `./bee-stack.sh setup`
 
 If desired, use the different commands to run, stop, or clean bee-stack: \
