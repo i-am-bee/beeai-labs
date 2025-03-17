@@ -48,15 +48,15 @@ spec:
   instructions: The user will give you a temperature in Fahrenheit and a location. Use the OpenMateo weather tool to find the average monthly temperature for the location. Answer if the temperature provided by the user is hotter or colder than the average found by the tool.
 ```
 
-* Create the agents by running the following command:
+* After defining agents in YAML, create them using Maestro:
 
 ```bash
-python create_agents.py agents.yaml
+maestro create agents.yaml
 ```
 
 ### Running a Workflow
 
-#### Sequential
+We use conditional workflows in Maestro, which handle sequential logic by default.
 
 * Define a workflow in YAML listing the agents you wish to run. For example, create a `workflow.yaml` file containing the following:
 
@@ -68,28 +68,46 @@ metadata:
   labels:
     app: mas-example
 spec:
-  strategy:
-    type: sequence
-    output: verbose
   template:
     metadata:
       labels:
         app: mas-example
     agents:
+      - current-affairs
+      - hot-or-not
+    prompt: New York City
+    steps:
       - name: current-affairs
+        agent: current-affairs
       - name: hot-or-not
-    prompt: New York
+        agent: hot-or-not
 ```
+
+* Before running, validate the agent and workflow structure:
+
+```bash
+maestro validate agent_schema.json agent.yaml
+```
+
+```bash
+maestro validate workflow_schema.json
 
 * Execute the workflow:
 
 ```bash
-python run_workflow workflow.yaml
+maestro run agent.yaml workflow.yaml
+```
+
+OR if the agents have already been created:
+
+```bash
+maestro run None workflow.yaml
 ```
 
 ## Local environment
 
 * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
+  * [Helpful tips](./demos/README.md) on setting up the stack
 
 * Install dependencies: `poetry shell && poetry install`
 
@@ -116,3 +134,5 @@ python run_workflow workflow.yaml
 * Prepare agent and workflow definition yaml files in the current directory (e.g. agent.yaml, workflow.yaml)
 
 * Run workflow: `./maestro.sh run agents.yaml workflow.yaml
+
+* Learn about [contributing](./demos/CONTRIBUTING.md)
