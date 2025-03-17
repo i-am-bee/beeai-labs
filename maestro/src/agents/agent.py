@@ -45,6 +45,15 @@ class Agent:
         """
 
 def _load_agent_db():
+    """
+    Load agents from database.
+
+    Parameters:
+    None
+
+    Returns:
+    agents (dict): A dictionary containing the loaded agents.
+    """
     agents = {}
     if os.path.exists('agents.db'):
         with open('agents.db', 'rb') as f:
@@ -52,6 +61,15 @@ def _load_agent_db():
     return agents
 
 def _save_agent_db(db):
+    """
+    Save the agent database to a file.
+
+    Args:
+        db (dict): The agent database to be saved.
+
+    Returns:
+        None
+    """
     with open('agents.db', 'wb') as f:
         pickle.dump(db, f)
 

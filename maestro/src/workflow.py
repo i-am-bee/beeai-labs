@@ -29,6 +29,15 @@ from src.agents.agent import save_agent, restore_agent
 dotenv.load_dotenv() #TODO is this needed now that __init__.py in package runs this?
 
 def get_agent_class(framework: str) -> type:
+    """
+    Returns the agent class based on the provided framework.
+
+    Args:
+        framework (str): The framework to get the agent class for.
+
+    Returns:
+        type: The agent class based on the provided framework.
+    """
     if os.getenv("DRY_RUN"):
         return MockAgent
     if framework == "crewai":
@@ -37,6 +46,17 @@ def get_agent_class(framework: str) -> type:
         return BeeAgent
 
 def create_agents(agent_defs):
+    """
+    Creates agents based on the provided definitions.
+
+    Args:
+        agent_defs (list): A list of agent definitions. Each definition is a dictionary with the following keys:
+            "spec": A dictionary containing the specification of the agent.
+                "framework": The framework of the agent (e.g., "bee").
+
+    Returns:
+        None
+    """
     for agent_def in agent_defs:
         # Use 'bee' if this value isn't set
         #
@@ -46,6 +66,16 @@ def create_agents(agent_defs):
         save_agent(get_agent_class(agent_def["spec"]["framework"])(agent_def))
 
 class Workflow:
+    """Execute sequential workflow.
+
+    Args:
+        agent_defs (dict): Dictionary of agent definitions.
+        workflow (dict): Workflow definition.
+
+    Attributes:
+        agents (dict): Dictionary of agents.
+        steps (dict): Dictionary of steps.
+    """
     def __init__(self, agent_defs={}, workflow={}):
         """Execute sequential workflow.
         input:
@@ -76,6 +106,16 @@ class Workflow:
 
     # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
+        """
+        Creates or restores agents based on the provided definitions and workflow.
+
+        Args:
+            agent_defs (list): A list of agent definitions. Each definition can be either a string (agent name) or a dictionary (agent definition).
+            workflow (dict): A dictionary representing the workflow.
+
+        Returns:
+            None
+        """
         if agent_defs:
             if type(agent_defs[0]) == str:
                 for agent_name in agent_defs:
@@ -99,6 +139,13 @@ class Workflow:
                 return steps.index(step)
 
     async def _condition(self):
+        """
+        This function is responsible for executing the workflow steps based on the provided prompt.
+        It iterates through the steps and runs each step using the `run` method of the `Step` class.
+        The function takes in the workflow template as input, which includes the prompt and the steps.
+        It also uses the `agents` dictionary to map the agent names to their corresponding objects.
+        The function returns a dictionary containing the final prompt after all the steps have been executed.
+        """
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
         for step in steps:
