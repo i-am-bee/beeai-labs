@@ -25,13 +25,20 @@
 </style>
 <body>
     <div id="title"></div>
+<<<<<<< HEAD
         <h1>Workflow: <a href="static/workflow.yaml">{{ title }}</a></h1>
         <p><a href="static/agents.yaml">Agent definitions</a>
     <div class="container">
         <div id="output" style="height: 500px; overflow: scroll;">
-            {% for line in result.splitlines() %}
-            <p>{{ line }}</p>
-            {% endfor %}
+	  <script>
+            var source = new EventSource('/stream');
+            source.onmessage = function(event) {
+                document.getElementById('output').innerHTML += event.data + '<br>';
+//                if event.data.includes("EndEnd") {
+//                    source.close();
+//                };
+            };
+	  </script>
         </div>
         <div class="mermaid-container">
           <pre><code class="language-mermaid">
@@ -41,7 +48,6 @@
     </div>
     <form action="/" method="get">
         <input type="text" name="Prompt" placeholder="Enter your prompt here">
-        <input type="checkbox" name="Clear Output" value="true"> Clear Output
         <input type="submit" value="Re-run">
     </form>
 </body>
