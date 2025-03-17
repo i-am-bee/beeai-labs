@@ -90,7 +90,8 @@ maestro validate agent_schema.json agent.yaml
 ```
 
 ```bash
-maestro validate workflow_schema.json
+maestro validate workflow_schema.json workflow.yaml
+```
 
 * Execute the workflow:
 
@@ -133,6 +134,6 @@ maestro run None workflow.yaml
 
 * Prepare agent and workflow definition yaml files in the current directory (e.g. agent.yaml, workflow.yaml)
 
-* Run workflow: `./maestro.sh run agents.yaml workflow.yaml
+* Run workflow (directly creating agents and running): `maestro run agents.yaml workflow.yaml`
 
 * Learn about [contributing](./demos/CONTRIBUTING.md)
