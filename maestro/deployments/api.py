@@ -49,6 +49,7 @@ def process_workflow():
     global workflow_instance
     global output
     global thread
+    global position
     if request.method == 'GET':
         agents_yaml = parse_yaml("src/agents.yaml")
         workflow_yaml = parse_yaml("src/workflow.yaml")
@@ -62,6 +63,10 @@ def process_workflow():
 
         diagram = workflow_instance.to_mermaid()
 
+        clear = request.args.get("Clear Output")
+        if clear:
+            output = io.StringIO()
+        position = 0
         thread = threading.Thread(target=start_workflow)
         thread.start()
 
