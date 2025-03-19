@@ -18,13 +18,16 @@ spec:
     steps:
       - name: current-affairs
         agent: current-affairs
-        condition: 
-        - case: (input.find('hotter') != -1)
-          do: hot-activities
-        - default: cold-activities
       - name: hot-or-not
         agent: hot-or-not
         condition:
-        - case: (input.find('hotter') != -1)
-          do: hot-activities
+        - if: (input.find('hotter') != -1)
+          then: hot-activities
           else: cold-activities
+      - name: cold-activities
+        agent: cold-activities
+        condition:
+          default: exit
+      - name: hot-activities
+        agent: hot-activities
+      - name: exit

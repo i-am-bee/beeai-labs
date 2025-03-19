@@ -24,7 +24,7 @@ spec:
   tools:
     - code_interpreter
     - weather
-  instructions:  Use the OpenMeteo weather tool to find the historical temperature of the given location. Determine if the input temperature is warmer or colder than the historical temperature.  Respond with "hotter" or "colder" and include the location name.
+  instructions:  Use the OpenMeteo weather tool to find the historical temperature of the given location. Determine if the input temperature is warmer or colder than the historical temperature.  Respond with hotter or colder and include the location name.
 ---
 apiVersion: maestro/v1alpha1
 kind: Agent
