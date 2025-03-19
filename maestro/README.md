@@ -270,7 +270,7 @@ maestro run None workflow.yaml
   * To delete the cluster: `kind delete cluster`
 
 * Deployment:
-  * `maestro deploy ./maestro/demos/workflows/weather-checker.ai/agents.yaml ./maestro/demos/workflows/weather-checker.ai/workflow.yaml --docker BEE_API_KEY=sk-proj-testkey BEE_API=http://<local-ip>:4000`
+  * `maestro deploy agents.yaml workflow.yaml --docker BEE_API_KEY=sk-proj-testkey BEE_API=http://<local-ip>:4000`
 
 * Helpful Debugging tools:
   * Find out where your BEE_API is:
