@@ -15,7 +15,7 @@ There are two steps to running a workflow: defining some agents and creating a w
 
 ### Agent Definition
 
-* You can define your Agent in a declarative way using a YAML file, where you can use the current Bee Agent implementation. With that, you can configure your agent or agents. For example, create an `agents.yaml` file containing the following:
+* You can define your Agent in a declarative way using a YAML file, where you can use the current BeeAI Agent implementation. With that, you can configure your agent or agents. For example, create an `agents.yaml` file containing the following:
 
 ```yaml
 apiVersion: maestro/v1alpha1
@@ -107,7 +107,7 @@ maestro run None workflow.yaml
 
 ## Local environment
 
-* Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
+* Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
   * [Helpful tips](./demos/README.md) on setting up the stack
 
 * Install dependencies: `poetry shell && poetry install`
@@ -116,9 +116,9 @@ maestro run None workflow.yaml
 
 ### Run workflow in local environment with container runtime (e.g. podman) or kubernetes cluster
 
-* Prepare required environments, running from Bee-Hive top level:
-  * Run a local instance of the [Bee Stack](https://github.com/i-am-bee/bee-stack)
-  * for Kubernetes, `kubectl`, `kind` are required
+* Prepare required environments, running from `~/Bee-Hive/Maestro/` top level:
+  * Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
+  * for Kubernetes, [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/), [`kind`](https://kind.sigs.k8s.io/) are required
 
 * Required Export Tags
   * `export IMAGE_PUSH_CMD='kind load docker-image docker.io/library/maestro:latest'`
