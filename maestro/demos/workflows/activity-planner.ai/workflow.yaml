@@ -27,7 +27,7 @@ spec:
       - name: cold-activities
         agent: cold-activities
         condition:
-          default: exit
+        - default: exit
       - name: hot-activities
         agent: hot-activities
       - name: exit
