@@ -3,9 +3,9 @@
 
 # Maestro
 
-A multi-agent platform with the vision to facilitate deploy and run AI agents.
+A multi-agent platform with the vision to facilitate deployment and runnning of AI agents.
 
-In this initial version you are going to find some examples how run a group of agents, that you can build using current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
+In this initial version you are going to find some examples showing how to run a group of agents, that you can build using the current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
 ## Usage
 
