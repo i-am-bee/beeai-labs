@@ -27,9 +27,10 @@ def generate():
     global thread
     message = output.getvalue()
     if len(message) > position:
-        text = "data: " + output.getvalue()[position:].replace("\n", "  \ndata: ")+ "\n\n"
-        yield text
-    position = len(message)
+        lines = output.getvalue()[position:].splitlines()
+        for line in lines:
+            yield f"data: {line}\n\n"
+        position = len(message)
     #if thread and not thread.is_alive():
     #    text = "data: Thread completed EndEnd\n\n"
     #    yield text
