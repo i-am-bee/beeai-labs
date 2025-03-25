@@ -77,6 +77,22 @@ class DeployCommand(TestCommand):
         self.assertTrue(self.command.name() == 'deploy')
         self.assertTrue(self.command.execute() == 0)
 
+    def test_deploy_without_auto_prompt(self):
+        self.args.pop('--auto_prompt', None)
+        self.args["--docker"] = True
+        self.command = CLI(self.args).command()
+
+        import yaml
+        def dummy_deploy(self, agents_yaml, workflow_file, env):
+            with open(workflow_file, 'r') as f:
+                docs = list(yaml.safe_load_all(f))
+            self.captured_workflow = docs[0]
+            return 0
+        self.command._DeployCmd__deploy_agents_workflow = dummy_deploy.__get__(self.command, type(self.command))
+        self.command.execute()
+        template = self.command.captured_workflow.get("spec", {}).get("template", {})
+        self.assertNotIn("prompt", template, "Prompt field should be removed when --auto_prompt is not set")
+
 # `run` commmand tests
 class RunCommand(TestCommand):
     def setUp(self):
