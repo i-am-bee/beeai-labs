@@ -25,7 +25,7 @@ spec:
                   agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo tool. 
                   agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo tool.  
           template: "{CONNECTOR}"
-      - name: Specify Agents and Descriptions 
+      - name: Specify Agents for Workflow Generation
         agent: Format Workflow Agent
       - name: Creating Workflow YAML file
         agent: Create Workflow YAML

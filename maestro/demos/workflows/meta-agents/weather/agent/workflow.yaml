@@ -16,7 +16,7 @@ spec:
       - Create Agent YAML
     prompt: I want to compare the current weather with the historical averages. To do this, I will need 2 agents, one to retrieve the weather and one to compare to the historical average.
     steps:
-      - name: NLP Agent Planner
+      - name: English Instructions to Prompt
         agent: NLP Agent Planner
       - name: input
         input:
@@ -25,7 +25,7 @@ spec:
                   agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo tool. 
                   agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo tool.
           template: "{CONNECTOR}"
-      - name: Format Input
+      - name: Specify Agents for Agent Generation
         agent: Format Input Agent
-      - name: Create Agent YAML
+      - name: Creating Agent YAML Workflow
         agent: Create Agent YAML
