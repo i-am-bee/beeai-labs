@@ -43,6 +43,7 @@ class DeployCommand(TestCommand):
                         '--k8s': False,
                         '--kubernetes': False,
                         '--docker': False,
+                        '--auto-prompt': False,
                         'AGENTS_FILE': self.get_fixture('yamls/agents/simple_agent.yaml'),
                         'SCHEMA_FILE': None,
                         'WORKFLOW_FILE': self.get_fixture('yamls/workflows/simple_workflow.yaml'),
@@ -73,6 +74,13 @@ class DeployCommand(TestCommand):
         
     def test_deploy__dry_run_docker(self):
         self.args["--docker"] = True
+        self.command = CLI(self.args).command()
+        self.assertTrue(self.command.name() == 'deploy')
+        self.assertTrue(self.command.execute() == 0)
+
+    def test_deploy__dry_run_docker_with_auto_prompt(self):
+        self.args["--docker"] = True
+        self.args["--auto-prompt"] = True
         self.command = CLI(self.args).command()
         self.assertTrue(self.command.name() == 'deploy')
         self.assertTrue(self.command.execute() == 0)
