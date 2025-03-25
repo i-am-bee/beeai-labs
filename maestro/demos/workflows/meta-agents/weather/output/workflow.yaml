@@ -11,10 +11,10 @@ spec:
         app: mas-example
     agents:
       - weather_fetcher
-      - tempature_analyzer
+      - temperature_analyzer
     prompt: San Jose
     steps:
       - name: current_weather
         agent: weather_fetcher
       - name: compare_temps
-        agent: tempature_analyzer
+        agent: temperature_analyzer
