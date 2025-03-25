@@ -10,11 +10,11 @@ spec:
       labels:
         app: mas-example
     agents:
-      - A
-      - B
+      - weather_fetcher
+      - tempature_analyzer
     prompt: San Jose
     steps:
-      - name: fetch_weather
-        agent: A
-      - name: compare_temperature
-        agent: B
+      - name: current_weather
+        agent: weather_fetcher
+      - name: compare_temps
+        agent: tempature_analyzer

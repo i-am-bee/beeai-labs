@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: A
+  name: weather_fetcher
   labels:
     app: mas-example
 spec:
@@ -15,7 +15,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: B
+  name: temperature_analyzer
   labels:
     app: mas-example
 spec:
