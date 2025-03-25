@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: get-temperature
+  name: Temperature Agent
   labels:
     app: mas-example
 spec:
@@ -15,7 +15,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: hot-or-not
+  name: hot-or-not Agent
   labels:
     app: mas-example
 spec:

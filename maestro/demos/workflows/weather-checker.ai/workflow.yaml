@@ -10,11 +10,11 @@ spec:
       labels:
         app: mas-example
     agents:
-      - get-temperature
-      - hot-or-not
+      - Temperature Agent
+      - hot-or-not Agent
     prompt: New York City
     steps:
-      - name: Retreive Temperature
-        agent: get-temperature
-      - name: Compare Temperature
-        agent: hot-or-not
+      - name: get_temperature
+        agent: Temperature Agent
+      - name: compare_temperature
+        agent: hot-or-not Agent
