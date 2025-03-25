@@ -55,24 +55,24 @@ def process_workflow():
         agents_yaml = parse_yaml("src/agents.yaml")
         workflow_yaml = parse_yaml("src/workflow.yaml")
         prompt = request.args.get("Prompt")
+        auto_run = os.getenv("AUTO_RUN", "false").lower() == "true"
+        should_run = auto_run or prompt
         if prompt:
             workflow_yaml[0]["spec"]["template"]["prompt"] = prompt
         try:
             workflow_instance = Workflow(agents_yaml, workflow_yaml[0])
         except Exception as excep:
             raise RuntimeError("Unable to create agents") from excep
-
         diagram = workflow_instance.to_mermaid()
-
-        clear = request.args.get("Clear Output")
-        if clear:
-            output = io.StringIO()
-        position = 0
-        thread = threading.Thread(target=start_workflow)
-        thread.start()
-
-        name = workflow_yaml[0]["metadata"]["name"]
-        return render_template('index.html', result="", title=name, diagram=diagram)
+        if should_run:
+            clear = request.args.get("Clear Output")
+            if clear:
+                output = io.StringIO()
+            position = 0
+            thread = threading.Thread(target=start_workflow)
+            thread.start()
+    name = workflow_yaml[0]["metadata"]["name"]
+    return render_template('index.html', result="", title=name, diagram=diagram)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

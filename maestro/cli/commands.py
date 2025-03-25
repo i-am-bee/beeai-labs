@@ -217,6 +217,9 @@ class DeployCmd(Command):
     def __init__(self, args):
         self.args = args
         super().__init__(self.args)
+
+    def auto_prompt(self):
+        return self.args.get('--auto-prompt', False)
     
     def __deploy_agents_workflow(self, agents_yaml, workflow_yaml, env):
         try:
@@ -257,19 +260,24 @@ class DeployCmd(Command):
         return self.args['WORKFLOW_FILE']
 
     def ENV(self):
-        return " ".join(self.args['ENV'])
+        env_vars = self.args['ENV']
+        if self.auto_prompt():
+            env_vars.append("AUTO_RUN=true")
+        return " ".join(env_vars)
 
     def name(self):
       return "deploy"
 
     def deploy(self):
         try:
+            
             self.__deploy_agents_workflow(self.AGENTS_FILE(), self.WORKFLOW_FILE(), self.ENV())
         except Exception as e:
             self._check_verbose()
             Console.error(f"Unable to deploy workflow: {str(e)}")
             return 1
         return 0
+        
 
 # Mermaid command group
 # $ maestro mermaid WORKFLOW_FILE [options]
