@@ -77,10 +77,8 @@ class DeployCommand(TestCommand):
         self.assertTrue(self.command.name() == 'deploy')
         self.assertTrue(self.command.execute() == 0)
 
-    def test_deploy_without_auto_prompt(self):
+    def test_deploy_with_auto_prompt(self):
         import tempfile, yaml
-
-        # Create a temporary workflow file with the expected nested structure.
         dummy_workflow = {
             "spec": {
                 "template": {
@@ -92,28 +90,22 @@ class DeployCommand(TestCommand):
         yaml.safe_dump(dummy_workflow, temp_file)
         temp_file.close()
 
-        # Set up the CLI arguments to use this temporary file.
         self.args["WORKFLOW_FILE"] = temp_file.name
-        self.args.pop("--auto_prompt", None)  # Ensure auto prompt is NOT set.
+        self.args["--auto_prompt"] = True
         self.args["--docker"] = True
         self.command = CLI(self.args).command()
 
-        # Monkey-patch the deploy helper to capture the processed workflow YAML.
         def dummy_deploy(self, agents_yaml, workflow_file, env):
             with open(workflow_file, 'r') as f:
                 docs = list(yaml.safe_load_all(f))
             self.captured_workflow = docs[0]
             return 0
         self.command._DeployCmd__deploy_agents_workflow = dummy_deploy.__get__(self.command, type(self.command))
-
-        # Execute the command.
         self.command.execute()
-
-        # Check that the prompt field has been removed from the nested template.
         template = self.command.captured_workflow.get("spec", {}).get("template", {})
-        self.assertNotIn("prompt", template, "Prompt field should be removed when --auto_prompt is not set")
+        self.assertIn("prompt", template, "Prompt field should be present when --auto_prompt is set")
 
-        
+
 # `run` commmand tests
 class RunCommand(TestCommand):
     def setUp(self):
