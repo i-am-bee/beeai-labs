@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: current-affairs
+  name: get-temperature
   labels:
     app: mas-example
 spec:
