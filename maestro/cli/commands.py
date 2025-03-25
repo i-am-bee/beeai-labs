@@ -270,7 +270,6 @@ class DeployCmd(Command):
 
     def deploy(self):
         try:
-            
             self.__deploy_agents_workflow(self.AGENTS_FILE(), self.WORKFLOW_FILE(), self.ENV())
         except Exception as e:
             self._check_verbose()
