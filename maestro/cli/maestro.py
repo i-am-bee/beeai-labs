@@ -31,7 +31,6 @@ Options:
   --silent               Show no additional output on success, e.g., no OK or Success etc
   --dry-run              Mocks agents and other parts of workflow execution.
 
-  --auto-prompt          Automatically runs the deploy workflow on page load with default user prompt
   --url                  The deployment URL, default: 127.0.0.1:5000
   --k8s                  Deploys to Kubernetes
   --kubernetes

@@ -218,9 +218,6 @@ class DeployCmd(Command):
         self.args = args
         super().__init__(self.args)
     
-    def auto_prompt(self):
-        return self.args.get('--auto-prompt', False)
-    
     def __deploy_agents_workflow(self, agents_yaml, workflow_yaml, env):
         try:
             if self.docker():
@@ -260,10 +257,7 @@ class DeployCmd(Command):
         return self.args['WORKFLOW_FILE']
 
     def ENV(self):
-        env_vars = self.args['ENV']
-        if self.auto_prompt():
-            env_vars.append("AUTO_RUN=true")
-        return " ".join(env_vars)
+        return " ".join(self.args['ENV'])
 
     def name(self):
       return "deploy"
