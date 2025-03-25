@@ -129,7 +129,7 @@ class Deploy:
         deploy_to_docker(): Deploys the image to Docker.
         deploy_to_kubernetes(): Deploys the image to Kubernetes.
     """
-    def __init__(self, agent_defs, workflow_defs, env="", target=None):
+    def __init__(self, agent_defs, workflow_defs, env="", target=None, auto_prompt=False):
         """
         Initializes the Code Assistant.
 
@@ -148,6 +148,7 @@ class Deploy:
         self.target = target or "127.0.0.1:5000"
         self.cmd = os.getenv("CONTAINER_CMD", "docker")
         self.flags = os.getenv("BUILD_FLAGS")
+        self.auto_prompt = auto_prompt
 
     def build_image(self, agent, workflow):
         """
@@ -186,7 +187,10 @@ class Deploy:
             None
         """
         self.build_image(self.agent, self.workflow)
-        subprocess.run(create_docker_args(self.cmd, self.target, self.env))
+        full_env = self.env
+        if self.auto_prompt:
+            full_env += " AUTO_RUN=true"
+        subprocess.run(create_docker_args(self.cmd, self.target, full_env))
         shutil.rmtree(self.tmp_dir)
 
     def deploy_to_kubernetes(self):

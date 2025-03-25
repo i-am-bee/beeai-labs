@@ -224,12 +224,12 @@ class DeployCmd(Command):
     def __deploy_agents_workflow(self, agents_yaml, workflow_yaml, env):
         try:
             if self.docker():
-                deploy = Deploy(agents_yaml, workflow_yaml, env)
+                deploy = Deploy(agents_yaml, workflow_yaml, env, autoprompt=self.auto_prompt())
                 deploy.deploy_to_docker()  
                 if not self.silent():
                     Console.ok(f"Workflow deployed: http://127.0.0.1:5000")
             elif self.k8s():
-                deploy = Deploy(agents_yaml, workflow_yaml, env)
+                deploy = Deploy(agents_yaml, workflow_yaml, env, autoprompt=self.auto_prompt()) 
                 deploy.deploy_to_kubernetes()
                 if not self.silent():
                     Console.ok(f"Workflow deployed: http://<kubernates address>:30051")
