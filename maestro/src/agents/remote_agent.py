@@ -23,6 +23,7 @@ class RemoteAgent(Agent):
             agent_name (str): The name of the agent.
         """
         super().__init__(agent)
+        self.url = agent["spec"]["url"]
 
 
     async def run(self, prompt: str) -> str:
@@ -31,10 +32,10 @@ class RemoteAgent(Agent):
         Args:
             prompt (str): The prompt to run the agent with.
         """
-        print(f"🐝 Running {self.agent_name}...\n")
+        print(f"👩🏻‍💻 Running {self.agent_name}...\n")
         try:
             data = {"prompt": prompt}
-            print("? ", prompt)
+            print("👩🏻‍💻 ", prompt)
             response = requests.post(self.url, json=data)
             response.raise_for_status()
             answer = response.json()["response"]
