@@ -62,6 +62,10 @@
         "output": {
           "type": "string",
           "description": "instructions for the agent"
+        },
+        "url": {
+            "type": "string",
+            "description": "The (optional) url to send a request to the agent"
         }
       },
       "required": [

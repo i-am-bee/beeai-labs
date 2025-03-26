@@ -23,6 +23,7 @@ from src.agents.agent_factory import AgentFramework
 
 from src.agents.crewai_agent import CrewAIAgent
 from src.agents.bee_agent import BeeAgent
+from src.agents.remote_agent import RemoteAgent
 from src.agents.mock_agent import MockAgent
 from src.agents.agent import save_agent, restore_agent
 
@@ -42,6 +43,8 @@ def get_agent_class(framework: str) -> type:
         return MockAgent
     if framework == "crewai":
         return CrewAIAgent
+    elif framework == "remote":
+        return RemoteAgent
     else:
         return BeeAgent
 
@@ -84,7 +87,7 @@ class Workflow:
         """
         self.agents = {}
         self.steps = {}
-                
+
         self.agent_defs = agent_defs
         self.workflow = workflow
 
@@ -96,7 +99,7 @@ class Workflow:
         workflow = self.workflow
         if isinstance(self.workflow, list):
             workflow = self.workflow[0]
-        
+
         return Mermaid(workflow, kind, orientation).to_markdown()
 
     async def run(self):
@@ -131,7 +134,7 @@ class Workflow:
         else:
             for agent in workflow["spec"]["template"]["agents"]:
                 self.agents[agent] = restore_agent(agent)
-    
+
     #TODO: why is this public? It should be private by naming: _find_index(...) @aki
     def find_index(self, steps, name):
         for step in steps:
