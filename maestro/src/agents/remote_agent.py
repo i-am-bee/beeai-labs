@@ -35,7 +35,7 @@ class RemoteAgent(Agent):
         print(f"👩🏻‍💻 Running {self.agent_name}...\n")
         try:
             data = {"prompt": prompt}
-            print("👩🏻‍💻 ", prompt)
+            print("❓ ", prompt)
             response = requests.post(self.url, json=data)
             response.raise_for_status()
             answer = response.json()["response"]
