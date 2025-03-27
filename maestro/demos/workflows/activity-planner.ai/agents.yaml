@@ -42,9 +42,10 @@ spec:
   description: Find activities suited to do in the colder weather at a given location.
   tools:
     - code_interpreter
-    - web_search
-  instructions: The input a location that is currently colder than normal.  Perform a web search to find fun activities to do in the colder near the location and recommend five. Return these in bullet point format.
-    Example Input -  'New York is colder' 
+    - LLM
+  instructions: You are a tool that provides a list of activities for cold weather. Do not include any explanations, apologies, or additional text. Only output the list of activities. 
+    The input is a location that is currently colder than normal. Recommend some fun activities to do in the colder weather near the location. Return only a list of activities, with no additional text or follow-up questions.
+    Example Input - 'New York is colder'
     Example Output - 'Go to a bar, go to the gym, go to the muesuem, visit Columbia, go to a club'
 ---
 apiVersion: maestro/v1alpha1
@@ -58,7 +59,8 @@ spec:
   description: Find activities suited to do in the hotter weather at a given location.
   tools:
     - code_interpreter
-    - web_search
-  instructions: The input a location that is currently hotter than normal.  Perform a web search to find fun activities to do in the hotter weather near the location and recommend five. Return these in bullet point format.
+    - LLM
+  instructions: You are a tool that provides a list of activities for hot weather. Do not include any explanations, apologies, or additional text. Only output the list of activities. 
+    The input is a location that is currently hotter than normal. Recommend some fun activities to do in the hotter weather near the location. Return only a list of activities, with no additional text or follow-up questions.
     Example Input - 'New York is hotter'
     Example Output - 'visit central park, go for a run, go to the muesuem, go for a swim, go get some pizza'
