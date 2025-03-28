@@ -9,6 +9,28 @@ class AgentFramework(Enum):
     """Enumeration of supported frameworks"""
     BEE = "bee"
     CREWAI = "crewai"
+    MOCK = "mock"
+
+    """Enumeration of supported frameworks"""
+    FRAMEWORKS = {
+        'BEEAI': "beeai",
+        'CREWAI': "crewai",
+        'MOCK': "mock",
+
+        # Not yet supported but adding in anticipation
+        'LANGFLOW': "langflow",
+        'OPENAI': "openai",
+        'REMOTE': "remote"   
+    }
+
+    EMOJIS = {
+        'BEEAI': '🐝',
+        'CREWAI': '👥',
+        'LANGFLOW': '⛓',
+        'OPENAI': '🔓',
+        'MOCK': '🤖',
+        'REMOTE': '💸'
+    }
 
 class AgentFactory:
     """Factory class for handling agent frameworks"""
