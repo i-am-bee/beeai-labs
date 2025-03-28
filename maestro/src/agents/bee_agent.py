@@ -4,7 +4,7 @@
 import os, dotenv
 import asyncio
 import requests
-
+import json
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta import AssistantStreamEvent
 from openai.types.beta.threads.runs import RunStep, RunStepDelta, ToolCall
@@ -28,7 +28,22 @@ class BeeAgent(Agent):
         super().__init__(agent)
     
         url = f'{os.getenv("BEE_API")}/v1/assistants'
-        payload = f'{{"tools": [{{"type": "code_interpreter"}},{{"type": "system","system": {{"id": "web_search"}}}},{{"type": "system","system": {{"id": "weather"}}}}],"name": "{self.agent_name}","description": "{self.agent_desc}","instructions": "{self.instructions}","metadata": {{}},"model": "{self.agent_model}","agent": "bee","top_p": 1,"temperature": 0.1}}'
+        payload_dict = {
+            "tools": [
+                {"type": "code_interpreter"},
+                {"type": "system", "system": {"id": "web_search"}},
+                {"type": "system", "system": {"id": "weather"}}
+            ],
+            "name": self.agent_name,
+            "description": self.agent_desc,
+            "instructions": self.instructions.strip(),
+            "metadata": {},
+            "model": self.agent_model,
+            "agent": "bee",
+            "top_p": 0.8,
+            "temperature": 0.1
+        }
+        payload = json.dumps(payload_dict)
         headers = {
             'accept': "application/json",
             'Authorization': "Bearer sk-proj-testkey",
