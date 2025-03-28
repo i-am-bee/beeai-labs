@@ -30,7 +30,7 @@ class MockAgent(Agent):
     
     def __init__(self, agent: dict) -> None:
         """
-        Initializes the workflow for the specified Bee agent.
+        Initializes the workflow for the specified mock agent.
          
         Args:
             agent_name (str): The name of the agent. 

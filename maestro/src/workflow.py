@@ -22,8 +22,11 @@ from src.step import Step
 from src.agents.agent_factory import AgentFramework
 
 from src.agents.crewai_agent import CrewAIAgent
-from src.agents.bee_agent import BeeAgent
+
+from src.agents.beeai_agent import BeeAIAgent
+
 from src.agents.remote_agent import RemoteAgent
+
 from src.agents.mock_agent import MockAgent
 from src.agents.agent import save_agent, restore_agent
 
@@ -46,7 +49,7 @@ def get_agent_class(framework: str) -> type:
     elif framework == "remote":
         return RemoteAgent
     else:
-        return BeeAgent
+        return BeeAIAgent
 
 def create_agents(agent_defs):
     """
@@ -64,7 +67,7 @@ def create_agents(agent_defs):
         # Use 'bee' if this value isn't set
         #
         agent_def["spec"]["framework"] = agent_def["spec"].get(
-            "framework", AgentFramework.BEE
+            "framework", AgentFramework.BEEAI
         )
         save_agent(get_agent_class(agent_def["spec"]["framework"])(agent_def))
 
@@ -128,7 +131,7 @@ class Workflow:
                   # Use 'bee' if this value isn't set
                   #
                   agent_def["spec"]["framework"] = agent_def["spec"].get(
-                      "framework", AgentFramework.BEE
+                      "framework", AgentFramework.BEEAI
                   )
                   self.agents[agent_def["metadata"]["name"]] = get_agent_class(agent_def["spec"]["framework"])(agent_def)
         else:

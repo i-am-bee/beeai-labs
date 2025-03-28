@@ -5,7 +5,7 @@
 
 A multi-agent platform with the vision to facilitate deployment and runnning of AI agents.
 
-In this initial version you are going to find some examples showing how to run a group of agents, that you can build using the current and more mature TypeScript [Bee Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
+In this initial version you are going to find some examples showing how to run a group of agents, that you can build using the current and more mature TypeScript [Bee AI Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
 ## Usage
 
@@ -116,7 +116,7 @@ maestro run None workflow.yaml
 
 ### Run workflow in local environment with container runtime (e.g. podman) or kubernetes cluster
 
-* Prepare required environments, running from `~/Bee-Hive/Maestro/` top level:
+* Prepare required environments, running from `~/maestro/` top level:
   * Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
   * for Kubernetes, [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/), [`kind`](https://kind.sigs.k8s.io/) are required
 
@@ -130,10 +130,10 @@ maestro run None workflow.yaml
   * To delete the cluster: `kind delete cluster`
 
 * Deployment:
-  * `maestro deploy agents.yaml workflow.yaml --docker BEE_API_KEY=sk-proj-testkey BEE_API=http://<local-ip>:4000`
+  * `maestro deploy agents.yaml workflow.yaml --docker BEEAI_API_KEY=sk-proj-testkey BEEAI_API=http://<local-ip>:4000`
 
 * Helpful Debugging tools:
-  * Find out where your BEE_API is:
+  * Find out where your BEEAI_API is:
     * `ifconfig | grep 'inet'`
   * Restarting containers:
     * `podman ps | grep maestro` -> `podman stop <container_id>` -> `podman rm <container_id>`

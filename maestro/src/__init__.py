@@ -17,8 +17,10 @@ import dotenv
 dotenv.load_dotenv()
 
 from .workflow import Workflow
-from .agents.bee_agent import BeeAgent
+
+from .agents.beeai_agent import BeeAIAgent
 from .agents.remote_agent import RemoteAgent
+
 from .agents.agent import save_agent, restore_agent, remove_agent
 from .deploy import Deploy
 

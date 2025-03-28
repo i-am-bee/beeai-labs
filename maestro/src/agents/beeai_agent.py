@@ -13,22 +13,22 @@ from src.agents.agent import Agent
 
 dotenv.load_dotenv()
 
-class BeeAgent(Agent):
+class BeeAIAgent(Agent):
     """
-    BeeAgent extends the Agent class to load and run a specific agent.
+    BeeAIAgent extends the Agent class to load and run a specific agent.
     """    
     
     def __init__(self, agent: dict) -> None:
         """
-        Initializes the workflow for the specified Bee agent.
+        Initializes the workflow for the specified BeeAI agent.
          
         Args:
             agent_name (str): The name of the agent. 
         """
         super().__init__(agent)
     
-        url = f'{os.getenv("BEE_API")}/v1/assistants'
-        payload = f'{{"tools": [{{"type": "code_interpreter"}},{{"type": "system","system": {{"id": "web_search"}}}},{{"type": "system","system": {{"id": "weather"}}}}],"name": "{self.agent_name}","description": "{self.agent_desc}","instructions": "{self.instructions}","metadata": {{}},"model": "{self.agent_model}","agent": "bee","top_p": 1,"temperature": 0.1}}'
+        url = f'{os.getenv("BEEAI_API")}/v1/assistants'
+        payload = f'{{"tools": [{{"type": "code_interpreter"}},{{"type": "system","system": {{"id": "web_search"}}}},{{"type": "system","system": {{"id": "weather"}}}}],"name": "{self.agent_name}","description": "{self.agent_desc}","instructions": "{self.instructions}","metadata": {{}},"model": "{self.agent_model}","agent": "bee", "top_p": 1,"temperature": 0.1}}'
         headers = {
             'accept': "application/json",
             'Authorization': "Bearer sk-proj-testkey",
@@ -39,13 +39,13 @@ class BeeAgent(Agent):
 
     async def run(self, prompt: str) -> str:
         """
-        Runs the bee agent with the given prompt.
+        Runs the BeeAI agent with the given prompt.
         Args:
             prompt (str): The prompt to run the agent with.
         """
         print(f"🐝 Running {self.agent_name}...\n")
         client = OpenAI(
-            base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
+            base_url=f'{os.getenv("BEEAI_API")}/v1', api_key=os.getenv("BEE_API_KEY")
         )
         # TODO: Unused currently
         assistant = client.beta.assistants.retrieve(self.agent_id)

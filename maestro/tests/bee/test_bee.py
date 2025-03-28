@@ -19,14 +19,14 @@ from unittest import TestCase
 from pytest_mock import mocker
 
 from src.workflow import Workflow
-from src.agents.bee_agent import BeeAgent
+from src.agents.beeai_agent import BeeAIAgent
 
 dotenv.load_dotenv()
 
 # TODO: consider moving setup here
 #@pytest.fixture(scope="module")
 
-class BeeAgentMock:
+class BeeAIAgentMock:
     def __init__(self):
         pass
 
@@ -40,8 +40,8 @@ def test_agent_runs(mocker) -> None:
         return yaml_data
 
     # setup mocks
-    mock_bee=BeeAgentMock()
-    mocker.patch.object(BeeAgent, "__new__", return_value = mock_bee)
+    mock_beeai=BeeAIAgentMock()
+    mocker.patch.object(BeeAIAgent, "__new__", return_value = mock_beeai)
 
     agents_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"agents.yaml"))
     workflow_yaml = parse_yaml(os.path.join(os.path.dirname(__file__),"workflow.yaml"))

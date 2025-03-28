@@ -26,7 +26,7 @@ from src.deploy import Deploy
 class TestDeploy(TestCase):
     def setUp(self):        
         self.cwd = os.getcwd()
-        self.deploy = Deploy("tests/examples/condition_agents.yaml", "tests/examples/condition_workflow.yaml", "BEE_API_KEY=sk-proj-testkey BEE_API=http://192.168.86.45:4000 DRY_RUN=1")
+        self.deploy = Deploy("tests/examples/condition_agents.yaml", "tests/examples/condition_workflow.yaml", "BEEAI_API_KEY=sk-proj-testkey BEEAI_API=http://192.168.86.45:4000 DRY_RUN=1")
         
     def tearDown(self):
         self.deploy = None

@@ -2,18 +2,18 @@
 from enum import Enum
 from typing import Callable, Type, Union
 
-from .bee_agent import BeeAgent
+from .beeai_agent import BeeAIAgent
 from .crewai_agent import CrewAIAgent
 
 class AgentFramework(Enum):
     """Enumeration of supported frameworks"""
-    BEE = "bee"
+    BEEAI = "beeai"
     CREWAI = "crewai"
 
 class AgentFactory:
     """Factory class for handling agent frameworks"""
     @staticmethod
-    def create_agent(framework: AgentFramework) -> Callable[..., Union[BeeAgent, CrewAIAgent]]:
+    def create_agent(framework: AgentFramework) -> Callable[..., Union[BeeAIAgent, CrewAIAgent]]:
         """Create an instance of the specified agent framework.
 
         Args:
@@ -23,7 +23,7 @@ class AgentFactory:
             A new instance of the corresponding agent class.
         """
         factories = {
-            AgentFramework.BEE: BeeAgent,
+            AgentFramework.BEEAI: BeeAIAgent,
             AgentFramework.CREWAI: CrewAIAgent
         }
 
@@ -33,6 +33,6 @@ class AgentFactory:
         return factories[framework]
 
     @classmethod
-    def get_factory(cls, framework: str) -> Callable[..., Union[BeeAgent, CrewAIAgent]]:
+    def get_factory(cls, framework: str) -> Callable[..., Union[BeeAIAgent, CrewAIAgent]]:
         """Get a factory function for the specified agent type."""
         return cls.create_agent(framework)
