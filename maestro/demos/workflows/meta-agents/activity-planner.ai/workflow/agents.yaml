@@ -113,7 +113,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Create Workflow V2
+  name: Workflow V2
   labels:
     app: meta-agent
 spec:
@@ -141,19 +141,19 @@ spec:
     - 'workflow_schema'
     - 'LLM'
   code: |
-    import requests
+      import requests
 
-    def get_workflow_schema():
-        """Fetches the workflow schema from the GitHub repository."""
-        url = "https://raw.githubusercontent.com/i-am-bee/beeai-labs/main/maestro/schemas/workflow_schema.json"
-        
-        try:
-            response = requests.get(url)
-            response.raise_for_status()  # Raise an error for HTTP issues
-            
-            schema = response.json()
-            return {"schema": schema}  # Ensure the response matches the expected format
-        
-        except requests.exceptions.RequestException as e:
-            print(f"⚠️ Error fetching schema: {e}")
-            return {"schema": {}}  # Return an empty schema if fetching fails
+      def get_workflow_schema():
+          """Fetches the workflow schema from the GitHub repository."""
+          url = "https://raw.githubusercontent.com/i-am-bee/beeai-labs/main/maestro/schemas/workflow_schema.json"
+          
+          try:
+              response = requests.get(url)
+              response.raise_for_status()  # Raise an error for HTTP issues
+              
+              schema = response.json()
+              return {"schema": schema}  # Ensure the response matches the expected format
+          
+          except requests.exceptions.RequestException as e:
+              print(f"⚠️ Error fetching schema: {e}")
+              return {"schema": {}}  # Return an empty schema if fetching fails
