@@ -20,4 +20,4 @@ Activity-planner: I want 4 agents in order to ultimately decide what activities 
 Weather-checker:  I want to compare the current weather with the historical averages. To do this, I will need 2 agents, one to retrieve the weather and one to compare to the historical average.
 
 To deploy:
-`maestro deploy ./demos/workflows/meta-agents/activity-planner.ai/FOLDER_NAME/AGENTS_FILE_NAME ./demos/workflows/meta-agents/activity-planner.ai/FOLDER_NAME/WORKFLOW_FILE_NAME`
+`maestro deploy ./demos/workflows/meta-agents/activity-planner.ai/FOLDER_NAME/AGENTS_FILE_NAME ./demos/workflows/meta-agents/activity-planner.ai/FOLDER_NAME/WORKFLOW_FILE_NAME --streamlit`
