@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: A Create Agent YAML TEST
+  name: Create Agent YAML V2
   labels:
     app: meta-agent
 spec:
@@ -84,7 +84,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: A Format Input Agent TEST
+  name: Format Input Agent V2
   labels:
     app: meta-agent
 spec:
@@ -128,7 +128,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: A NLP Agent Planner TEST
+  name: NLP Agent Planner V2
   labels:
     app: meta-agent
 spec:
