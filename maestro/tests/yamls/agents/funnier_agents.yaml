@@ -7,10 +7,10 @@ metadata:
 spec:
   model: meta-llama/llama-3-1-70b-instruct
   framework: bee
+  instructions: you are a joke telling agent
   description: this is a simple agent
   
 ---
-
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
@@ -20,4 +20,5 @@ metadata:
 spec:
   model: meta-llama/llama-3-1-70b-instruct
   framework: bee
+  instructions: you are a joke telling agent
   description: this is a simple agent
