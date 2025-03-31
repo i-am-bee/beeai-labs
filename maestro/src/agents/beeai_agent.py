@@ -13,14 +13,14 @@ from src.agents.agent import Agent
 
 dotenv.load_dotenv()
 
-class BeeAgent(Agent):
+class BeeAIAgent(Agent):
     """
-    BeeAgent extends the Agent class to load and run a specific agent.
+    BeeAIAgent extends the Agent class to load and run a specific agent.
     """    
     
     def __init__(self, agent: dict) -> None:
         """
-        Initializes the workflow for the specified Bee agent.
+        Initializes the workflow for the specified BeeAI agent.
          
         Args:
             agent_name (str): The name of the agent. 
@@ -60,7 +60,7 @@ class BeeAgent(Agent):
 
     async def run(self, prompt: str) -> str:
         """
-        Runs the bee agent with the given prompt.
+        Runs the BeeAI agent with the given prompt.
         Args:
             prompt (str): The prompt to run the agent with.
         """

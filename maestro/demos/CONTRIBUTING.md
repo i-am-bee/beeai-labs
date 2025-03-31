@@ -1,6 +1,6 @@
-# Contributing to Bee Hive Demos
+# Contributing to Maestro Demos
 
-Thank you for your interest in contributing to **Bee Hive**! This document outlines the structure and workflow for setting up and testing demos using **Maestro**.
+Thank you for your interest in contributing to **Maestro**! This document outlines the structure and workflow for setting up and testing demos using **Maestro**.
 
 ---
 
@@ -96,7 +96,7 @@ maestro run ./src/agents/meta_agent/agents.yaml ./src/agents/meta_agent/workflow
 #### Example `agents.yaml`
 
 ```yaml
-apiVersion: beehive/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: search_arxiv
@@ -114,7 +114,7 @@ spec:
 #### Example `workflow.yaml`
 
 ```yaml
-apiVersion: beehive/v1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
   name: arxiv_search_demo
