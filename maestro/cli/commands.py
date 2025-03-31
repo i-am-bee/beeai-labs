@@ -242,12 +242,11 @@ class DeployCmd(Command):
                 deploy = Deploy(agents_yaml, workflow_yaml, env)
                 deploy.deploy_to_kubernetes()
                 if not self.silent():
-                    Console.ok(f"Workflow deployed: http://<kubernetes address>:30051")
-            elif self.streamlit():
-                self.__deploy_agents_workflow_streamlit()
+                    Console.ok(f"Workflow deployed: http://<kubernetes address>:30051")            
             else:
-                Console.error("Need to specify --docker or --k8s | --kubernetes")
-                return 1
+                self.__deploy_agents_workflow_streamlit()
+                if not self.silent():
+                    Console.ok(f"Workflow deployed: http://localhost:8501/?embed=true")
         except Exception as e:
             self._check_verbose()
             raise RuntimeError(f"Unable to deploy workflow: {str(e)}") from e
