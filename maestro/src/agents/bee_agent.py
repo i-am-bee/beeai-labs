@@ -28,6 +28,17 @@ class BeeAgent(Agent):
         super().__init__(agent)
     
         url = f'{os.getenv("BEE_API")}/v1/assistants'
+        headers = {
+            'accept': "application/json",
+            'Authorization': "Bearer sk-proj-testkey",
+            'Content-Type': "application/json"
+        }
+        response = requests.request("GET", url, headers=headers).json()
+        for agent in response["data"]:
+            if agent["name"] == self.agent_name and agent["model"] == self.agent_model: 
+                self.agent_id = agent["id"]
+                return
+
         payload_dict = {
             "tools": [
                 {"type": "code_interpreter"},
@@ -44,11 +55,6 @@ class BeeAgent(Agent):
             "temperature": 0.1
         }
         payload = json.dumps(payload_dict)
-        headers = {
-            'accept': "application/json",
-            'Authorization': "Bearer sk-proj-testkey",
-            'Content-Type': "application/json"
-        }
         response = requests.request("POST", url, headers=headers, data=payload).json()
         self.agent_id = response["id"]
 
