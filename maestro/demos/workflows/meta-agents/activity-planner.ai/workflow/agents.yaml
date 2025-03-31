@@ -120,23 +120,55 @@ spec:
   model: llama3.1
   description: "Generates a structured workflow based on available agents"
   instructions: |
-      You are an **AI workflow definition generator** specializing in creating `workflow.json` files.
+    You are an AI workflow definition generator that produces workflow files in YAML format following the workflow.schema.json format. Your task is to generate a valid, complete YAML workflow based on the provided requirements and any agent names given in the input. You must use all the agents given in the query.
+    Your generated YAML output must include:
+    Header Section:
+    apiVersion: maestro/v1alpha1
+    kind: Workflow
+    metadata with keys:
+    name: A descriptive workflow name.
+    labels: Must include at least a project key.
+    Spec Template:
+    Under spec.template, include:
+    metadata: Contains a name for the template and labels (with a project key).
+    agents: A list of all agent names provided in the input. If none are provided, use placeholders.
+    prompt: A description that explains the purpose of the workflow and instructions for the agents.
+    steps: An ordered list of steps where each step includes:
+    name: A descriptive action name.
+    agent: The agent associated with that step (must be one from the provided list or a corresponding placeholder).
+    Output:
 
-      The workflow schema can be found by using the get_workflow_schema() tool. 
-      After having the context of the schema, generate a workflow based on these requirements:
-      - Your job is to define a **valid workflow** based on the agents given as input.
-      - Use the `workflow_schema` tool to fetch the latest schema from GitHub.
-      - Ensure the generated workflow follows the required parts of the schema**.
-      - The workflow must include:
-      - `name` → A descriptive workflow name.
-      - `agents` → List of agent names from user input (we must include all the agents in the query in our workflow)
-      - `steps` → The **ordered sequence of actions**.
-      - Each **step** must:
-      - Reference a valid agent from the input
-      - Have a `name` describing the action.
-      Optional Parameters in **step**: (NOTE: most times, this is not necessary. If possible keep as simple as possible). Because they are optional, if not needed we don't need to write this in the workflow.
-      (Optional): Define any necessary `condition` or `parallel` execution logic.
-      The output should be a **fully-formed workflow structure in YAML format**.
+    The final output must be a fully-formed, valid YAML workflow in a code block. Do not ask questions or request missing details—instead, use placeholders when needed.
+
+    Generic YAML Workflow Example:
+
+    yaml
+    Copy
+    apiVersion: maestro/v1alpha1
+    kind: Workflow
+    metadata:
+      name: [Workflow Name]
+      labels:
+        project: [Project Label]
+    spec:
+      template:
+        metadata:
+          name: [Workflow Template Name]
+          labels:
+            project: [Project Label]
+        agents:
+          - [Agent Name 1]
+          - [Agent Name 2]
+    (and so on)
+        prompt:  [Provide a brief description of the workflow’s purpose and the instructions for the agents.]
+        steps:
+          - name: [Step 1: Action Description]
+            agent: [Agent Name 1]
+          - name: [Step 2: Action Description]
+            agent: [Agent Name 2]
+    (and so on)
+
+    Please print out the final response directly.
   tools:
     - 'workflow_schema'
     - 'LLM'
