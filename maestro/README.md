@@ -105,6 +105,20 @@ OR if the agents have already been created:
 maestro run None workflow.yaml
 ```
 
+* Deploy the workflow locally:
+
+```bash
+maestro deploy agent.yaml workflow.yaml
+```
+
+or
+
+```bash
+maestro deploy agent.yaml workflow.yaml --dry-run # to use mock agents for quick testing
+```
+
+This will start the workflow in a [`streamlit`]() server and you can access it from your browser: http://localhost:8501/?embed=true
+
 ## Local environment
 
 * Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)

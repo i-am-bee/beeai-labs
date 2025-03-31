@@ -32,7 +32,7 @@ Options:
   --dry-run              Mocks agents and other parts of workflow execution.
   --auto-prompt          Run prompt by default if specified
 
-  --streamlit            Deploys locally as streamlit application
+  --streamlit            Deploys locally as streamlit application (default deploy)
 
   --url                  The deployment URL, default: 127.0.0.1:5000
   --k8s                  Deploys to Kubernetes
