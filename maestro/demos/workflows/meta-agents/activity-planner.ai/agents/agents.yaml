@@ -16,7 +16,7 @@ spec:
                 Each agent must include:
                 name: A unique identifier.
                 model: The model identifier (e.g., "llama3.1:latest").
-                instructions: A description of the role or context of the agent.
+                instructions: A description of the role or context of the agent to be used as context for the agent (no code).
                 tools: A list of required tools. If the input specifies a tool (e.g., OpenMeteo, DuckDuckGo), it must be included.
                 Ensure every generated agent conforms strictly to the current schema.
                 Output Format:
