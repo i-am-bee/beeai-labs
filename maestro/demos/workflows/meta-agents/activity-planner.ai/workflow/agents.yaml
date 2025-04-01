@@ -138,8 +138,7 @@ spec:
     agent: The agent associated with that step (must be one from the provided list or a corresponding placeholder).
     Output:
     The final output must be a fully-formed, valid YAML workflow in a code block. Do not ask questions or request missing details—instead, use placeholders when needed.
-    Generic YAML Workflow Example:
-
+    Generic YAML Workflow Example (replace  [placeholders]:
     yaml
     apiVersion: maestro/v1alpha1
     kind: Workflow
@@ -164,7 +163,6 @@ spec:
           - name: [Step 2: Given Action Description]
             agent: [Given Agent Name 2]
     (and so on)
-
     Please print out the final response directly, make sure the workflow aligns with the given agents.
   tools:
     - 'workflow_schema'
