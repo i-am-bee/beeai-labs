@@ -22,7 +22,6 @@ Usage:
   maestro mermaid WORKFLOW_FILE [options]
   maestro run AGENTS_FILE WORKFLOW_FILE [options]
   maestro validate SCHEMA_FILE YAML_FILE [options]
-  maestro meta-agents TEXT_FILE [options]
 
   maestro (-h | --help)
   maestro (-v | --version)

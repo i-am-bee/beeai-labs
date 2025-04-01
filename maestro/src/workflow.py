@@ -104,13 +104,11 @@ class Workflow:
 
         return Mermaid(workflow, kind, orientation).to_markdown()
 
-    async def run(self, prompt=''):
+    async def run(self):
         """Execute workflow."""
         try:
-          if prompt != '':
-            self.workflow['spec']['template']['prompt'] = prompt
-          self.create_or_restore_agents(self.agent_defs, self.workflow)
-          return await self._condition()
+            self.create_or_restore_agents(self.agent_defs, self.workflow)
+            return await self._condition()
         except Exception as err:
             if self.workflow["spec"]["template"].get("exception"):
                 exp = self.workflow["spec"]["template"].get("exception")
