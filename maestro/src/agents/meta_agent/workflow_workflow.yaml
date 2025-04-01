@@ -11,21 +11,14 @@ spec:
       labels:
         project: maestro-demo
     agents:
-      - NLP Agent Planner
-      - Format Workflow Agent
-      - Create Workflow YAML
+      - NLP Agent Planner V2
+      - Format Workflow Agent V2
+      - Workflow V2
     prompt: I want to compare the current weather with the historical averages. To do this, I probably will need 2 agents, one to retrieve the weather and one to compare to the historical average.
     steps:
-      - name: NLP Agent Planner
-        agent: NLP Agent Planner
-      - name: input
-        input:
-          prompt: |
-                  number of agents: 2
-                  agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo tool. 
-                  agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo tool.  
-          template: "{CONNECTOR}"
-      - name: Format Workflow Agent
-        agent: Format Workflow Agent
-      - name: Create Workflow YAML
-        agent: Create Workflow YAML
+      - name: English Instructions to Prompt
+        agent: NLP Agent Planner V2
+      - name: Specify Agents for Workflow Generation
+        agent: Format Workflow Agent V2
+      - name: Creating Workflow YAML file
+        agent: Workflow V2
