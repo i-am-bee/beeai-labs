@@ -1,0 +1,26 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: simple workflow
+  labels:
+    app: example2
+spec:
+  template:
+    metadata:
+      name: maestro-deployment
+      labels:
+        app: example
+        use-case: test
+    agents:
+        - test1
+        - test2
+        - test3
+        - test4
+    prompt: This is a test input
+    steps:
+      - name: step1
+        agent: test1
+      - name: step2
+        agent: test10
+      - name: step3
+        agent: test3
