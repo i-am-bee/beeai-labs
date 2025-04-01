@@ -2,7 +2,6 @@
 
 echo "🚀 Running all demos in CI..."
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-
 echo "📂 Running from: $REPO_ROOT"
 
 WORKFLOWS_DIR="$REPO_ROOT/maestro/demos/workflows"
@@ -21,7 +20,6 @@ fi
 echo "🔍 Verifying Maestro installation..."
 cd "$REPO_ROOT/maestro"
 
-# More robust checking for Maestro
 if command -v poetry &>/dev/null; then
     echo "Poetry found, checking for maestro..."
     if poetry run which maestro &>/dev/null; then
@@ -52,14 +50,14 @@ fi
 
 echo "✅ Maestro is running correctly using: $MAESTRO_CMD"
 
-# Create a temporary file to track test counts
+# Create temporary files to track test counts
 TEMP_DIR=$(mktemp -d)
 EXPECTED_TESTS_FILE="$TEMP_DIR/expected_tests.txt"
 TEST_COUNT_FILE="$TEMP_DIR/test_count.txt"
-
 echo "0" > "$EXPECTED_TESTS_FILE"
 echo "0" > "$TEST_COUNT_FILE"
 
+# Iterate over each demo workflow (skipping the common directory)
 find "$WORKFLOWS_DIR" -mindepth 1 -type d -print0 | while IFS= read -r -d '' demo; do
     if [[ "$demo" == "$COMMON_DIR" ]]; then
         echo "⚠️ Skipping common/ directory..."
@@ -72,22 +70,23 @@ find "$WORKFLOWS_DIR" -mindepth 1 -type d -print0 | while IFS= read -r -d '' dem
     echo "========================================\n"
 
     if [[ -f "$demo/agents.yaml" && -f "$demo/workflow.yaml" ]]; then
-        echo "🔍 Running tests for $demo"
+        echo "🔍 Running tests for demo at: $demo"
         CURRENT_EXPECTED=$(cat "$EXPECTED_TESTS_FILE")
         echo $((CURRENT_EXPECTED + 1)) > "$EXPECTED_TESTS_FILE"
         
-        echo "🩺 Running common doctor.sh for $demo..."
+        echo "🩺 Running common doctor.sh for demo..."
         cd "$REPO_ROOT/maestro"
-        bash "$COMMON_DIR/doctor.sh" || { echo "❌ doctor.sh failed for $demo"; exit 1; }
+        bash "$COMMON_DIR/doctor.sh" || { echo "❌ doctor.sh failed for demo at $demo"; exit 1; }
         
-        echo "🧪 Running common test.sh for $demo..."
+        echo "🧪 Running common test.sh for demo..."
         cd "$REPO_ROOT/maestro"
-        env MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" echo "" | bash "$COMMON_DIR/test.sh" "$demo" || { echo "❌ test.sh failed for $demo"; exit 1; }
+        # Use a here-string to pass empty input while ensuring the environment variable is set
+        MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" bash "$COMMON_DIR/test.sh" "$demo" <<< "" || { echo "❌ test.sh failed for demo at $demo"; exit 1; }
     
         CURRENT_COUNT=$(cat "$TEST_COUNT_FILE")
         echo $((CURRENT_COUNT + 1)) > "$TEST_COUNT_FILE"
     else
-        echo "⚠️ Skipping $demo (no agents.yaml or workflow.yaml found)"
+        echo "⚠️ Skipping demo at $demo (missing agents.yaml or workflow.yaml)"
     fi
 done
 
