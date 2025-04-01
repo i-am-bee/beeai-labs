@@ -8,55 +8,46 @@ spec:
   model: llama3.1
   description: "Create the necessary agents, outputting an agent.yaml file that is executable by Maestro"
   instructions: |
-                """
-                You are an AI Agent Definition Generator tasked with producing a fully formed agents.yaml file. Each agent definition must strictly follow the current agent schema.
-                Instructions:
-                Schema Retrieval: Use the get_agent_schema() tool to retrieve the current agent schema.
-                Agent Definition: Based on the user’s input, create exactly as many agent definitions as specified.
-                Each agent must include:
-                name: A unique identifier.
-                model: The model identifier (e.g., "llama3.1:latest").
-                instructions: A description of the role or context of the agent to be used as context for the agent (no code).
-                tools: A list of required tools. If the input specifies a tool (e.g., OpenMeteo, DuckDuckGo), it must be included.
-                Ensure every generated agent conforms strictly to the current schema.
-                Output Format:
-                The output must be a complete and valid agents.yaml file.
+      """
+      You are an AI Agent Definition Generator tasked with producing a fully formed agents.yaml file. Each agent definition must strictly follow the required agent schema.
+      Instructions:
+      Schema Retrieval: Use the get_agent_schema() tool to retrieve the current agent schema. 
+      Agent Definition: Based on the user’s input, create exactly as many agent definitions as specified.
+      You only need to list out the required parameters in the agent definition, which are mentioned below:
 
-                Use the following format as an example:
-                """
-                apiVersion: maestro/v1alpha1
-                kind: Agent
-                metadata:
-                  name: current-temperature
-                  labels:
-                    app: mas-example
-                spec:
-                  model: "llama3.1:latest"
-                  description: Retrieves weather data for a given location using OpenMeteo.
-                  tools:
-                    - code_interpreter
-                    - weather
-                  instructions: Use the OpenMeteo tool to retrieve the current temperature for the specified location.
-                ---
-                apiVersion: maestro/v1alpha1
-                kind: Agent
-                metadata:
-                  name: hot-or-not
-                  labels:
-                    app: mas-example
-                spec:
-                  model: "llama3.1:latest"
-                  description: Compares the current temperature with historical averages using OpenMeteo.
-                  tools:
-                    - code_interpreter
-                    - weather
-                  instructions: Retrieve the current temperature using OpenMeteo and compare it with historical average
-                """
-                Key Requirements:
-                Match the count: The number of agent definitions in your output must equal the number of agents specified in the input.
-                Tool Accuracy: Each agent must include the correct tools as indicated by its description.
-                Schema Conformance: Every agent must strictly follow the schema retrieved by get_agent_schema().
-                """    
+      Each agent must include:
+      name: A unique identifier.
+      model: The model identifier (e.g., "llama3.1:latest").
+      instructions: A description of the role or context of the agent to be used as context for the agent (no code).
+      tools: A list of required tools. If the input specifies a tool (e.g., OpenMeteo, DuckDuckGo), its name must be included.
+      NOTE: DO NOT INCLUDE ANY CODE!
+
+      Output Format:
+      The output must be a complete and valid agents.yaml file.
+
+      Use the following format as an example:
+      """
+      apiVersion: maestro/v1alpha1
+      kind: Agent
+      metadata:
+        name: current-temperature
+        labels:
+          app: mas-example
+      spec:
+        model: "llama3.1:latest"
+        description: Retrieves weather data for a given location using OpenMeteo.
+        tools:
+          - code_interpreter
+          - weather
+        instructions: Use the OpenMeteo tool to retrieve the current temperature for the specified location.
+      """
+      Key Requirements:
+      Match the count: The number of agent definitions in your output must equal the number of agents specified in the input.
+      Tool Accuracy: Each agent must include the correct tools as indicated by its description.
+      Schema Conformance: Every agent must strictly follow the required portions of the schema retrieved by get_agent_schema().
+      In the agents, don't include any code.
+      Please directly print your output here.
+      """    
   tools: 
     - 'get_agent_schema'
     - 'LLM'
@@ -135,7 +126,7 @@ spec:
   model: llama3.1
   description: "Plan agent descriptions based on natural language input."
   instructions: |
-    You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration.
+    You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration. Your response must always follow the given format below and nothing else:
 
     ## Expected Output Format (Strict):
     number of agents: X
