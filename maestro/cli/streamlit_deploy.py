@@ -53,8 +53,10 @@ def deploy_agents_workflow_streamlit(agents_file, workflow_file):
     # Initialize session state for chat history
     if "messages" not in st.session_state:
         st.session_state.messages = [
-            {"role": "assistant", "content": "Welcome to Maestro workflow?"}
-        ]
+            { 
+                "role": "assistant", 
+                "content": "Welcome to Maestro workflow"
+            }]
 
     # Page header
     st.image("images/maestro.png", width=200)

@@ -23,7 +23,7 @@ from jsonschema.exceptions import ValidationError, SchemaError
 
 from src.deploy import Deploy
 from src.workflow import Workflow, create_agents
-from cli.common import Console, parse_yaml
+from cli.common import Console, parse_yaml, read_file
 from cli.streamlit_deploy import deploy_agents_workflow_streamlit
 
 # Root CLI class
@@ -49,6 +49,8 @@ class CLI:
             return DeployCmd(self.args)
         elif self.args.get('mermaid') and self.args['mermaid']:
             return MermaidCmd(self.args)
+        elif self.args.get('meta-agents') and self.args['meta-agents']:
+            return MetaAgentsCmd(self.args)
         else:
             raise Exception("Invalid command")
 
@@ -107,6 +109,8 @@ class Command:
             return self.deploy
         elif self.args['mermaid']:
             return self.mermaid
+        elif self.args['meta-agents']:
+            return self.meta_agents
         else:
             raise Exception("Invalid subcommand")
 
@@ -344,5 +348,41 @@ class MermaidCmd(Command):
         except Exception as e:
             self._check_verbose()
             Console.error(f"Unable to generate mermaid for workflow: {str(e)}")
+            return 1
+        return 0
+
+# MetaAgents command group
+# $ maestro meta-agents TEXT_FILE [options]
+class MetaAgentsCmd(Command):
+    def __init__(self, args):
+        self.args = args
+        super().__init__(self.args)
+
+    # private    
+    def __meta_agents(self, text_file) -> int:
+        try:
+            sys.argv = ["streamlit", "run", "./cli/streamlit_meta_agents_deploy.py", text_file]
+            process = Popen(sys.argv)
+        except Exception as e:
+            self._check_verbose()
+            raise RuntimeError(f"{str(e)}") from e
+        return 0
+
+    # public options
+    def TEXT_FILE(self):
+        return self.args.get('TEXT_FILE')
+
+    def name(self):
+      return "meta-agents"
+
+    # public command method
+    def meta_agents(self):
+        try:
+            rc = self.__meta_agents(self.TEXT_FILE())
+            if not self.silent():
+                Console.ok("Running meta-agents\n")
+        except Exception as e:
+            self._check_verbose()
+            Console.error(f"Unable to run meta-agents: {str(e)}")
             return 1
         return 0

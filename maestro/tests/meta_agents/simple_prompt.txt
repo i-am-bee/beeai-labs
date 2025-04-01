@@ -1,0 +1,3 @@
+number of agents: 2
+agent1: weather_fetcher – Retrieves weather data for a given location using OpenMeteo tool. 
+agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo tool.
