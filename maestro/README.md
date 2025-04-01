@@ -3,7 +3,7 @@
 
 # Maestro
 
-A multi-agent platform with the vision to facilitate deployment and runnning of AI agents.
+A multi-agent platform with the vision to facilitate deployment and running of AI agents.
 
 In this initial version you are going to find some examples showing how to run a group of agents, that you can build using the current and more mature TypeScript [Bee AI Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
@@ -127,6 +127,16 @@ This will start the workflow in a [`streamlit`]() server and you can access it f
 * Install dependencies: `poetry shell && poetry install`
 
 * Configure environmental variables: `cp example.env .env`
+
+### Run workflow in streamlit (default deploy)
+
+* Required Export Tags
+  * `export CONTAINER_CMD=podman`
+* Deployment
+  * `maestro deploy agents.yaml workflow.yaml --streamlit`
+* Meta-Agent Specific deployment
+  * `maestro meta-agents text_file.txt`
+  * the text file contains the prompt you want to run
 
 ### Run workflow in local environment with container runtime (e.g. podman) or kubernetes cluster
 
