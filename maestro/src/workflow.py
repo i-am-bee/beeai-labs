@@ -15,8 +15,6 @@
 # limitations under the License.
 
 import os, dotenv
-import traceback
-
 from src.mermaid import Mermaid
 
 from src.step import Step
@@ -114,11 +112,11 @@ class Workflow:
         except Exception as err:
             if self.workflow["spec"]["template"].get("exception"):
                 exp = self.workflow["spec"]["template"].get("exception")
-                exp_agent = self.agents.get(exp)
+                exp_agent = self.agents.get(exp["agent"])
                 if exp_agent:
                     await exp_agent.run(err)
-                else:
-                    traceback.print_stack()
+            else:
+                raise err
 
     # private methods
     def create_or_restore_agents(self, agent_defs, workflow):
