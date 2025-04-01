@@ -24,6 +24,8 @@ from src.agents.crewai_agent import CrewAIAgent
 
 from src.agents.beeai_agent import BeeAIAgent
 
+from src.agents.beeai_local_agent import BeeAILocalAgent
+
 from src.agents.remote_agent import RemoteAgent
 
 from src.agents.mock_agent import MockAgent
@@ -47,6 +49,8 @@ def get_agent_class(framework: str) -> type:
         return CrewAIAgent
     elif framework == "remote":
         return RemoteAgent
+    elif framework == "beeailocal":
+        return BeeAILocalAgent
     else:
         return BeeAIAgent
 

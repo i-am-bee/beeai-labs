@@ -1,0 +1,24 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: colleague
+  labels:
+    app: funnier-example
+spec:
+  model: llama3.1
+  framework: beeailocal
+  instructions: you are a joke telling agent
+  description: this is a simple agent
+  
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: expert
+  labels:
+    app: funnier-example
+spec:
+  model: llama3.1
+  framework: beeailocal
+  instructions: you are a joke telling agent
+  description: this is a simple agent

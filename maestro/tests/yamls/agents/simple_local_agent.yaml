@@ -1,0 +1,87 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test1
+  labels:
+    app: test-example
+spec:
+  # model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  framework: beeailocal
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: print("this is a test.")
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test2
+  labels:
+    app: test-example
+spec:
+  # model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  framework: beeailocal
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: print("this is a test.")
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test3
+  labels:
+    app: test-example
+spec:
+  # model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  framework: beeailocal
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: print("this is a test.")
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test4
+  labels:
+    app: test-example
+spec:
+  # model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  framework: beeailocal
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: print("this is a test.")
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test5
+  labels:
+    app: test-example
+spec:
+  # model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  framework: beeailocal
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: print("this is a test.")
