@@ -73,7 +73,7 @@ spec:
   model: llama3.1
   description: "Plan agent descriptions based on natural language input."
   instructions: |
-    You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration.
+    You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration. Your response must always follow the given format below and nothing else:
 
     ## Expected Output Format (Strict):
     number of agents: X
@@ -124,33 +124,23 @@ spec:
 
     Requirements:
     The output must include:
-
     apiVersion: maestro/v1alpha1
     kind: Workflow
-
     metadata with keys such as name and labels (e.g., project or app).
-
     Spec Template:
     Under spec.template, include:
-
     agents: A list of all agent names provided in the input. Use placeholders if not provided.
-
     prompt: A string describing the workflow's purpose or instructions.
-
     steps: An ordered list of steps, where each step:
-
     Has a name that describes its function.
-
     References a valid agent from the provided agent list.
-
+    Note: Do not include input/output in the final workflow
     Output Format:
-    The final output must be a complete, fully-formed YAML workflow enclosed in a code block.
+    The final output must be a complete, fully-formed YAML workflow.
     Do not ask for more details—generate the output using the provided information or placeholders when necessary.
-
-    Example Input (Weather Workflow):
+    Example Input:
     """
     Build a structured workflow using the `workflow_schema` tool as a reference.
-
     I have 2 agents in agents.yaml:
     Temperature Agent – Retrieves the current temperature for a given location.
     hot-or-not Agent – Determines if the temperature is hot or not.
@@ -179,6 +169,7 @@ spec:
           - Temperature Agent
           - hot-or-not Agent"""
     Use these instructions and the example as guidance to generate a valid workflow in YAML format for any given input.
+    Print output here.
   tools:
     - 'workflow_schema'
     - 'LLM'
