@@ -244,6 +244,7 @@ spec:
               print(f"⚠️ Error fetching schema: {e}")
               return {"schema": {}}  # Return an empty schema if fetching fails
 
+---
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
