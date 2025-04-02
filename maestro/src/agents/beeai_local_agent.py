@@ -78,12 +78,6 @@ def process_agent_events(data: Any, event: EventMeta) -> None:
 
     if event.name == "error":
         write("Agent 🤖 : ", FrameworkError.ensure(data.error).explain())
-    #elif event.name == "retry":
-    #    write("Agent 🤖 : ", "retrying the action...")
-    #elif event.name == "update":
-    #    write(f"Agent({data.update.key}) 🤖 : ", data.update.parsed_value)
-    #elif event.name == "start":
-    #    write("Agent 🤖 : ", "starting new iteration")
     elif event.name == "success":
         write("Agent 🤖 : ", "success")
 
