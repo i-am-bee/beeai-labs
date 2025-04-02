@@ -5,7 +5,7 @@ from typing import Any
 import dotenv
 from pydantic import BaseModel
 
-from beeai_framework import UnconstrainedMemory
+from beeai_framework.memory import UnconstrainedMemory
 from beeai_framework.adapters.ollama.backend.chat import OllamaChatModel
 from beeai_framework.agents.react.agent import ReActAgent
 from beeai_framework.agents.types import AgentExecutionConfig
