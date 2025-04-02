@@ -10,6 +10,9 @@ import streamlit_mermaid as stmd
 
 from src.workflow import Workflow
 from cli.common import Console, parse_yaml, read_file
+from src.workflow import Workflow
+import threading
+import time
 
 # TODO: refactor
 
@@ -26,17 +29,6 @@ def start_workflow():
 
 def create_workflow(agents_yaml, workflow_yaml):
     return Workflow(agents_yaml, workflow_yaml[0])
-
-def generate_output():
-    global output
-    global position
-    position = 0
-    message = output.getvalue()
-    if len(message) > position:
-        lines = output.getvalue()[position:].splitlines()
-        for line in lines:
-            yield f"{line}\n\n"
-        position = len(message)
 
 def deploy_agents_workflow_streamlit(agents_file, workflow_file):
     agents_yaml = parse_yaml(agents_file)
@@ -107,6 +99,9 @@ def deploy_agents_workflow_streamlit(agents_file, workflow_file):
     
     prompt = st.chat_input(f"{workflow_yaml[0]['spec']['template']['prompt']}")
     if prompt:
+        # recreate workflow with the new prompt
+        workflow_yaml[0]["spec"]["template"]["prompt"] = prompt
+        workflow_instance = Workflow(agents_yaml, workflow_yaml[0])
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
         
@@ -119,16 +114,21 @@ def deploy_agents_workflow_streamlit(agents_file, workflow_file):
             message_placeholder = st.empty()
             message_placeholder.markdown("Thinking...")
 
-            start_workflow()
+            thread = threading.Thread(target=start_workflow)
+            thread.start()
 
             # stream response
-            responses = ''
-            for response in st.write_stream(generate_output):
-                message_placeholder.markdown(response)
-                responses += f"{response}"
+            while True:
+                message = output.getvalue()
+                message_placeholder.markdown(message)
+                time.sleep(1)
+                if not thread.is_alive():
+                    message = output.getvalue()
+                    message_placeholder.markdown(message)
+                    break
                 
         # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": responses})
+        st.session_state.messages.append({"role": "assistant", "content": message})
 
         # Add reset button
         def reset_conversation():
