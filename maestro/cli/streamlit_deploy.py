@@ -119,11 +119,17 @@ def deploy_agents_workflow_streamlit(agents_file, workflow_file):
 
             # stream response
             while True:
-                message = output.getvalue()
+                message = ""
+                lines = output.getvalue().splitlines()
+                for line in lines:
+                    message = message + f"{line}\n\n"
                 message_placeholder.markdown(message)
                 time.sleep(1)
                 if not thread.is_alive():
-                    message = output.getvalue()
+                    message = ""
+                    lines = output.getvalue().splitlines()
+                    for line in lines:
+                        message = message + f"{line}\n\n"
                     message_placeholder.markdown(message)
                     break
                 
