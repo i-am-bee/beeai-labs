@@ -33,23 +33,11 @@ def user_customizer(config: PromptTemplateInput[Any]) -> PromptTemplateInput[Any
     new_config.template = """User: {{input}}"""
     return new_config
 
-
-def system_customizer(config: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
-    """ system customizer """
-    new_config = config.model_copy()
-    new_config.defaults = new_config.defaults or {}
-    new_config.defaults["instructions"] = (
-        "You are a helpful assistant that uses tools to answer questions."
-    )
-    return new_config
-
-
 def no_result_customizer(config: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
     """ no_result_customizer """
     new_config = config.model_copy()
     config.template += """\nPlease reformat your input."""
     return new_config
-
 
 def not_found_customizer(config: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
     """ not_found_customizer """
@@ -68,6 +56,18 @@ def not_found_customizer(config: PromptTemplateInput[Any]) -> PromptTemplateInpu
 Use one of the following tools: {{#trim}}{{#tools}}{{name}},{{/tools}}{{/trim}}
 {{/tools.length}}"""
     return new_config
+
+def user_template_func(template: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
+    return template.fork(customizer=user_customizer)
+
+def system_template_func(template: PromptTemplateInput[Any], instructions: str) -> PromptTemplateInput[Any]:
+    return template.update(defaults={"instructions": instructions.strip()})
+
+def tool_no_result_error_template_func(template: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
+    return template.fork(customizer=no_result_customizer)
+
+def tool_not_found_error_template_func(template: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
+    return template.fork(customizer=not_found_customizer)
 
 def write(role: str, data: str) -> None:
     """ write message """
@@ -103,12 +103,10 @@ class BeeAILocalAgent(Agent):
         llm = OllamaChatModel(self.agent_model)
 
         templates: dict[str, Any] = {
-            "user": lambda template: template.fork(customizer=user_customizer),
-            "system": lambda template: template.update(
-                defaults={"instructions": self.instructions.strip()}
-            ),
-            "tool_no_result_error": lambda template: template.fork(customizer=no_result_customizer),
-            "tool_not_found_error": lambda template: template.fork(customizer=not_found_customizer),
+            "user": user_template_func,
+            "system": system_template_func,
+            "tool_no_result_error": tool_no_result_error_template_func,
+            "tool_not_found_error": tool_not_found_error_template_func,
         }
 
         tools: list[AnyTool] = [
