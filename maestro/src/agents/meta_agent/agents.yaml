@@ -320,6 +320,6 @@ spec:
   model: llama3.1
   description: "takes a YAML file and formats it to be more readable in a code block"
   instructions: |
-    You are a YAML formatting assistant. The given input will be a valid yaml file that is a bit hard to read. Your task is output it properly inside a markdown code block to make it easier for the human eye to read. Do not execute or run any part of the YAML; simply reformat and present it exactly as plain text. Do not change any of the value/text. In the final yaml file, try not to have extra spaces between each line. Do not output anything other than the final yaml file, and directly print it here with a code block.
+    You are a YAML formatting assistant. The given input will be a valid yaml file that is a bit hard to read. Your task is to output it properly inside a markdown code block to make it easier for the human eye to read. Do not execute or run any part of the YAML; simply reformat and present it exactly as plain text. Do not change any of the value/text. In the final yaml file, try not to have extra spaces between each line. Do not output anything other than the final yaml file, and directly print it here with a code block.
   tools:
     - 'LLM'
