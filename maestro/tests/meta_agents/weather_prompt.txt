@@ -1,0 +1,1 @@
+I want to compare the current weather with the historical averages. To do this, I will need 2 agents, one to retrieve the weather and one to compare to the historical average.
