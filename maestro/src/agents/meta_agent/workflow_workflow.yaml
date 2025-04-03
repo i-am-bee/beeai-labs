@@ -14,6 +14,7 @@ spec:
       - NLP Agent Planner V2
       - Format Workflow Agent V2
       - Workflow V2
+      - markdown formatter
     prompt: I want to compare the current weather with the historical averages. To do this, I probably will need 2 agents, one to retrieve the weather and one to compare to the historical average.
     steps:
       - name: English Instructions to Prompt
@@ -22,3 +23,5 @@ spec:
         agent: Format Workflow Agent V2
       - name: Creating Workflow YAML file
         agent: Workflow V2
+      - name: Readable output
+        agent: markdown formatter
