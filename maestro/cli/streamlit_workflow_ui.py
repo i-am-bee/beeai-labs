@@ -26,7 +26,6 @@ class StreamlitWorkflowUI:
     def setup_ui(self):        
         self.__initialize_session_state()
         self.__add_workflow_name_and_files()
-        self.__create_workflow_ui()
         self.__create_chat_messages()
         self.__add_use_prompt_and_chat_reset_button()
 
@@ -46,16 +45,21 @@ class StreamlitWorkflowUI:
 
     def __add_workflow_name_and_files(self):
         # add line of workflow: title, agents.yaml, and workflow.yaml
-        st.markdown(f"### {self.workflow_yaml[0]['metadata']['name']}")
-        cols = st.columns(4)
-        with cols[0]:
-            with st.popover("agents.yaml"):
-                st.markdown("## Formatted agents YAML")
-                st.code(self.__read_file_content(self.agents_file), language="yaml", line_numbers=True, wrap_lines=False, height=700)
-        with cols[1]:
-            with st.popover("workflow.yaml"):
-                st.markdown("## Formatted workflow YAML")
-                st.code(self.__read_file_content(self.workflow_file), language="yaml", line_numbers=True, wrap_lines=False, height=700)
+        with st.form(f"draw_form:{self.title}"):
+            st.markdown(f"### {self.workflow_yaml[0]['metadata']['name']}")
+            cols = st.columns(4)
+            with cols[0]:
+                with st.popover("agents.yaml"):
+                    st.markdown("## Formatted agents YAML")
+                    st.code(self.__read_file_content(self.agents_file), language="yaml", line_numbers=True, wrap_lines=False, height=700)
+            with cols[1]:
+                with st.popover("workflow.yaml"):
+                    st.markdown("## Formatted workflow YAML")
+                    st.code(self.__read_file_content(self.workflow_file), language="yaml", line_numbers=True, wrap_lines=False, height=700)
+            with cols[2]:
+                show = st.form_submit_button("Show diagram")
+            if show:
+                self.__create_workflow_ui()
 
     def __initialize_session_state(self):
         # Initialize session state for chat history
@@ -136,7 +140,7 @@ class StreamlitWorkflowUI:
         except Exception as e:
             traceback.print_exc()
             raise RuntimeError(f"Unable to create agents: {str(e)}") from e
-        
+
         # add workflow mermaid diagram to page
         st.markdown("")
         st.markdown(f"###### _Sequence diagram of workflow_")
