@@ -140,6 +140,7 @@ def deploy_agents_workflow_streamlit(agents_file, workflow_file):
         def reset_conversation():
             st.session_state.conversation = None
             st.session_state.chat_history = None
+            st.session_state.messages = []
             message_placeholder = st.empty()
 
         st.button('Reset', on_click=reset_conversation)
