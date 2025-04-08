@@ -11,12 +11,10 @@ from streamlit_workflow_ui import StreamlitWorkflowUI
 from cli.common import Console, parse_yaml, read_file
 
 def deploy_meta_agents_streamlit(prompt_text_file):
-    print("!!!!")
     generated_agent = "generated_agent"
     generated_workflow = "generated_workflow"
 
     def load_generated():
-        print(os.getcwd())
         if os.path.exists(generated_agent):
             agent_file = generated_agent
             st.session_state.agent_file = agent_file
