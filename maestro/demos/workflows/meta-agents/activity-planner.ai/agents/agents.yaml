@@ -187,7 +187,7 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
-  description: "takes a YAML file and formats it to be more readable in a code block" 
+  description: "adds file tags for parsing" 
   instructions: |
     When given an input query, you must output the exact input with two additional wrapper tags. Do not modify, rewrap, or remove any of the original newlines, bullet points, or spacing. Simply add the tag <file start> at the very beginning, and add the tag </file> at the very end, each on its own separate line.
 
