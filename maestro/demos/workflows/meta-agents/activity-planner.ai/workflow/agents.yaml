@@ -225,8 +225,6 @@ spec:
     </file>
     Example Input:
 
-    yaml
-    Copy
     apiVersion: maestro/v1alpha1
     kind: Workflow
     metadata:
@@ -249,8 +247,6 @@ spec:
             agent: hot-or-not Agent
     Example Output:
 
-    yaml
-    Copy
     <file start>
     apiVersion: maestro/v1alpha1
     kind: Workflow
