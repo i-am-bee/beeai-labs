@@ -44,6 +44,7 @@ class StreamlitWorkflowUI:
         return file_or_string
 
     def __add_workflow_name_and_files(self):
+        global workflow_instance
         # add line of workflow: title, agents.yaml, and workflow.yaml
         with st.form(f"draw_form:{self.title}"):
             st.markdown(f"### {self.workflow_yaml[0]['metadata']['name']}")
@@ -58,6 +59,12 @@ class StreamlitWorkflowUI:
                     st.code(self.__read_file_content(self.workflow_file), language="yaml", line_numbers=True, wrap_lines=False, height=700)
             with cols[2]:
                 show = st.form_submit_button("Show diagram")
+            # create workflow
+            try:
+                workflow_instance = self.__create_workflow(self.agents_yaml, self.workflow_yaml[0])
+            except Exception as e:
+                traceback.print_exc()
+                raise RuntimeError(f"Unable to create agents: {str(e)}") from e
             if show:
                 self.__create_workflow_ui()
 
@@ -83,6 +90,13 @@ class StreamlitWorkflowUI:
             submitted = st.form_submit_button("Submit")
             if submitted:
                 self.__process_chat_input()
+
+                def __reset_conversation():
+                    st.session_state.conversation = None
+                    st.session_state.chat_history = None
+                    st.session_state.messages = []
+
+                st.form_submit_button('Reset', on_click=__reset_conversation)
 
     def __process_chat_input(self):
         if self.prompt:
@@ -118,7 +132,6 @@ class StreamlitWorkflowUI:
                         message_placeholder.markdown(message)
                         break
 
-
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": message})
 
@@ -135,11 +148,6 @@ class StreamlitWorkflowUI:
     def __create_workflow_ui(self):
         # create workflow
         global workflow_instance
-        try:
-            workflow_instance = self.__create_workflow(self.agents_yaml, self.workflow_yaml[0])
-        except Exception as e:
-            traceback.print_exc()
-            raise RuntimeError(f"Unable to create agents: {str(e)}") from e
         # add workflow mermaid diagram to page
         st.markdown("")
         st.markdown(f"###### _Sequence diagram of workflow_")
