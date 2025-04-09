@@ -142,6 +142,16 @@ class StreamlitWorkflowUI:
                         lines = StreamlitWorkflowUI.__generate_output().splitlines()
                         for line in lines:
                             message = message + f"{line}\n\n"
+                            if save_to_file:
+                                if "</file>" in line:
+                                    save_to_file = False
+                                    with open(self.save_file, "w") as file:
+                                        file.write(file_contents)
+                                    file_contents = ""
+                                else:
+                                    file_contents = file_contents + f"{line}\n\n"
+                            if "<file start>" in line:
+                                save_to_file = True
                         message_placeholder.markdown(message)
                         break
 
