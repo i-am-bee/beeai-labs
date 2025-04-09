@@ -50,12 +50,12 @@ def deploy_meta_agents_streamlit(prompt_text_file):
 
     with agents_tab:
         st.header("Meta-agents 🤖 -> agents.yaml")
-        ma_agents_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_agent.yaml', prompt, 'Maestro meta-agents agents workflow')
+        ma_agents_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_agent.yaml', prompt, 'Maestro meta-agents agents workflow', generated_agent)
         ma_agents_workflow_ui.setup_ui()
     
     with workflow_tab:
         st.header("Meta-agents 🤖 -> workflow.yaml")
-        ma_workflow_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_workflow.yaml', prompt, 'Maestro meta-agents workflow')
+        ma_workflow_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_workflow.yaml', prompt, 'Maestro meta-agents workflow', generated_workflow)
         ma_workflow_workflow_ui.setup_ui()
 
     with generated_workflow_tab:
