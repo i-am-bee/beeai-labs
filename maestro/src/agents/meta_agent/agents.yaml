@@ -318,8 +318,79 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
-  description: "takes a YAML file and formats it to be more readable in a code block"
+  description: "adds file tags for parsing"
   instructions: |
     You are a YAML formatting assistant. The given input will be a valid yaml file that is a bit hard to read. Your task is to output it properly inside a markdown code block to make it easier for the human eye to read. Do not execute or run any part of the YAML; simply reformat and present it exactly as plain text. Do not change any of the value/text. In the final yaml file, try not to have extra spaces between each line. Do not output anything other than the final yaml file, and directly print it here with a code block.
   tools:
     - 'LLM'
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: tagger agent
+  labels:
+    app: meta-agent
+spec:
+  model: llama3.1
+  description: "takes a YAML file and formats it to be more readable in a code block" 
+  instructions: |
+    When given an input query, you must output the exact input with two additional wrapper tags. Do not modify, rewrap, or remove any of the original newlines, bullet points, or spacing. Simply add the tag <file start> at the very beginning, and add the tag </file> at the very end, each on its own separate line.
+
+    Desired Output Format:
+    <file start>
+    [Content exactly as provided, preserving all newlines, indents, and formatting]
+    </file>
+    Example Input:
+
+    apiVersion: maestro/v1alpha1
+    kind: Workflow
+    metadata:
+      name: maestro-deployment
+      labels:
+        app: mas-example
+    spec:
+      template:
+        metadata:
+          labels:
+            app: mas-example
+        agents:
+          - Temperature Agent
+          - hot-or-not Agent
+        prompt: New York City
+        steps:
+          - name: get_temperature
+            agent: Temperature Agent
+          - name: compare_temperature
+            agent: hot-or-not Agent
+    Example Output:
+
+    <file start>
+    apiVersion: maestro/v1alpha1
+    kind: Workflow
+    metadata:
+      name: maestro-deployment
+      labels:
+        app: mas-example
+    spec:
+      template:
+        metadata:
+          labels:
+            app: mas-example
+        agents:
+          - Temperature Agent
+          - hot-or-not Agent
+        prompt: New York City
+        steps:
+          - name: get_temperature
+            agent: Temperature Agent
+          - name: compare_temperature
+            agent: hot-or-not Agent
+    </file>
+    Important:
+
+    The agent should not combine all the text into a single paragraph.
+
+    Each line in the input should appear as a separate line in the output, exactly as it was provided.
+
+    Please use this exact prompt to ensure the output maintains the original formatting with the required wrapper tags.
