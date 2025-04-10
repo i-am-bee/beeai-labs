@@ -40,6 +40,14 @@
           "type": "string",
           "description": "The LLM model for this agent"
         },
+        "framework": {
+          "type": "string",
+            "description": "The agent framework type. beeai, crewai, remote or mock"
+        },
+        "mode": {
+          "type": "string",
+          "description": "The mode of the agent.  remote or local"
+        },
         "tools": {
           "type": "array",
           "description": "tool list of the agent",

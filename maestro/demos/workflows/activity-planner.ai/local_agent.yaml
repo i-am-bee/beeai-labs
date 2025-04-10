@@ -6,7 +6,8 @@ metadata:
     app: mas-example
 spec:
   model: "llama3.1:latest"
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: Get the current weather
   tools:
     - code_interpreter
@@ -23,7 +24,8 @@ metadata:
     app: mas-example
 spec:
   model: "llama3.1:latest"
-  framework: beeailocal
+  mode: local
+  framework: beeai
   description: Is the current temperature hotter or colder than the historical monthly average.
   tools:
     - code_interpreter
@@ -41,7 +43,8 @@ metadata:
     app: mas-example
 spec:
   model: "llama3.1:latest"
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: Find activities suited to do in the colder weather at a given location.
   tools:
     - code_interpreter
@@ -59,7 +62,8 @@ metadata:
     app: mas-example
 spec:
   model: "llama3.1:latest"
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: Find activities suited to do in the hotter weather at a given location.
   tools:
     - code_interpreter

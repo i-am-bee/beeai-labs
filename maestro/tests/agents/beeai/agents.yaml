@@ -8,4 +8,4 @@ spec:
   model: "llama3.1:latest"
   description: test
   instructions: input = 'Mock agent:'
-  framework: bee
+  framework: beeai

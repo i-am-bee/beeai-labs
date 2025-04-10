@@ -6,7 +6,7 @@ metadata:
     app: funnier-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
-  framework: bee
+  framework: beeai
   instructions: you are a joke telling agent
   description: this is a simple agent
   
@@ -19,6 +19,6 @@ metadata:
     app: funnier-example
 spec:
   model: meta-llama/llama-3-1-70b-instruct
-  framework: bee
+  framework: beeai
   instructions: you are a joke telling agent
   description: this is a simple agent

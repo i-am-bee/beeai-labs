@@ -6,7 +6,8 @@ metadata:
     app: mas-example
 spec:
   model: llama3.1
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: Get the current weather
   tools:
     - code_interpreter
@@ -21,7 +22,8 @@ metadata:
     app: mas-example
 spec:
   model: llama3.1
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: Is the current temperature hotter than usual?
   tools:
     - code_interpreter

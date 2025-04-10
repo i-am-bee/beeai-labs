@@ -5,9 +5,10 @@ metadata:
   labels:
     app: test-example
 spec:
-  # model: meta-llama/llama-3-1-70b-instruct
+
   model: llama3.1
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: this is a test
   tools:
     - code_interpreter
@@ -23,9 +24,9 @@ metadata:
   labels:
     app: test-example
 spec:
-  # model: meta-llama/llama-3-1-70b-instruct
   model: llama3.1
-  framework: beeailocal
+  mode: local
+  framework: beeai
   description: this is a test
   tools:
     - code_interpreter
@@ -41,9 +42,9 @@ metadata:
   labels:
     app: test-example
 spec:
-  # model: meta-llama/llama-3-1-70b-instruct
   model: llama3.1
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: this is a test
   tools:
     - code_interpreter
@@ -59,9 +60,9 @@ metadata:
   labels:
     app: test-example
 spec:
-  # model: meta-llama/llama-3-1-70b-instruct
   model: llama3.1
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: this is a test
   tools:
     - code_interpreter
@@ -77,9 +78,9 @@ metadata:
   labels:
     app: test-example
 spec:
-  # model: meta-llama/llama-3-1-70b-instruct
   model: llama3.1
-  framework: beeailocal
+  framework: beeai
+  mode: local
   description: this is a test
   tools:
     - code_interpreter
