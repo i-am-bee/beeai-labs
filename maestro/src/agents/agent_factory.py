@@ -56,10 +56,10 @@ class AgentFactory:
         if framework not in factories:
             raise ValueError(f"Unknown framework: {framework}")
 
-        if mode == "local":
-            return factories[framework]
-        else:
+        if mode == "remote":
             return remote_factories[framework]
+        else:
+            return factories[framework]
         
         return factories[framework]
 
