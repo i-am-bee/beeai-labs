@@ -11,6 +11,17 @@ from streamlit_workflow_ui import StreamlitWorkflowUI
 from cli.common import Console, parse_yaml, read_file
 
 def deploy_meta_agents_streamlit(prompt_text_file):
+    generated_agent = "generated_agent"
+    generated_workflow = "generated_workflow"
+
+    def load_generated():
+        if os.path.exists(generated_agent):
+            agent_file = generated_agent
+            st.session_state.agent_file = agent_file
+        if os.path.exists(generated_workflow):
+            workflow_file = generated_workflow
+            st.session_state.workflow_file = workflow_file
+
     prompt = "Enter your maestro meta-agents prompt here"
     try:
         prompt = read_file(prompt_text_file)
@@ -39,21 +50,28 @@ def deploy_meta_agents_streamlit(prompt_text_file):
 
     with agents_tab:
         st.header("Meta-agents 🤖 -> agents.yaml")
-        ma_agents_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_agent.yaml', prompt, 'Maestro meta-agents agents workflow')
+        ma_agents_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_agent.yaml', prompt, 'Maestro meta-agents agents workflow', generated_agent)
         ma_agents_workflow_ui.setup_ui()
     
     with workflow_tab:
         st.header("Meta-agents 🤖 -> workflow.yaml")
-        ma_workflow_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_workflow.yaml', prompt, 'Maestro meta-agents workflow')
+        ma_workflow_workflow_ui = StreamlitWorkflowUI('src/agents/meta_agent/agents.yaml', 'src/agents/meta_agent/workflow_workflow.yaml', prompt, 'Maestro meta-agents workflow', generated_workflow)
         ma_workflow_workflow_ui.setup_ui()
 
     with generated_workflow_tab:
         st.header("Meta-agents generated ⌇ -> Workflow")
+        # Add load generated file button
+        st.button('Load generated files', on_click=load_generated)
         agent_file = st.file_uploader("Choose agents.yaml", key='agents.yaml')
         workflow_file = st.file_uploader("Choose agents.yaml", key='workflow.yaml')
 
         if agent_file is not None and workflow_file is not None:
             ma_gent_workflow_workflow_ui = StreamlitWorkflowUI(agent_file.getvalue().decode("utf-8"), workflow_file.getvalue().decode("utf-8"), '', 'Maestro meta-agents generated workflow')
+            ma_gent_workflow_workflow_ui.setup_ui()
+        elif "workflow_file" in st.session_state and "agent_file" in st.session_state:
+            agent_file = st.session_state.agent_file
+            workflow_file = st.session_state.workflow_file
+            ma_gent_workflow_workflow_ui = StreamlitWorkflowUI(agent_file, workflow_file, '', 'Maestro meta-agents generated workflow')
             ma_gent_workflow_workflow_ui.setup_ui()
 
 if __name__ == '__main__':

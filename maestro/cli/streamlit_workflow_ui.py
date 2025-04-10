@@ -11,12 +11,13 @@ sys_stdout = sys.stdout
 global workflow_instance
 
 class StreamlitWorkflowUI:
-    def __init__(self, agents_file, workflow_file, prompt='', title='Maestro workflow'):
+    def __init__(self, agents_file, workflow_file, prompt='', title='Maestro workflow', save_file=''):
         self.title = title
         self.prompt = prompt
         self.initial_prompt = 'Enter your prompt here'
         self.agents_file = agents_file
         self.workflow_file = workflow_file
+        self.save_file = save_file
 
         self.agents_yaml = self.__read_or_parse_yaml(agents_file)
         self.workflow_yaml = self.__read_or_parse_yaml(workflow_file)
@@ -119,9 +120,21 @@ class StreamlitWorkflowUI:
                 # stream response
                 while True:
                     message = ""
+                    file_contents = ""
+                    save_to_file = False
                     lines = StreamlitWorkflowUI.__generate_output().splitlines()
                     for line in lines:
                         message = message + f"{line}\n\n"
+                        if save_to_file:
+                            if "</file>" in line:
+                                save_to_file = False
+                                with open(self.save_file, "w") as file:
+                                    file.write(file_contents)
+                                file_contents = ""
+                            else:
+                                file_contents = file_contents + f"{line}\n\n" 
+                        if "<file start>" in line:
+                            save_to_file = True
                     message_placeholder.markdown(message)
                     time.sleep(1)
                     if not thread.is_alive():
@@ -129,6 +142,16 @@ class StreamlitWorkflowUI:
                         lines = StreamlitWorkflowUI.__generate_output().splitlines()
                         for line in lines:
                             message = message + f"{line}\n\n"
+                            if save_to_file:
+                                if "</file>" in line:
+                                    save_to_file = False
+                                    with open(self.save_file, "w") as file:
+                                        file.write(file_contents)
+                                    file_contents = ""
+                                else:
+                                    file_contents = file_contents + f"{line}\n\n"
+                            if "<file start>" in line:
+                                save_to_file = True
                         message_placeholder.markdown(message)
                         break
 
