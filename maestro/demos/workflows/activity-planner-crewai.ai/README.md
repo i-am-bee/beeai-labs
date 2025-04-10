@@ -2,6 +2,29 @@
 
 This is a simple demonstration of a workflow that uses a third party agent - in this case crew.ai
 
+## Mermaid Diagram
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant current_temperature
+participant hot_or_not
+participant cold_activities
+participant hot_activities
+current_temperature->>hot_or_not: get-temperature
+hot_or_not->>cold_activities: hot-or-not
+hot_or_not->>cold_activities: (input.find('hotter') != -1)
+alt if True
+  hot_or_not->>cold_activities: hot-activities
+else is False
+  cold_activities->>hot_or_not: cold-activities
+end
+cold_activities->>hot_activities: cold-activities
+hot_activities->>hot_activities: hot-activities
+hot_activities->>hot_activities: exit
+```
+<!-- MERMAID_END -->
+
 # Requirements
 
 * Python 3.11/3.12

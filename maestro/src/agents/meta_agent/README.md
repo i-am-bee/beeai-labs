@@ -2,6 +2,42 @@
 
 Our goal is to create an agent that can create the relevant agents/workflow.yaml files necessary for you to delegate your tasks. Currently, because we are process of generalizing our prompts, currently the workflow is split into 2 files, `workflow_agent.yaml` and `workflow_workflow.yaml`.
 
+## Mermaid Diagram of Agent Generation Workflow
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant NLP Agent Planner V2
+participant Format Input Agent V2
+participant Create Agent YAML V2
+participant markdown formatter
+participant tagger agent
+NLP Agent Planner V2->>Format Input Agent V2: English Instructions to Prompt
+Format Input Agent V2->>Create Agent YAML V2: Specify Agents for Agent Generation
+Create Agent YAML V2->>markdown formatter: Creating Agent YAML Workflow
+markdown formatter->>tagger agent: Readable output
+tagger agent->>tagger agent: add tags
+```
+<!-- MERMAID_END -->
+
+## Mermaid Diagram of Workflow Generation Workflow
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant NLP Agent Planner V2
+participant Format Workflow Agent V2
+participant Workflow V2
+participant markdown formatter
+participant tagger agent
+NLP Agent Planner V2->>Format Workflow Agent V2: English Instructions to Prompt
+Format Workflow Agent V2->>Workflow V2: Specify Agents for Workflow Generation
+Workflow V2->>markdown formatter: Creating Workflow YAML file
+markdown formatter->>tagger agent: Readable output
+tagger agent->>tagger agent: add tags
+```
+<!-- MERMAID_END -->
+
 ## Validating/Creating Agents/Workflow files
 
 We can use the maestro commands to validate that our workflows are following the correct schema, and we can actually run them.
