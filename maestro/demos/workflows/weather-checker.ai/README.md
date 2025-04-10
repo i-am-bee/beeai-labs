@@ -7,10 +7,10 @@ A multi-agent workflow using Maestro to check if the current temperature in a lo
 <!-- MERMAID_START -->
 ```mermaid
 sequenceDiagram
-    participant Temperature Agent
-    participant hot_or_not Agent
-    Temperature Agent->>hot_or_not Agent: get_temperature
-    hot_or_not Agent->>hot_or_not Agent: compare_temperature
+participant Temperature Agent
+participant hot_or_not Agent
+Temperature Agent->>hot_or_not Agent: get_temperature
+hot_or_not Agent->>hot_or_not Agent: compare_temperature
 ```
 <!-- MERMAID_END -->
 
