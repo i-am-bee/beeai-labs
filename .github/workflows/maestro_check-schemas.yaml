@@ -3,11 +3,15 @@ on:
   push:
     branches: [ 'main' ]
     paths:
-    - 'maestro/**'
+      - 'maestro/**'
+      - 'demos/**'
+      - 'tools/update_all_readme.sh'
   pull_request:
     branches: [ 'main' ]
     paths:
-    - 'maestro/**'
+      - 'maestro/**'
+      - 'demos/**'
+      - 'tools/update_all_readme.sh'
 jobs:
   check-schemas:
     runs-on: ubuntu-latest
@@ -27,8 +31,24 @@ jobs:
         run: |
           cd maestro
           poetry install
+      - name: Filter changed files for demos
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            demos:
+              - 'demos/**'
+
+      - name: Update README diagrams
+        if: steps.filter.outputs.demos == 'true'
+        run: |
+          # Go to project root (from maestro folder) and run the update script
+          cd maestro
+          cd ..
+          chmod +x tools/update_all_readme.sh
+          ./tools/update_all_readme.sh
+
       - name: Check schema
-        # Run from root to capture all projects - but poetry needs to run in maestro to pick up environment above
         run: |
           cd maestro
           poetry run tools/check-schemas.sh
