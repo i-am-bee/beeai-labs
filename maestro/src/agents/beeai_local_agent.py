@@ -103,10 +103,12 @@ class BeeAILocalAgent(Agent):
         llm = OllamaChatModel(self.agent_model)
 
         templates: dict[str, Any] = {
-            "user": user_template_func,
-            "system": system_template_func,
-            "tool_no_result_error": tool_no_result_error_template_func,
-            "tool_not_found_error": tool_not_found_error_template_func,
+            "user": lambda template: template.fork(customizer=user_customizer),
+            "system": lambda template: template.update(
+                defaults={"instructions": "You are a helpful assistant that uses tools to answer questions."}
+            ),
+            "tool_no_result_error": lambda template: template.fork(customizer=no_result_customizer),
+            "tool_not_found_error": lambda template: template.fork(customizer=not_found_customizer),
         }
 
         tools: list[AnyTool] = [
