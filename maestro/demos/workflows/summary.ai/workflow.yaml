@@ -13,13 +13,9 @@ spec:
     agents:
       - Search Arxiv
       - Individual Summary
-    prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
+    prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=2):"
     steps:
-      - name: Search Arxiv
+      - name: retreive papers
         agent: Search Arxiv
-      - name: input
-        input: 
-          prompt: "Here are the retrieved papers:\n{prompt}\n\nSelect the papers you want to summarize by entering the full title name (comma-separated):"
-          template: "{response}"
-      - name: Individual Summary
+      - name: create summary
         agent: Individual Summary
