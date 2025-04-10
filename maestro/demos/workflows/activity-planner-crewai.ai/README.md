@@ -2,18 +2,28 @@
 
 This is a simple demonstration of a workflow that uses a third party agent - in this case crew.ai
 
-# Requirements
+## Mermaid Diagram
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant activity_planner.ActivityPlannerCrew.activity_crew
+activity_planner.ActivityPlannerCrew.activity_crew->>activity_planner.ActivityPlannerCrew.activity_crew: begin
+```
+<!-- MERMAID_END -->
+
+## Requirements
 
 * Python 3.11/3.12
 * A valid project environment set-up by running the following from the root of the repository:
   * `poetry shell`
   * `poetry install`
 
-# Running
+## Running
 
 * Run `demos/activity-planner-crewai.ai/run.py` via shell command line, or IDE such as vscode
 
-# Caveats
+## Caveats
 
 * Demo is incomplete and still being worked on including but not limited to
   * Output from current agent cannot be parsed

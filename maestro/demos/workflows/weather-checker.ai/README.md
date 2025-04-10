@@ -2,6 +2,18 @@
 
 A multi-agent workflow using Maestro to check if the current temperature in a location is hotter or colder than average.
 
+## Mermaid Diagram
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant Temperature Agent
+participant hot_or_not Agent
+Temperature Agent->>hot_or_not Agent: get_temperature
+hot_or_not Agent->>hot_or_not Agent: compare_temperature
+```
+<!-- MERMAID_END -->
+
 ## Getting Started
 
 * Run a local instance of the [bee-stack](https://github.com/i-am-bee/bee-stack/blob/main/README.md)

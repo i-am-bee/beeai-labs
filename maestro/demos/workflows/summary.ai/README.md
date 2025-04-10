@@ -2,6 +2,19 @@
 
 A multi-agent workflow using Maestro: Allows an user to specify a topic from Arxiv they want to look at, choose a number of potential papers to summarize.
 
+## Mermaid Diagram
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant Search Arxiv
+participant Individual Summary
+Search Arxiv->>Search Arxiv: Search Arxiv
+Search Arxiv->>Individual Summary: input
+Individual Summary->>Individual Summary: Individual Summary
+```
+<!-- MERMAID_END -->
+
 ## Getting Started
 
 * Run a local instance of the [bee-stack](https://github.com/i-am-bee/bee-stack/blob/main/README.md)
