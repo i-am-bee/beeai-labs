@@ -8,10 +8,13 @@ A multi-agent workflow using Maestro: Allows an user to specify a topic from Arx
 ```mermaid
 sequenceDiagram
 participant Search Arxiv
-participant Individual Summary
-Search Arxiv->>Search Arxiv: Search Arxiv
-Search Arxiv->>Individual Summary: input
-Individual Summary->>Individual Summary: Individual Summary
+participant Abstract Agent
+participant Summary Agent
+participant Choose Paper
+Search Arxiv->>Choose Paper: retreive papers
+Choose Paper->>Abstract Agent: choose paper
+Abstract Agent->>Summary Agent: retrieve abstract
+Summary Agent->>Summary Agent: get summary
 ```
 <!-- MERMAID_END -->
 
