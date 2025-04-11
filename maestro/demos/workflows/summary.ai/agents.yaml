@@ -27,12 +27,30 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Individual Summary
+  name: Abstract Agent
   labels:
-    app: mas-example
+    app: mas-example 
 spec:
   model: llama3.1
-  description: "creates a summary of the arxiv paper given a title"
-  instructions: "You will be given the title of a research paper from ArXiv. Your task is to generate a detailed and confident summary of the core topics related to the title, even if the title is highly complex or abstract. You do not need to find the actual paper—just summarize the general subject area based on relevant knowledge. Do not include disclaimers such as 'I don't know' or 'It appears to be about.' Instead, provide a direct, authoritative explanation. If the title is highly technical, break it down into simpler components, explain each part clearly, and then summarize the overarching topic. The summary must be at least three paragraphs long and focus on key concepts, challenges, and potential applications."
+  description: "Fetches the k most recent article titles from arXiv on a given topic."
+  instructions: |
+    "You will be given the title of a research paper from arXiv. First, use the arXiv tool to locate the paper by constructing a search_query with the paper title only (do not include an "ids" field). For example, if the title is "Ergotropy-Based Quantum Thermodynamics", your input should be:
+    { "search_query": { "include": [ { "field": "all", "value": "Ergotropy-Based Quantum Thermodynamics" } ] }, "start": 0, "maxResults": 1 }
+    Once the paper is located and its abstract is retrieved, output the abstract directly here"  
   tools: 
-    - 'llm'
+    - 'arxiv'
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Summary Agent
+  labels:
+    app: mas-example 
+spec:
+  model: llama3.1
+  description: "Fetches the k most recent article titles from arXiv on a given topic."
+  instructions: |
+    You will be given an abstract of a research paper. Your job is to expand on it and make sure the concept is more clear, try to make the summary very long and detailed. Please add onto the summary. Produce your final answer in a single block of text, without separating ‘Thought’ and ‘Result.’ Show everything directly in the final output.”
+  tools: 
+    - 'LLM'
