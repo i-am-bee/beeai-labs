@@ -24,6 +24,7 @@ streamlit-mermaid = "^0.3.0"
 psutil = "^7.0.0"
 beeai_framework = "^0.1.11"
 openapi = "^2.0.0"
+openai-agents = "^0.0.9"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"

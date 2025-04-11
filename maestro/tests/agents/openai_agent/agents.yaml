@@ -9,3 +9,5 @@ spec:
   description: test
   instructions: echo your prompt
   framework: openai
+  tools:
+    - web_search
