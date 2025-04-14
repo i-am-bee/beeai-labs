@@ -23,7 +23,6 @@ from src.agents.agent_factory import AgentFramework, AgentFactory
 from src.agents.beeai_agent import BeeAIAgent
 from src.agents.crewai_agent import CrewAIAgent
 from src.agents.openai_agent import OpenAIAgent
-from src.agents.beeai_local_agent import BeeAILocalAgent
 from src.agents.remote_agent import RemoteAgent
 from src.agents.mock_agent import MockAgent
 
