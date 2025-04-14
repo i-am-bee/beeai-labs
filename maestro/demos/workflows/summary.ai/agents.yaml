@@ -1,34 +1,6 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Search Arxiv
-  labels:
-    app: mas-example 
-spec:
-  model: llama3.1
-  framework: beeai
-  mode: remote
-  description: "Fetches the k most recent article titles from arXiv on a given topic."
-  instructions: "Execute the given query using only the fetch tool provided. In your output, only list out the output the function gave you and nothing else. Example output: ['title1', 'title2', .... ]"  
-  tools: 
-    - 'fetch'
-  code: |
-        import urllib.request
-
-        def fetch_arxiv_titles(topic: str, k: int = 10):
-          """Fetches the k most recent article titles from arXiv on a given topic."""
-          url = f"http://export.arxiv.org/api/query?search_query=all:{topic}&sortBy=submittedDate&sortOrder=descending&max_results={k}"
-
-          with urllib.request.urlopen(url) as response:
-              data = response.read().decode()
-
-          titles = [line.split("<title>")[1].split("</title>")[0] for line in data.split("\n") if "<title>" in line][1:k+1]
-          return titles
-
----
-apiVersion: maestro/v1alpha1
-kind: Agent
-metadata:
   name: Abstract Agent
   labels:
     app: mas-example 
@@ -38,8 +10,7 @@ spec:
   mode: remote
   description: "Get the abstract of the desired paper."
   instructions: |
-    "You will be given the title of a research paper from arXiv. First, use the arXiv tool to locate the paper by constructing a search_query with the paper title only.
-    Once the paper is located, retrieve its summary, output the summary directly here."  
+    "You will be given the title of a research paper from arXiv. Your task is to use the arXiv tool to search for the paper by using only the provided paper title as your search parameter. Once you have located the paper, retrieve its summary (abstract) and output it directly here. Do not use any SQL queries or database commands."  
   tools: 
     - 'arxiv'
 
@@ -56,7 +27,7 @@ spec:
   mode: remote
   description: "Get the summary of the desired paper"
   instructions: |
-    You will be given an abstract of a research paper. Your job is to expand on it and make sure the concept is more clear, try to make the summary very long and detailed. Please add onto the summary. Produce your final answer in a single block of text, without separating ‘Thought’ and ‘Result.’ Show everything directly in the final output.”
+    You will be given an abstract of a research paper. Your job is to expand on it and make sure the concept is more clear, try to make the summary very long and detailed. It should be at least 3 times as long as the original abstract. Go into detail about each topic mentioned. Please add onto the summary. Produce your final answer in a single block of text, without separating ‘Thought’ and ‘Result.’ Show everything directly in the final output.
   tools: 
     - 'LLM'
 
@@ -73,6 +44,33 @@ spec:
   mode: remote
   description: "Choose a paper from the list of titles."
   instructions: |
-    You will be given an abstract of a research paper. Your job is to expand on it and make sure the concept is more clear, try to make the summary very long and detailed. Please add onto the summary. Produce your final answer in a single block of text, without separating ‘Thought’ and ‘Result.’ Show everything directly in the final output.”
+    You will be provided a list of titles, simply output one at random.
+    
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: paper retriever
+  labels:
+    app: mas-example 
+spec:
+  model: llama3.1
+  framework: beeai
+  mode: remote
+  description: "Choose a paper from the list of titles."
+  instructions: |
+    Input: A topic (string) and a number n (integer) indicating how many papers to retrieve.
+
+    Task:
+    Use the arXiv tool to search for the most recent papers related to the given topic.
+    Retrieve exactly n papers sorted by their publication date (most recent first).
+    Extract only the titles of these papers.
+    Output the titles in a list format (i.e., a Python list). Do not include any additional text or formatting.
+
+    Example Input:
+    topic: "quantum", n: 2
+
+    Output:
+    ['title1_related_quantum', 'title2_quantum']
   tools: 
-    - 'LLM'
+    - 'arxiv'

@@ -11,14 +11,14 @@ spec:
       labels:
         project: maestro-demo
     agents:
-      - Search Arxiv
+      - paper retriever
       - Abstract Agent
       - Summary Agent
       - Choose Paper
-    prompt: "Run the fetch tool using this function call: fetch_arxiv_titles(topic='quantum', k=5):"
+    prompt: topic = quantum, n=2
     steps:
       - name: retreive papers
-        agent: Search Arxiv
+        agent: paper retriever
       - name: choose paper
         agent: Choose Paper
       - name: retrieve abstract 
