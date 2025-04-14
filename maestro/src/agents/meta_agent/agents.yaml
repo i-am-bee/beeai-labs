@@ -20,6 +20,8 @@ spec:
       Each agent must include:
       name: A unique identifier.
       model: The model identifier (e.g., "llama3.1:latest").
+      framework: beeai
+      mode: remote
       instructions: A description of the role or context of the agent to be used as context for the agent (no code).
       tools: A list of required tools. If the input specifies a tool (e.g., OpenMeteo, DuckDuckGo), its name must be included.
       NOTE: DO NOT INCLUDE ANY CODE!
@@ -37,6 +39,8 @@ spec:
           app: mas-example
       spec:
         model: "llama3.1:latest"
+        framework: beeai
+        mode: remote
         description: Retrieves weather data for a given location using OpenMeteo.
         tools:
           - code_interpreter

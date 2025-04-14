@@ -37,6 +37,8 @@ spec:
           app: mas-example
       spec:
         model: "llama3.1:latest"
+        framework: beeai
+        mode: remote
         description: Retrieves weather data for a given location using OpenMeteo.
         tools:
           - code_interpreter
