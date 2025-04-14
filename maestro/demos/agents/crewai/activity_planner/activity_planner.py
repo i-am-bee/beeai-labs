@@ -63,7 +63,7 @@ class ActivityPlannerCrew:
         """
         return Agent(
             config=self.agents_config["activity_planner_agent"],
-            tools=[self.ddg_search],  # Include the DuckDuckGo search tool
+            # tools=[self.ddg_search],  # Include the DuckDuckGo search tool
             llm=self.llm,  # Use the locally running LLM (Ollama 3.1)
             verbose=True,
         )
