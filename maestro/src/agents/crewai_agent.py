@@ -26,14 +26,8 @@ class CrewAIAgent(Agent):
         #   test.crewai_test.ColdWeatherCrew.activity_crew
 
         try:
-            partial_agent_name, method_name = self.agent_name.rsplit(".", 1)
-            module_name, class_name = partial_agent_name.rsplit(".", 1)
-            my_module = importlib.import_module(module_name)
-            # Get the class object
-            self.crew_agent_class = getattr(my_module, class_name)
-            # Instantiate the class
-            self.instance = self.crew_agent_class()          
-            self.method_name = method_name
+            partial_agent_name, self.method_name = self.agent_name.rsplit(".", 1)
+            self.module_name, self.class_name = partial_agent_name.rsplit(".", 1)
         except Exception as e:
             print(f"🧑🏽‍✈️ Failed to load agent {self.agent_name}: {e}")
             raise(e)
@@ -53,6 +47,11 @@ class CrewAIAgent(Agent):
         print(f"🧑🏽‍✈️ RunningCrewAI agent: {self.agent_name} with prompt: {prompt}\n")
 
         try:
+            my_module = importlib.import_module(self.module_name)
+            # Get the class object
+            self.crew_agent_class = getattr(my_module, self.class_name)
+            # Instantiate the class
+            self.instance = self.crew_agent_class()
             method = getattr(self.instance, self.method_name)
             output = method().kickoff({ 'prompt': prompt})
             return { 'prompt': output.raw }

@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: activity_planner.ActivityPlannerCrew.activity_crew
+  name: demos.agents.crewai.activity_planner.activity_planner.ActivityPlannerCrew.activity_crew
   labels:
     app: activity-planner-demo
 spec:
