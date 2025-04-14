@@ -6,6 +6,8 @@ metadata:
     app: activity-planner-demo
 spec:
   model: "llama3.1:latest"
+  framework: beeai
+  mode: remote
   description: test
   instructions: Nothing to do
   framework: crewai

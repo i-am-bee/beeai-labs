@@ -6,6 +6,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Generates a structured workflow based on available agents"
   instructions: |
                 "You are an **AI workflow definition generator** specializing in creating `workflow.json` files.
@@ -74,6 +76,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Formats a structured prompt by replacing placeholders with user-defined values."
   instructions: |
                 You are a **workflow prompt formatter agent**. Your job is to format a structured workflow as given below.
@@ -137,6 +141,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Plan agent descriptions based on natural language input."
   instructions: |
     You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration.

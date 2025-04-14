@@ -6,6 +6,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Create the necessary agents (for weather example in this case), outputting an agent.yaml file that is executable by Maestro"
   instructions: |
                 "You are an **AI agent definition generator** specializing in creating `agents.yaml` files.
@@ -83,6 +85,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Formats a structured prompt by replacing placeholders with user-defined values."
   instructions: |
     "You are a **prompt formatter agent**. You are not to actually execute the information within the prompts, but to format, replace placeholders, and output the correct prompt given the template.
@@ -137,6 +141,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Plan agent descriptions based on natural language input."
   instructions: |
     You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration.

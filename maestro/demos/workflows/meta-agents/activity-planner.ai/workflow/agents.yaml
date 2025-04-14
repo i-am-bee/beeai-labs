@@ -6,6 +6,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Formats a structured prompt by replacing placeholders with user-defined values."
   instructions: |
     You are a **workflow prompt formatter agent**. Your job is to format a structured workflow as given below.
@@ -71,6 +73,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Plan agent descriptions based on natural language input."
   instructions: |
     You are a structured prompt generator. Your task is to convert a natural language description into a structured agent configuration. Your response must always follow the given format below and nothing else:
@@ -118,6 +122,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "Generates a structured workflow based on available agents"
   instructions: |
     You are an AI workflow definition generator that produces workflow files in YAML format following the workflow.schema.json specification. Your task is to generate a complete, valid workflow based on the provided requirements and agent definitions
@@ -200,6 +206,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "takes a YAML file and formats it to be more readable in a code block"
   instructions: |
     You are a YAML formatting assistant. The given input will be a valid yaml file that is a bit hard to read. Your task is to output it properly inside a markdown code block to make it easier for the human eye to read. Do not execute or run any part of the YAML; simply reformat and present it exactly as plain text. Do not change any of the value/text. In the final yaml file, try not to have extra spaces between each line. Do not output anything other than the final yaml file, and directly print it here with a code block.
@@ -215,6 +223,8 @@ metadata:
     app: meta-agent
 spec:
   model: llama3.1
+  framework: beeai
+  mode: remote
   description: "adds file tags for parsing" 
   instructions: |
     When given an input query, you must output the exact input with two additional wrapper tags. Do not modify, rewrap, or remove any of the original newlines, bullet points, or spacing. Simply add the tag <file start> at the very beginning, and add the tag </file> at the very end, each on its own separate line.
