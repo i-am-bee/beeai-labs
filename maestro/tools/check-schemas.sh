@@ -15,6 +15,7 @@ AGENT_FILES=$(find . -name '*agents*.yaml')
 echo "|Filename|Type|Stats|" >> "$GITHUB_STEP_SUMMARY"
 echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
 
+EXCLUDED_FILES=("./crewai_test/src/crewai_test/config/agents.yaml" "./demos/agents/crewai/generic/config/agents.yaml" "./demos/agents/crewai/activity_planner/config/agents.yaml")
 
 # Check workflows
 # TODO Consolidate duplication
@@ -32,16 +33,27 @@ done
 
 # Check agents
 for f in $AGENT_FILES
-do
-    if ! maestro validate --verbose "$f"
-    then
-      RESULT="FAIL ❌"
-      fail+=1
-    else
-      RESULT="PASS ✅"
-    fi
-    echo "|$f|agent|$RESULT|" >> "$GITHUB_STEP_SUMMARY"
-done
+    do
+      EXCLUDE=false
+      for EXCLUDED_FILE in "${EXCLUDED_FILES[@]}"; do
+          if [[ "$f" == "$EXCLUDED_FILE" ]]; then
+	      echo $f
+              EXCLUDE=true
+              break
+          fi
+      done
+      if ! $EXCLUDE
+      then
+        if ! ./maestro validate --verbose "$f"
+        then
+          RESULT="FAIL ❌"
+          fail+=1
+        else
+          RESULT="PASS ✅"
+        fi
+        echo "|$f|agent|$RESULT|" >> "$GITHUB_STEP_SUMMARY"
+      fi
+    done
 
 if [ -z "$CI" ];
  then

@@ -1,0 +1,60 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: beeaiagent
+  labels:
+    app: multi-agent
+spec:
+  #model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  # model: granite3.1-dense:8b
+  framework: beeai
+  mode: remote
+  description: beeai agent
+  tools:
+    - code_interpreter
+  instructions: |
+    You are playing a guessing game.  One person has a number between 1 and 10 in mind.  You guess the number.
+    Output format is {"BeeAI=" + guessed number'}
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Generic_Crew
+  labels:
+    app: multi-agent
+    module: demos.agents.crewai.generic.generic_agent
+    class: Generic_Crew
+    factory: generic_crew
+spec:
+  model: "llama3.1:latest"
+  description: crewai agent
+  instructions: dummy
+  framework: crewai
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Jadge_agent
+  labels:
+    app: multi-agent
+spec:
+  #model: meta-llama/llama-3-1-70b-instruct
+  model: llama3.1
+  # model: granite3.1-dense:8b
+  framework: beeai
+  mode: remote
+  description: beeai agent
+  tools:
+    - code_interpreter
+  instructions: |
+    You are a jadge of a guess game.  You generate a ramdom number between 1 and 10
+    You can use the code interpreter tools to generate the number.
+    The players guess numbers are given in the prompt or input.
+    The format of the prompt is a list of "name=guess number".
+    Find a winner who guessed the closest number to the number your generated.
+    Output format is {Number: you generated, Winner: winner and its guess number}

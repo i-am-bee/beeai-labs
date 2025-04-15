@@ -1,0 +1,25 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: multi agent workflow
+  labels:
+    app: multi-agent
+spec:
+  template:
+    metadata:
+      name: multi-agent-workflow
+      labels:
+        app: multi-agent
+        use-case: test
+    agents:
+        - beeaiagent
+        - Generic_Crew
+        - Jadge_agent
+    prompt: Pick a number between 1 and 10 for a guessing game
+    steps:
+      - name: beeai
+        agent: beeaiagent
+      - name: crewai
+        agent: Generic_Crew
+      - name: Jadge_agent
+        agent: Jadge_agent
