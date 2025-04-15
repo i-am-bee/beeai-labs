@@ -10,8 +10,8 @@ spec:
       labels:
         app: activity-planner-demo
     agents:
-      - demos.agents.crewai.activity_planner.activity_planner.ActivityPlannerCrew.activity_crew
+      - ActivityPlannerCrew
     prompt: Show me some activities to do in London in cold weather
     steps:
       - name: begin
-        agent: demos.agents.crewai.activity_planner.activity_planner.ActivityPlannerCrew.activity_crew
+        agent: ActivityPlannerCrew

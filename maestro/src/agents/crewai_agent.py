@@ -26,8 +26,9 @@ class CrewAIAgent(Agent):
         #   test.crewai_test.ColdWeatherCrew.activity_crew
 
         try:
-            partial_agent_name, self.method_name = self.agent_name.rsplit(".", 1)
-            self.module_name, self.class_name = partial_agent_name.rsplit(".", 1)
+            self.module_name = agent["metadata"]["labels"]["module"]
+            self.class_name = agent["metadata"]["labels"]["class"]
+            self.factory_name = agent["metadata"]["labels"]["factory"]
         except Exception as e:
             print(f"🧑🏽‍✈️ Failed to load agent {self.agent_name}: {e}")
             raise(e)
@@ -52,8 +53,8 @@ class CrewAIAgent(Agent):
             self.crew_agent_class = getattr(my_module, self.class_name)
             # Instantiate the class
             self.instance = self.crew_agent_class()
-            method = getattr(self.instance, self.method_name)
-            output = method().kickoff({ 'prompt': prompt})
+            factory = getattr(self.instance, self.factory_name)
+            output = factory().kickoff({ 'prompt': prompt})
             return { 'prompt': output.raw }
 
         # TODO address error handling

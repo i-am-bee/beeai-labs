@@ -1,13 +1,14 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: demos.agents.crewai.activity_planner.activity_planner.ActivityPlannerCrew.activity_crew
+  name: ActivityPlannerCrew
   labels:
     app: activity-planner-demo
+    module: demos.agents.crewai.activity_planner.activity_planner
+    class: ActivityPlannerCrew
+    factory: activity_crew
 spec:
   model: "llama3.1:latest"
-  framework: beeai
-  mode: remote
   description: test
   instructions: Nothing to do
   framework: crewai

@@ -65,7 +65,7 @@ class ActivityPlannerCrew:
             config=self.agents_config["activity_planner_agent"],
             # tools=[self.ddg_search],  # Include the DuckDuckGo search tool
             llm=self.llm,  # Use the locally running LLM (Ollama 3.1)
-            verbose=True,
+            verbose=False,
         )
 
     @task
@@ -92,7 +92,7 @@ class ActivityPlannerCrew:
             tasks=self.tasks,
             process=Process.sequential,
             # TODO: disable verbose when working well
-            verbose=True,
+            verbose=False,
         )
 
 # Main for testing
