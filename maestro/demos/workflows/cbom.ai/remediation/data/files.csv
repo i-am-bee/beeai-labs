@@ -1,0 +1,11 @@
+"Algorithm","Location","Line","Offset","Additional Context"
+"SHA256","src/main/java/com/mastercard/developer/encryption/EncryptionConfigBuilder.java",51,38,"java.security.MessageDigest#getInstance(Ljava/lang/String;)Ljava/security/MessageDigest;"
+"RSA","src/main/java/com/mastercard/developer/encryption/rsa/RSA.java",27,28,"javax.crypto.Cipher#getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;"
+"AES128-CBC-PKCS5","src/main/java/com/mastercard/developer/encryption/aes/AESCBC.java",31,24,"javax.crypto.Cipher#getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;"
+"AES128","src/main/java/com/mastercard/developer/encryption/aes/AESEncryption.java",32,15,"javax.crypto.spec.SecretKeySpec#<init>([BLjava/lang/String;)V"
+"AES128","src/main/java/com/mastercard/developer/encryption/jwe/JweObject.java",74,31,"javax.crypto.spec.SecretKeySpec#<init>([BLjava/lang/String;)V"
+"RSA-OAEP","src/main/java/com/mastercard/developer/encryption/rsa/RSA.java",27,28,"javax.crypto.Cipher#getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;"
+"RSA-OAEP","src/main/java/com/mastercard/developer/encryption/rsa/RSA.java",42,28,"javax.crypto.Cipher#getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;"
+"AES128-GCM","src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java",29,24,"javax.crypto.Cipher#getInstance(Ljava/lang/String;)Ljavax/crypto/Cipher;"
+"RSA-2048","src/main/java/com/mastercard/developer/utils/EncryptionUtils.java",99,32,"java.security.KeyFactory#getInstance(Ljava/lang/String;)Ljava/security/KeyFactory;"
+

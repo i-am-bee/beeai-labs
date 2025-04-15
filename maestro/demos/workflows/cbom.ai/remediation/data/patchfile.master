@@ -1,0 +1,24 @@
+From 2ec0e7ccc6fa9ad8a2096eb323018c6f9393bcb7 Mon Sep 17 00:00:00 2001
+From: patcher <patcher@research.ibm.com>
+Date: Tue, 15 Apr 2025 11:07:58 +0100
+Subject: [PATCH] Bee patched!
+
+---
+ .../java/com/mastercard/developer/encryption/aes/AESGCM.java    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java b/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java
+index 31cb738..bc98c36 100644
+--- a/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java
++++ b/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java
+@@ -20,7 +20,7 @@ public class AESGCM {
+
+     public static byte[] decrypt(Key cek, JweObject object) throws GeneralSecurityException {
+         byte[] aad = object.getRawHeader().getBytes(StandardCharsets.US_ASCII);
+-        GCMParameterSpec gcmSpec = new GCMParameterSpec(128, EncodingUtils.base64Decode(object.getIv()));
++        GCMParameterSpec gcmSpec = new GCMParameterSpec(256, EncodingUtils.base64Decode(object.getIv()));
+         byte[] bytes = ByteUtils.concat(EncodingUtils.base64Decode(object.getCipherText()), EncodingUtils.base64Decode(object.getAuthTag()));
+         return cipher(cek, gcmSpec, bytes, aad, Cipher.DECRYPT_MODE);
+     }
+--
+2.49.0

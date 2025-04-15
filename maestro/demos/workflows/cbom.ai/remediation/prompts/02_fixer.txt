@@ -1,0 +1,28 @@
+Fix my code based on the findings report below:
+
+{
+  "repository": "https://github.com/planetf1/client-encryption-java",
+  "findings": [
+    {
+      "algorithm": "AES128-CBC-PKCS5",
+      "remediation": "KEYLEN01",
+      "filename": "src/main/java/com/mastercard/developer/encryption/aes/AESCBC.java",
+      "URL": "https://raw.githubusercontent.com/planetf1/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/aes/AESCBC.java",
+      "linenumber": 31
+    },
+    {
+      "algorithm": "AES128",
+      "remediation": "KEYLEN01",
+      "filename": "src/main/java/com/mastercard/developer/encryption/aes/AESEncryption.java",
+      "URL": "https://raw.githubusercontent.com/planetf1/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/aes/AESEncryption.java",
+      "linenumber": 32
+    },
+    {
+      "algorithm": "AES128-GCM",
+      "remediation": "KEYLEN01",
+      "filename": "src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java",
+      "URL": "https://raw.githubusercontent.com/planetf1/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java",
+      "linenumber": 29
+    }
+  ]
+}

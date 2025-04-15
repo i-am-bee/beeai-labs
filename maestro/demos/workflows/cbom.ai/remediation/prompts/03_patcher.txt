@@ -1,0 +1,30 @@
+Using the patch provided, create a pull request for my code at https://github.com/planetf1/client-encryption-java . My github api token is:
+
+TOKEN
+
+Here's the patch:
+
+From 94abe5f3b19d11a4d538ef629467a89392e50d2c Mon Sep 17 00:00:00 2001
+From: patcher <patcher@research.ibm.com>
+Date: Mon, 2 Dec 2024 11:46:35 +0000
+Subject: [PATCH] Bee patched!
+
+---
+ .../java/com/mastercard/developer/encryption/aes/AESGCM.java    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java b/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java
+index 31cb738..bc98c36 100644
+--- a/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java
++++ b/src/main/java/com/mastercard/developer/encryption/aes/AESGCM.java
+@@ -20,7 +20,7 @@ public class AESGCM {
+
+     public static byte[] decrypt(Key cek, JweObject object) throws GeneralSecurityException {
+         byte[] aad = object.getRawHeader().getBytes(StandardCharsets.US_ASCII);
+-        GCMParameterSpec gcmSpec = new GCMParameterSpec(128, EncodingUtils.base64Decode(object.getIv()));
++        GCMParameterSpec gcmSpec = new GCMParameterSpec(256, EncodingUtils.base64Decode(object.getIv()));
+         byte[] bytes = ByteUtils.concat(EncodingUtils.base64Decode(object.getCipherText()), EncodingUtils.base64Decode(object.getAuthTag()));
+         return cipher(cek, gcmSpec, bytes, aad, Cipher.DECRYPT_MODE);
+     }
+--
+2.45.2

@@ -178,3 +178,7 @@ poetry.lock
 
 # Do not commit agents.db file
 agents.db
+
+# Temporary spaces used by beeai python code interpreter
+workspace/
+tmp/
