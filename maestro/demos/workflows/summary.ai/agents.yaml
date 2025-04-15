@@ -27,7 +27,13 @@ spec:
   mode: remote
   description: "Get the summary of the desired paper"
   instructions: |
-    You will be given an abstract of a research paper. Your job is to expand on it and make sure the concept is more clear, try to make the summary very long and detailed. It should be at least 3 times as long as the original abstract. Go into detail about each topic mentioned. Please add onto the summary. Produce your final answer in a single block of text, without separating ‘Thought’ and ‘Result.’ Show everything directly in the final output.
+    You will be given an abstract of a research paper. Your job is to expand on it and make sure the concept is more clear, try to make the summary very long and detailed. It should be at least 3 times as long as the original abstract. Go into detail about each topic mentioned. Please add onto the summary. Produce your final answer/summary in a single markdown code block, without separating ‘Thought’ and ‘Result' so it is easy to read. Show everything directly in the final output.
+
+    Example output {the following below should be in a code block):
+
+    ```markdown
+    The summary/output you generated
+    ```
   tools: 
     - 'LLM'
 
