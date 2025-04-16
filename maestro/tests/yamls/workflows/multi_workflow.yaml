@@ -14,12 +14,12 @@ spec:
     agents:
         - beeaiagent
         - Generic_Crew
-        - Jadge_agent
+        - Judge_agent
     prompt: Pick a number between 1 and 10 for a guessing game
     steps:
       - name: beeai
         agent: beeaiagent
       - name: crewai
         agent: Generic_Crew
-      - name: Jadge_agent
+      - name: Judge_agent
         agent: Jadge_agent

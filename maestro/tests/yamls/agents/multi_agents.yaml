@@ -39,7 +39,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Jadge_agent
+  name: Judge_agent
   labels:
     app: multi-agent
 spec:
@@ -52,7 +52,7 @@ spec:
   tools:
     - code_interpreter
   instructions: |
-    You are a jadge of a guess game.  You generate a ramdom number between 1 and 10
+    You are a judge of a guess game.  You generate a ramdom number between 1 and 10
     You can use the code interpreter tools to generate the number.
     The players guess numbers are given in the prompt or input.
     The format of the prompt is a list of "name=guess number".
