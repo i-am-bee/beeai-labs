@@ -55,6 +55,7 @@ class CrewAIAgent(Agent):
             self.instance = self.crew_agent_class()
             factory = getattr(self.instance, self.factory_name)
             output = factory().kickoff({ 'prompt': prompt})
+            print(f"🐝 Response from {self.agent_name}: {output.raw}\n")
             return { 'prompt': output.raw }
 
         # TODO address error handling
