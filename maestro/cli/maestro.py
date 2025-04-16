@@ -33,6 +33,7 @@ Options:
   --verbose              Show all output.
   --silent               Show no additional output on success, e.g., no OK or Success etc
   --dry-run              Mocks agents and other parts of workflow execution.
+  --prompt               Reads a user prompt and executes workflow with it
   --auto-prompt          Run prompt by default if specified
 
   --streamlit            Deploys locally as streamlit application (default deploy)

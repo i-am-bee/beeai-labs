@@ -225,6 +225,8 @@ class RunCmd(Command):
         self.args = args
         super().__init__(self.args)
 
+    # private
+
     def __run_agents_workflow(self, agents_yaml, workflow_yaml):
         try:
             workflow = Workflow(agents_yaml, workflow_yaml[0])
@@ -233,12 +235,20 @@ class RunCmd(Command):
             self._check_verbose()
             raise RuntimeError(f"{str(e)}") from e
         return 0
-    
+
+    def __read_prompt(self):
+        return Console.read('Enter your prompt: ')
+
+    # public
+
     def AGENTS_FILE(self):
         return self.args['AGENTS_FILE']
 
     def WORKFLOW_FILE(self):
         return self.args['WORKFLOW_FILE']
+
+    def prompt(self):
+        return self.args.get('--prompt')
 
     def name(self):
       return "run"
@@ -248,6 +258,11 @@ class RunCmd(Command):
         if self.AGENTS_FILE() != None and self.AGENTS_FILE() != 'None':
             agents_yaml = parse_yaml(self.AGENTS_FILE())
         workflow_yaml = parse_yaml(self.WORKFLOW_FILE())
+
+        if self.prompt():
+            prompt = self.__read_prompt()
+            workflow_yaml[0]['spec']['template']['prompt'] = prompt
+
         try:
             self.__run_agents_workflow(agents_yaml, workflow_yaml)
         except Exception as e:

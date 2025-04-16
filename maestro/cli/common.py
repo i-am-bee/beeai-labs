@@ -47,6 +47,9 @@ def read_file(file_path):
         Console.error("Could read file: {file_path}")
 
 class Console:
+    def read(message):
+        return input(message)
+
     def verbose(msg):
         if VERBOSE:
             print(f"{Colors.OKBLUE}{msg}{Colors.ENDC}".format(msg=str(msg)))

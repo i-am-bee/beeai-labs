@@ -16,7 +16,7 @@
 
 import os
 import unittest
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from cli.commands import CLI
 
@@ -115,6 +115,7 @@ class RunCommandTest(TestCommand):
                         '--dry-run': True,
                         '--help': False,
                         '--verbose': False,
+                        '--prompt': False,
                         '--silent': False,
                         '--version': False,
                         'AGENTS_FILE': self.get_fixture('yamls/agents/simple_agent.yaml'),
@@ -131,13 +132,22 @@ class RunCommandTest(TestCommand):
     def tearDown(self):
         self.args = {}
         self.command = None
-        
+
     def test_run__dry_run(self):
         self.assertTrue(self.command.name() == 'run')
         try:
             self.command.execute()
         except Exception as e:
             self.fail(f"Exception running command: {str(e)}")
+
+    def test_run__dry_run_prompt(self):
+        with mock.patch('builtins.input', return_value='test prompt'):
+            self.args['--prompt'] = True
+            self.assertTrue(self.command.name() == 'run')
+            try:
+                self.command.execute()
+            except Exception as e:
+                self.fail(f"Exception running command: {str(e)}")
 
     def test_run_None_agents_file__dry_run(self):
         self.args['AGENTS_FILE'] = None
