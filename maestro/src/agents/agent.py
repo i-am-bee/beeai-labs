@@ -4,7 +4,8 @@
 from abc import abstractmethod
 import os
 import pickle
-import asyncio
+from typing import Dict, Final
+
 
 class Agent:
     """
@@ -17,22 +18,36 @@ class Agent:
             agent_name (str): The name of the agent.
         """
         # TODO: Review which attributes belong in base class vs subclasses
-        self.agent_name = agent["metadata"]["name"]
-        self.agent_framework = agent["spec"]["framework"]
-        self.agent_model = agent["spec"]["model"]
+        self.agent_name = agent['metadata']['name']
+        self.agent_framework = agent['spec']['framework']
+        self.agent_model = agent['spec']['model']
 
-        self.agent_desc = agent["spec"]["description"]
-        self.agent_instr = agent["spec"]["instructions"]
-        self.agent_input = agent["spec"].get("input")
-        self.agent_output = agent["spec"].get("output")
-        self.instructions = f"{self.agent_instr} Input is expected in format: {self.agent_input}" if self.agent_input else self.agent_instr
-        self.instructions = f"{self.instructions} Output must be in format: {self.agent_output}" if self.agent_output else self.instructions
+        self.agent_tools = agent['spec'].get('tools', [])
 
+        self.agent_desc = agent['spec']['description']
+        self.agent_instr = agent['spec']['instructions']
+
+        self.agent_input = agent['spec'].get('input')
+        self.agent_output = agent['spec'].get('output')
+
+        self.instructions = f'{self.agent_instr} Input is expected in format: {self.agent_input}' if self.agent_input else self.agent_instr
+        self.instructions = f'{self.instructions} Output must be in format: {self.agent_output}' if self.agent_output else self.instructions
+
+    EMOJIS: Final[Dict[str, str]] = {
+        'beeai': '🐝',
+        'crewai': '👥',
+        'openai': '🔓',
+        'mock': '🤖',
+        'remote': '💸',
+        # Not yet supported
+        # 'langflow': '⛓',
+    }
     def emoji(self) -> str:
-        return AgentFactory.EMOJIS[AgentFramework.MOCK]
+        '''Provides an Emoji for agent type'''
+        return self.EMOJIS.get(self.agent_framework, "⚙️")
 
     def print(self, message) -> str:
-        return f"{self.emoji()} {message}"
+        return f'{self.emoji()} {message}'
 
     @abstractmethod
     async def run(self, prompt: str) -> str:

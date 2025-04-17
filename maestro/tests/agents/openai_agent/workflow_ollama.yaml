@@ -1,0 +1,17 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: openai_test_ollama
+  labels:
+    app: testapp_ollama
+spec:
+  template:
+    metadata:
+      labels:
+        app: testapp_ollama
+    agents:
+      - openai_test_ollama
+    prompt: Welcome OpenAI to the AI Agent OSS party, now with Ollama
+    steps:
+      - name: begin
+        agent: openai_test_ollama
