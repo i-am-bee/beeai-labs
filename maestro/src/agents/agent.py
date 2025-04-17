@@ -4,7 +4,8 @@
 from abc import abstractmethod
 import os
 import pickle
-import asyncio
+from typing import Dict, Final
+
 
 class Agent:
     """
@@ -32,8 +33,18 @@ class Agent:
         self.instructions = f'{self.agent_instr} Input is expected in format: {self.agent_input}' if self.agent_input else self.agent_instr
         self.instructions = f'{self.instructions} Output must be in format: {self.agent_output}' if self.agent_output else self.instructions
 
+    EMOJIS: Final[Dict[str, str]] = {
+        'beeai': '🐝',
+        'crewai': '👥',
+        'openai': '🔓',
+        'mock': '🤖',
+        'remote': '💸',
+        # Not yet supported
+        # 'langflow': '⛓',
+    }
     def emoji(self) -> str:
-        return AgentFactory.EMOJIS[AgentFramework.MOCK]
+        '''Provides an Emoji for agent type'''
+        return self.EMOJIS.get(self.agent_framework, "⚙️")
 
     def print(self, message) -> str:
         return f'{self.emoji()} {message}'
