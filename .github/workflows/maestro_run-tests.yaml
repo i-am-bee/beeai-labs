@@ -27,7 +27,7 @@ jobs:
         run: |
           cd maestro
           poetry install
-          pip install beeai_framework
+          poetry run pip install beeai-framework
       - name: Run unit tests
         run: |
           cd maestro
