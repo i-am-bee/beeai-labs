@@ -12,17 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents
+from src.agents.agent import Agent as BeeAgent
+from agents import (
+    Agent as OAIAgent,
+    Runner as OAIRunner
+)
 
-from .agent import Agent
-
-class OpenAIAgent(Agent):
+class OpenAIAgent(BeeAgent):
     def __init__(self, agent: dict) -> None:
-        super.__init__(agent)
-        self.openai_agent = agents.Agent(
+        super().__init__(agent)
+        # TODO: Add tools (std and MCP)
+        self.openai_agent = OAIAgent(
             name=self.agent_name,
             instructions=self.instructions,
-            tools=self.tools)
+            )
     
     async def run(self, prompt: str) -> str:
         """
@@ -31,7 +34,7 @@ class OpenAIAgent(Agent):
             prompt (str): The prompt to run the agent with.
         """
         self.print(f"Running {self.agent_name}...")
-        result = await agents.Runner.run(self.openai_agent, prompt)        
+        result = await OAIRunner.run(self.openai_agent, prompt)        
         self.print(f"Response from {self.agent_name}: {result.final_output}")
         return result.final_output
 
@@ -41,4 +44,4 @@ class OpenAIAgent(Agent):
         Args:
             prompt (str): The prompt to run the agent with.
         """        
-        return self.run(prompt)
+        return await self.run(prompt)
