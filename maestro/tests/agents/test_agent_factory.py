@@ -20,7 +20,7 @@ from typing import Callable
 
 from unittest import TestCase
 
-from src.agents.agent_factory import AgentFramework, AgentFactory, EMOJIS
+from src.agents.agent_factory import AgentFramework, AgentFactory
 
 class TestAgentFramework(TestCase):    
     def test_frameworks(self):        
@@ -30,12 +30,6 @@ class TestAgentFramework(TestCase):
         self.assertTrue(AgentFramework.MOCK is not None)
         self.assertTrue(AgentFramework.REMOTE is not None)
 
-    def test_EMOJIS(self):
-        self.assertTrue(EMOJIS['beeai'] == '🐝')
-        self.assertTrue(EMOJIS['crewai'] == '👥')
-        self.assertTrue(EMOJIS['openai'] == '🔓')
-        self.assertTrue(EMOJIS['mock'] == '🤖')
-        self.assertTrue(EMOJIS['remote'] == '💸')
 
 class TestAgentFactory(TestCase):    
     def test_create_agents(self):
