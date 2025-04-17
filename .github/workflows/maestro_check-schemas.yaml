@@ -31,7 +31,7 @@ jobs:
         run: |
           cd maestro
           poetry install
-	  pip install beeai_framework
+          pip install beeai_framework
       - name: Filter changed files for demos
         id: filter
         uses: dorny/paths-filter@v2
