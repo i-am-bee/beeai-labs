@@ -22,4 +22,4 @@ spec:
       - name: crewai
         agent: Generic_Crew
       - name: Judge_agent
-        agent: Jadge_agent
+        agent: Judge_agent
