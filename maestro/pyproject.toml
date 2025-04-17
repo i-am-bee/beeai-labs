@@ -22,8 +22,9 @@ duckduckgo-search = "^7.3.0"
 streamlit = "^1.44.0"
 streamlit-mermaid = "^0.3.0"
 psutil = "^7.0.0"
-beeai_framework = "^0.1.11"
+# beeai_framework = "^0.1.11"
 openapi = "^2.0.0"
+crewai = "^0.114.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"

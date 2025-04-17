@@ -3,7 +3,7 @@
 import importlib
 import asyncio
 
-# from crewai import Agent, Crew, Task, Process, LLM
+from crewai import Agent, Crew, Task, Process, LLM
 from .agent import Agent as BeeAgent
 
 class CrewAIAgent(BeeAgent):
@@ -66,11 +66,9 @@ class CrewAIAgent(BeeAgent):
                 factory = getattr(self.instance, self.factory_name)
                 output = factory().kickoff({ 'prompt': prompt})
             else:
-                # output = self.crew().kickoff({ 'prompt': prompt})
-                print(f"Not implemeted\n")
-                return(f"Not implemeted\n")
+                output = self.crew().kickoff({ 'prompt': prompt})
             print(f"🐝 Response from {self.agent_name}: {output.raw}\n")
-            return { 'prompt': output.raw }
+            return output.raw
 
         # TODO address error handling
         except Exception as e:
@@ -90,30 +88,30 @@ class CrewAIAgent(BeeAgent):
 
         raise NotImplementedError("🧑🏽‍✈️CrewAI agent execution logic not implemented yet")
 
-#    def agent(self) -> Agent:
-#        llm = LLM(
-#            model = self.agent_model,
-#            base_url = self.provider_url
-#        )
-#        return Agent(
-#            role = self.crew_role,
-#            goal = self.crew_goal,
-#            backstory = self.crew_backstory,
-#            llm = llm,
-#            verbose = False,
-#        )
-#
-#    def task(self) -> Task:
-#        return Task(
-#            description = self.crew_description,
-#            expected_output = self.crew_expected_output,
-#            agent = self.agent()
-#        )
-#
-#    def crew(self) -> Crew:
-#        return Crew(
-#            agents = [self.agent()],
-#            tasks = [self.task()],
-#            process = Process.sequential,
-#            verbose = False
-#        )
+    def agent(self) -> Agent:
+        llm = LLM(
+            model = self.agent_model,
+            base_url = self.provider_url
+        )
+        return Agent(
+            role = self.crew_role,
+            goal = self.crew_goal,
+            backstory = self.crew_backstory,
+            llm = llm,
+            verbose = False,
+        )
+
+    def task(self) -> Task:
+        return Task(
+            description = self.crew_description,
+            expected_output = self.crew_expected_output,
+            agent = self.agent()
+        )
+
+    def crew(self) -> Crew:
+        return Crew(
+            agents = [self.agent()],
+            tasks = [self.task()],
+            process = Process.sequential,
+            verbose = False
+        )
