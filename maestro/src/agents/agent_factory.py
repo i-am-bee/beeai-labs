@@ -8,17 +8,6 @@ from .openai_agent import OpenAIAgent
 from .remote_agent import RemoteAgent
 from .mock_agent import MockAgent
 
-EMOJIS = {
-    'beeai': '🐝',
-    'crewai': '👥',
-    'openai': '🔓',
-    'mock': '🤖',
-    'remote': '💸',
-
-    # # Not yet supported
-    # 'langflow': '⛓',
-}
-
 class AgentFramework(StrEnum):
     """Enumeration of supported frameworks"""
     BEEAI = "beeai"

@@ -15,5 +15,3 @@ spec:
     steps:
       - name: begin
         agent: openai_test
-      - name: end
-        agent: openai_test
