@@ -1,11 +1,11 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: openai_test
+  name: openai_test_ollama
   labels:
-    app: testapp
+    app: testapp_ollama
 spec:
-  model: "gpt-4o-mini"
+  model: "granite3.3:8b"
   description: test
   instructions: echo your prompt
   framework: openai
