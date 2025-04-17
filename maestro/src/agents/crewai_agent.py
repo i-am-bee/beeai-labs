@@ -3,9 +3,10 @@
 import importlib
 import asyncio
 
-from .agent import Agent
+from crewai import Agent, Crew, Task, Process, LLM
+from .agent import Agent as BeeAgent
 
-class CrewAIAgent(Agent):
+class CrewAIAgent(BeeAgent):
     """
     CrewAIAgent extends the Agent class to load and run a specific CrewAI agent.
     """
@@ -26,9 +27,17 @@ class CrewAIAgent(Agent):
         #   test.crewai_test.ColdWeatherCrew.activity_crew
 
         try:
-            self.module_name = agent["metadata"]["labels"]["module"]
-            self.class_name = agent["metadata"]["labels"]["class"]
-            self.factory_name = agent["metadata"]["labels"]["factory"]
+            self.module_name = agent["metadata"]["labels"].get("module")
+            if self.module_name:
+                self.class_name = agent["metadata"]["labels"]["class"]
+                self.factory_name = agent["metadata"]["labels"]["factory"]
+            else:
+                self.provider_url = agent["spec"].get("url")
+                self.crew_role = agent["metadata"]["labels"].get("crew_role")
+                self.crew_goal = agent["metadata"]["labels"].get("crew_goal")
+                self.crew_backstory = agent["metadata"]["labels"].get("crew_backstory")
+                self.crew_description = agent["metadata"]["labels"].get("crew_description")
+                self.crew_expected_output = agent["metadata"]["labels"].get("crew_expected_output")
         except Exception as e:
             print(f"🧑🏽‍✈️ Failed to load agent {self.agent_name}: {e}")
             raise(e)
@@ -48,13 +57,16 @@ class CrewAIAgent(Agent):
         print(f"🧑🏽‍✈️ RunningCrewAI agent: {self.agent_name} with prompt: {prompt}\n")
 
         try:
-            my_module = importlib.import_module(self.module_name)
-            # Get the class object
-            self.crew_agent_class = getattr(my_module, self.class_name)
-            # Instantiate the class
-            self.instance = self.crew_agent_class()
-            factory = getattr(self.instance, self.factory_name)
-            output = factory().kickoff({ 'prompt': prompt})
+            if self.module_name:
+                my_module = importlib.import_module(self.module_name)
+                # Get the class object
+                self.crew_agent_class = getattr(my_module, self.class_name)
+                # Instantiate the class
+                self.instance = self.crew_agent_class()
+                factory = getattr(self.instance, self.factory_name)
+                output = factory().kickoff({ 'prompt': prompt})
+            else:
+                output = self.crew().kickoff({ 'prompt': prompt})
             print(f"🐝 Response from {self.agent_name}: {output.raw}\n")
             return { 'prompt': output.raw }
 
@@ -75,3 +87,31 @@ class CrewAIAgent(Agent):
         print(f"🧑🏽‍✈️Running CrewAI agent (streaming): {self.agent_name} with prompt: {prompt}\n")
 
         raise NotImplementedError("🧑🏽‍✈️CrewAI agent execution logic not implemented yet")
+
+    def agent(self) -> Agent:
+        llm = LLM(
+            model = self.agent_model,
+            base_url = self.provider_url
+        )
+        return Agent(
+            role = self.crew_role,
+            goal = self.crew_goal,
+            backstory = self.crew_backstory,
+            llm = llm,
+            verbose = False,
+        )
+
+    def task(self) -> Task:
+        return Task(
+            description = self.crew_description,
+            expected_output = self.crew_expected_output,
+            agent = self.agent()
+        )
+
+    def crew(self) -> Crew:
+        return Crew(
+            agents = [self.agent()],
+            tasks = [self.task()],
+            process = Process.sequential,
+            verbose = False
+        )
