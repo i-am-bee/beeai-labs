@@ -39,7 +39,7 @@ class CrewAITest(TestCase):
         print(result)
 
         assert result is not None
-        assert result["final_prompt"]['prompt'] == "OK"
+        assert result["final_prompt"] == "OK"
 
 if __name__ == "__main__":
     crewtest = CrewAITest()
