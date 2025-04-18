@@ -64,6 +64,7 @@ class Mermaid:
         for agent in self.workflow['spec']['template']['agents']:
             agent = self.__fix_agent_name(agent)
             sb += f"participant {agent}\n"
+        agentL = None
         steps, i = self.workflow['spec']['template']['steps'], 0
         for step in steps:
             if step.get('agent'):
