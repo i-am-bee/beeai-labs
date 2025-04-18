@@ -16,8 +16,9 @@
 
 import os, dotenv
 from src.mermaid import Mermaid
+import pycron
 
-from src.step import Step
+from src.step import Step, eval_expression
 from src.agents.agent_factory import AgentFramework, AgentFactory
 
 from src.agents.beeai_agent import BeeAIAgent
@@ -102,10 +103,14 @@ class Workflow:
     async def run(self, prompt=''):
         """Execute workflow."""
         try:
-          if prompt != '':
-            self.workflow['spec']['template']['prompt'] = prompt
-          self.create_or_restore_agents(self.agent_defs, self.workflow)
-          return await self._condition()
+            if prompt != '':
+                self.workflow['spec']['template']['prompt'] = prompt
+            self.create_or_restore_agents(self.agent_defs, self.workflow)
+            if self.workflow['spec']['template'].get('event'):
+                output = await self._condition()
+                return await self.process_event(output)
+            else:
+                return await self._condition()
         except Exception as err:
             if self.workflow["spec"]["template"].get("exception"):
                 exp = self.workflow["spec"]["template"].get("exception")
@@ -159,6 +164,9 @@ class Workflow:
         """
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
+        return await self._process_steps(steps, prompt)
+
+    async def _process_steps(self, steps, prompt):
         for step in steps:
             if step.get("agent"):
                 step["agent"] = self.agents.get(step["agent"])
@@ -186,3 +194,30 @@ class Workflow:
                     current_step = steps[self.find_index(steps, current_step)+1].get("name")
         step_results["final_prompt"] = prompt
         return step_results
+
+    async def process_event(self, prompt):
+        cron = self.workflow['spec']['template']['event'].get("cron")
+        name = self.workflow['spec']['template']['event'].get("name")
+        steps = self.workflow['spec']['template']['event'].get("steps")
+        agent = self.workflow['spec']['template']['event'].get("agent")
+        exit = self.workflow['spec']['template']['event'].get("exit")
+
+        run = True
+        while True:
+            if pycron.is_now(cron):
+                if run:
+                    if agent:
+                        prompt = await self.agents.get(step["agent"]).run(prompt)
+                    if steps:
+                        output = await self._process_steps(steps, prompt)
+                        prompt = output.get("final_prompt") 
+                    run = False
+                else:
+                    run = True
+            if eval_expression(exit, prompt):
+                break
+            time.sleep(30)
+        return prompt
+
+        
+        
