@@ -17,7 +17,7 @@ spec:
        steps:
          - step2
          - step3
-       exit: ( input.exit == True )
+       exit: ( input == True )
     agents:
         - test1
         - test2
