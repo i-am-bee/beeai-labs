@@ -15,7 +15,7 @@ spec:
        cron: "10 14 * * 1"
        name: cron event
        agent: test4
-       exit: ( input.count >= 3 )
+       exit: ( "test" in input  )
     agents:
         - test1
         - test2

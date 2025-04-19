@@ -14,10 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, dotenv
+import os, dotenv, time
 from src.mermaid import Mermaid
+import pycron
 
-from src.step import Step
+from src.step import Step, eval_expression
 from src.agents.agent_factory import AgentFramework, AgentFactory
 
 from src.agents.beeai_agent import BeeAIAgent
@@ -102,10 +103,14 @@ class Workflow:
     async def run(self, prompt=''):
         """Execute workflow."""
         try:
-          if prompt != '':
-            self.workflow['spec']['template']['prompt'] = prompt
-          self.create_or_restore_agents(self.agent_defs, self.workflow)
-          return await self._condition()
+            if prompt != '':
+                self.workflow['spec']['template']['prompt'] = prompt
+            self.create_or_restore_agents(self.agent_defs, self.workflow)
+            if self.workflow['spec']['template'].get('event'):
+                output = await self._condition()
+                return await self.process_event(output)
+            else:
+                return await self._condition()
         except Exception as err:
             if self.workflow["spec"]["template"].get("exception"):
                 exp = self.workflow["spec"]["template"].get("exception")
@@ -159,9 +164,13 @@ class Workflow:
         """
         prompt = self.workflow["spec"]["template"]["prompt"]
         steps = self.workflow["spec"]["template"]["steps"]
+        return await self._process_steps(steps, self.workflow["spec"]["template"]["steps"][0]["name"], prompt)
+
+    async def _process_steps(self, steps, start_step, prompt):
         for step in steps:
             if step.get("agent"):
-                step["agent"] = self.agents.get(step["agent"])
+                if type(step["agent"]) == str:
+                    step["agent"] = self.agents.get(step["agent"])
                 if not step["agent"]:
                     raise Exception("Agent doesn't exist")
             if step.get("parallel"):
@@ -172,7 +181,7 @@ class Workflow:
             if step.get("loop"):
                 step["loop"]["agent"] = self.agents.get(step["loop"]["agent"])
             self.steps[step["name"]] = Step(step)
-        current_step = self.workflow["spec"]["template"]["steps"][0]["name"]
+        current_step = start_step
         step_results = {}
         while True:
             response = await self.steps[current_step].run(prompt)
@@ -186,3 +195,39 @@ class Workflow:
                     current_step = steps[self.find_index(steps, current_step)+1].get("name")
         step_results["final_prompt"] = prompt
         return step_results
+
+    def get_step(self, step_name):
+        steps = self.workflow["spec"]["template"]["steps"]
+        for step in steps:
+            if step.get("name") == step_name:
+                return step
+
+    async def process_event(self, prompt):
+        cron = self.workflow['spec']['template']['event'].get("cron")
+        name = self.workflow['spec']['template']['event'].get("name")
+        step_names = self.workflow['spec']['template']['event'].get("steps")
+        agent = self.workflow['spec']['template']['event'].get("agent")
+        exit = self.workflow['spec']['template']['event'].get("exit")
+
+        run = True
+        while True:
+            if pycron.is_now(cron):
+                if run:
+                    if agent:
+                        prompt = await self.agents.get(agent).run(prompt)
+                    if step_names:
+                        event_steps = []
+                        for step_name in step_names:
+                            event_steps.append(self.get_step(step_name))
+                        output = await self._process_steps(event_steps, step_names[0], prompt)
+                        prompt = output.get("final_prompt") 
+                    run = False
+                else:
+                    run = True
+            if eval_expression(exit, prompt):
+                break
+            time.sleep(30)
+        return prompt
+
+        
+        
