@@ -39,7 +39,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Judge_agent
+  name: Judgeagent
   labels:
     app: multi-agent
 spec:

@@ -5,9 +5,7 @@ metadata:
   labels:
     app: multi-agent
 spec:
-  #model: meta-llama/llama-3-1-70b-instruct
   model: llama3.1
-  # model: granite3.1-dense:8b
   framework: beeai
   mode: remote
   description: beeai agent
@@ -42,13 +40,11 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Judge_agent
+  name: Judgeagent
   labels:
     app: multi-agent
 spec:
-  #model: meta-llama/llama-3-1-70b-instruct
   model: llama3.1
-  # model: granite3.1-dense:8b
   framework: beeai
   mode: remote
   description: beeai agent
