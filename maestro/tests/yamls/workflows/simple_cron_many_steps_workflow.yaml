@@ -12,14 +12,14 @@ spec:
         app: cron
         use-case: test
     event:
-       cron: "10 14 * * 1"
+       cron: "* * * * *"
        name: multi step cron
        steps:
          - step2
-         - step3
-       exit: ( input == True )
+         - step1
+       exit: ( 'This is a test input' in input )
     agents:
-        - test1
+        - test5
         - test2
         - test3
     prompt: This is a test input
@@ -27,9 +27,9 @@ spec:
         name: step2
         agent: test2
     steps:
-      - name: step1
-        agent: test2
       - name: step2
         agent: test2
+      - name: step1
+        agent: test5
       - name: step3
         agent: test3
