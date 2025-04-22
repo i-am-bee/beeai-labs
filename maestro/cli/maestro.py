@@ -25,6 +25,7 @@ Usage:
   maestro validate YAML_FILE [options]
   maestro validate SCHEMA_FILE YAML_FILE [options]
   maestro meta-agents TEXT_FILE [options]
+  maestro clean [options]
 
   maestro (-h | --help)
   maestro (-v | --version)

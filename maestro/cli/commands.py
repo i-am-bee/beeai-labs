@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys, yaml, json, jsonschema, traceback, asyncio
+import os, signal, sys, yaml, json, jsonschema, traceback, asyncio, psutil
 
 import streamlit.web
 
@@ -51,6 +51,8 @@ class CLI:
             return MermaidCmd(self.args)
         elif self.args.get('meta-agents') and self.args['meta-agents']:
             return MetaAgentsCmd(self.args)
+        elif self.args.get('clean') and self.args['clean']:
+            return CleanCmd(self.args)
         else:
             raise Exception("Invalid command")
 
@@ -111,6 +113,8 @@ class Command:
             return self.mermaid
         elif self.args['meta-agents']:
             return self.meta_agents
+        elif self.args['clean']:
+            return self.clean
         else:
             raise Exception("Invalid subcommand")
 
@@ -437,4 +441,36 @@ class MetaAgentsCmd(Command):
             self._check_verbose()
             Console.error(f"Unable to run meta-agents: {str(e)}")
             return 1
+        return 0
+
+# Create command group
+#  maestro create AGENTS_FILE [options]
+class CleanCmd(Command):
+    def __init__(self, args):
+        self.args = args
+        super().__init__(self.args)
+
+    def __clean(self):
+        try:
+            for pid in psutil.pids():
+                try:
+                    process = psutil.Process(pid)
+                    cmd = process.cmdline()
+                    if len(cmd) > 3 and "streamlit" in cmd[1]:
+                        process.send_signal(signal.SIGTERM)
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    pass
+        except Exception as e:
+            self._check_verbose()
+            raise RuntimeError(f"{str(e)}") from e
+
+    def name(self):
+      return "clean"
+
+    def clean(self):
+        try:
+            self.__clean()
+        except Exception as e:
+            self._check_verbose()
+            Console.error(f"Unable to clean: {str(e)}")
         return 0
