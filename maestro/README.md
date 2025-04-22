@@ -126,6 +126,8 @@ This will start the workflow in a [`streamlit`]() server and you can access it f
 
 * Install dependencies: `poetry shell && poetry install`
 
+* Install dependency workaround: pip install beeai-framework
+
 * Configure environmental variables: `cp example.env .env`
 
 ### Run workflow in streamlit (default deploy)
