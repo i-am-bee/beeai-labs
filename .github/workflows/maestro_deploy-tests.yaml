@@ -36,7 +36,7 @@ jobs:
         run: |
           cd maestro
           poetry install
-          poetry run pip install beeai-framework
+          poetry run pip install crewai
       - name: Run deploy integration tests/
         run: |
           cd maestro

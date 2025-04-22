@@ -27,7 +27,7 @@ jobs:
         run: |
           cd maestro
           poetry install
-          poetry run pip install beeai-framework
+          poetry run pip install crewai
       - name: Check schema
         # Run from root to capture all projects - but poetry needs to run in maestro to pick up environment above
         run: |

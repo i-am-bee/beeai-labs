@@ -126,7 +126,8 @@ This will start the workflow in a [`streamlit`]() server and you can access it f
 
 * Install dependencies: `poetry shell && poetry install`
 
-* Install dependency workaround: pip install beeai-framework
+  * If using **crewAI**: `pip install crewai litellm==1.67.0.post1`
+`
 
 * Configure environmental variables: `cp example.env .env`
 
