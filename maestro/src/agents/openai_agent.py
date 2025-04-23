@@ -46,8 +46,8 @@ class OpenAIAgent(Agent):
         model_name: str = spec_dict.get('model', "gpt-4o-mini")
 
         # TODO: Proper debug
-        print(f"DEBUG [OpenAIAgent {self.agent_name}]: Using Base URL: {base_url}")
-        print(f"DEBUG [OpenAIAgent {self.agent_name}]: Using Model: {model_name}")
+        self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Using Base URL: {base_url}")
+        self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Using Model: {model_name}")
         
         client = OAIAsyncOpenAI(
             base_url=base_url,
@@ -73,9 +73,9 @@ class OpenAIAgent(Agent):
         Args:
             prompt (str): The prompt to run the agent with.
         """
-        print(f"Running {self.agent_name}...")
+        self.print(f"Running {self.agent_name}...")
         result = await OAIRunner.run(self.openai_agent, prompt)        
-        print(f"Response from {self.agent_name}: {result.final_output}")
+        self.print(f"Response from {self.agent_name}: {result.final_output}")
         return result.final_output
 
     async def run_streaming(self, prompt: str) -> str:

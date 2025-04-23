@@ -47,7 +47,7 @@ class Agent:
         return self.EMOJIS.get(self.agent_framework, "⚙️")
 
     def print(self, message) -> str:
-        return f'{self.emoji()} {message}'
+        print(f'{self.emoji()} {message}')
 
     @abstractmethod
     async def run(self, prompt: str) -> str:

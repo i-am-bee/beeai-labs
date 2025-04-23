@@ -11,7 +11,7 @@ try:
     enabled=True
     CREWAI_IMPORT_ERROR = None
 except ImportError as e:
-    print("WARNING: Could not import crewai. CrewAI agent support will be disabled. Run `pip install crewai litellm==1.67.0.post1` to enable")
+    self.print("WARNING: Could not import crewai. CrewAI agent support will be disabled. Run `pip install crewai litellm==1.67.0.post1` to enable")
     enabled=False
     CREWAI_IMPORT_ERROR = e # Store the original error
     # Define dummy types to prevent NameErrors later if needed for type hints (though avoided below)
@@ -83,10 +83,10 @@ class CrewAIAgent(BeeAgent):
                 self.factory_name = None
 
         except KeyError as e:
-            print(f"🧑🏽‍✈️ Failed to load agent {self.agent_name}: Missing configuration key - {e}")
+            self.print(f"Failed to load agent {self.agent_name}: Missing configuration key - {e}")
             raise ValueError(f"Invalid configuration for agent {self.agent_name}: Missing key {e}") from e
         except Exception as e:
-            print(f"🧑🏽‍✈️ Failed to load agent {self.agent_name}: {e}")
+            self.print(f"Failed to load agent {self.agent_name}: {e}")
             raise e # Re-raise other unexpected errors
 
 
@@ -103,7 +103,7 @@ class CrewAIAgent(BeeAgent):
             Exception: If there is an error in retrieving or executing the agent's method.
         """
 
-        print(f"🧑🏽‍✈️ Running CrewAI agent: {self.agent_name} with prompt: {prompt}\n")
+        self.print(f"Running CrewAI agent: {self.agent_name} with prompt: {prompt}\n")
 
         try:
             if self.module_name:
@@ -121,11 +121,11 @@ class CrewAIAgent(BeeAgent):
 
             # Ensure output is string (CrewAI kickoff often returns structured data)
             raw_output = getattr(output, 'raw', str(output))
-            print(f"🐝 Response from {self.agent_name}: {raw_output}\n")
+            self.print(f"Response from {self.agent_name}: {raw_output}\n")
             return raw_output
 
         except Exception as e:
-            print(f"🧑🏽‍✈️ Failed to kickoff crew agent: {self.agent_name}: {e}\n")
+            self.print(f"Failed to kickoff crew agent: {self.agent_name}: {e}\n")
             # Consider more specific error handling if needed
             raise RuntimeError(f"Error executing CrewAI agent {self.agent_name}") from e
 
@@ -141,10 +141,10 @@ class CrewAIAgent(BeeAgent):
             NotImplementedError: Indicates that the streaming logic for CrewAI is not yet implemented.
         """
 
-        print(f"🧑🏽‍✈️ Running CrewAI agent (streaming): {self.agent_name} with prompt: {prompt}\n")
+        self.print(f"Running CrewAI agent (streaming): {self.agent_name} with prompt: {prompt}\n")
 
         # If enabled, raise NotImplementedError as before
-        raise NotImplementedError(f"🧑🏽‍✈️ Streaming execution for CrewAI agent '{self.agent_name}' is not implemented yet.")
+        raise NotImplementedError(f"Streaming execution for CrewAI agent '{self.agent_name}' is not implemented yet.")
 
     def agent(self) -> CrewAI_Agent:
         """Creates a CrewAI Agent instance based on configuration."""

@@ -80,7 +80,7 @@ class BeeAIAgent(Agent):
         Args:
             prompt (str): The prompt to run the agent with.
         """
-        print(f"🐝 Running {self.agent_name}...\n")
+        self.print(f"Running {self.agent_name}...\n")
         client = OpenAI(
             base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
         )
@@ -94,7 +94,7 @@ class BeeAIAgent(Agent):
         )
         messages = client.beta.threads.messages.list(thread_id=thread.id)
         answer = messages.data[0].content[0].text.value
-        print(f"🐝 Response from {self.agent_name}: {answer}\n")
+        self.print(f"Response from {self.agent_name}: {answer}\n")
         return answer
 
     def run_streaming(self, prompt: str) -> str:
@@ -103,7 +103,7 @@ class BeeAIAgent(Agent):
         Args:
             prompt (str): The prompt to run the agent with.
         """    
-        print(f"🐝 Running {self.agent_name}...\n")
+        self.print(f"Running {self.agent_name}...\n")
         client = OpenAI(
             base_url=f'{os.getenv("BEE_API")}/v1', api_key=os.getenv("BEE_API_KEY")
         )
@@ -116,14 +116,14 @@ class BeeAIAgent(Agent):
             """NOTE: Streaming is work in progress, not all methods are implemented"""
     
             def on_event(self, event: AssistantStreamEvent) -> None:
-                print(f"event > {event.event}")
+                self.print(f"event > {event.event}")
 
             def on_text_delta(self, delta, snapshot):
-                print(delta.value, end="", flush=True)
+                self.print(delta.value, end="", flush=True)
 
             def on_run_step_delta(self, delta: RunStepDelta, snapshot: RunStep) -> None:
                 if delta.step_details.type != "tool_calls":
-                    print(
+                    self.print(
                         f"{delta.step_details.type} > {getattr(delta.step_details, delta.step_details.type)}"
                     )
 
@@ -142,7 +142,7 @@ class BeeAIAgent(Agent):
 
         messages = client.beta.threads.messages.list(thread_id=thread.id)
         answer = messages.data[0].content[0].text.value
-        print(f"🐝 Response from {self.agent_name}: {answer}\n")
+        self.print(f"Response from {self.agent_name}: {answer}\n")
         return answer
 
 def user_customizer(config: PromptTemplateInput[Any]) -> PromptTemplateInput[Any]:
@@ -195,7 +195,7 @@ def tool_not_found_error_template_func(template: PromptTemplateInput[Any]) -> Pr
 
 def write(role: str, data: str) -> None:
     """ write message """
-    print(f"{role} {data}")
+    self.print(f"{role} {data}")
 
 def process_agent_events(data: Any, event: EventMeta) -> None:
     """Process agent events and log appropriately"""
@@ -252,7 +252,7 @@ class BeeAILocalAgent(Agent):
             prompt (str): The prompt to run the agent with.
         """
 
-        print(f"🐝 Running {self.agent_name}...\n")
+        self.print(f"Running {self.agent_name}...\n")
         response = await self.agent.run(
             prompt=prompt,
             execution=AgentExecutionConfig(
@@ -262,7 +262,7 @@ class BeeAILocalAgent(Agent):
             signal=AbortSignal.timeout(2 * 60 * 1000),
         ).observe(observer)
         answer = response.result.text
-        print(f"🐝 Response from {self.agent_name}: {answer}\n")
+        self.print(f"Response from {self.agent_name}: {answer}\n")
         return answer
 
     async def run_streaming(self, prompt: str) -> str:
@@ -271,7 +271,7 @@ class BeeAILocalAgent(Agent):
         Args:
             prompt (str): The prompt to run the agent with.
         """
-        print(f"🐝 Running {self.agent_name}...\n")
+        self.print(f"Running {self.agent_name}...\n")
         response = await self.agent.run(
             prompt=prompt,
             execution=AgentExecutionConfig(
@@ -282,5 +282,5 @@ class BeeAILocalAgent(Agent):
             signal=AbortSignal.timeout(2 * 60 * 1000),
         ).observe(observer)
         answer = response.result.text
-        print(f"🐝 Response from {self.agent_name}: {answer}\n")
+        self.print(f"Response from {self.agent_name}: {answer}\n")
         return answer
