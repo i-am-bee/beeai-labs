@@ -473,5 +473,5 @@ class CleanCmd(Command):
         except Exception as e:
             self._check_verbose()
             Console.error(f"Unable to clean: {str(e)}")
-            rerurn 1
+            return 1
         return 0
