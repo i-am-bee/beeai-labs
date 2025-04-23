@@ -303,21 +303,21 @@ class TestMermaid_event_cron_many_steps(TestCase):
         markdown = mermaid.to_markdown()
         expected_markdown = [
             'sequenceDiagram',
-            'participant test1',
+            'participant test5',
             'participant test2',
             'participant test3',
-            'test2->>test2: step1',
-            'test2->>test3: step2',
+            'test2->>test5: step2',
+            'test5->>test3: step1',
             'test3->>test3: step3',
-            'alt cron "10 14 * * 1"',
+            'alt cron "* * * * *"',
             '  cron->>test2: step2',
-            '  cron->>test3: step3',
+            '  cron->>test5: step1',
             'else',
-            '  cron->>exit: ( input == True )',
+            '  cron->>exit: (input.get("final_prompt").find("This is a test input") != -1)',
             'end',
             'alt exception',
             '  test2->>test2: step2',
-            '  test2->>test2: step2',
+            '  test5->>test2: step2',
             '  test3->>test2: step2',
             'end'
         ]
