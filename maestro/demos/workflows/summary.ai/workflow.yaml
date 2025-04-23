@@ -10,6 +10,14 @@ spec:
       name: summary-ai
       labels:
         project: maestro-demo
+    event:
+      cron: "0 0 * * *"
+      name: multi step cron
+      steps:
+        - retreive papers
+        - choose paper
+        - retrieve abstract
+        - get summary
     agents:
       - paper retriever
       - Abstract Agent
