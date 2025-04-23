@@ -17,7 +17,7 @@ spec:
        steps:
          - step2
          - step1
-       exit: ( 'This is a test input' in input )
+       exit: (input.get("final_prompt").find("This is a test input") != -1)
     agents:
         - test5
         - test2

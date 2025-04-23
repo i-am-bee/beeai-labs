@@ -41,8 +41,8 @@ class TestCron(TestCase):
 
     def test_cron(self):
         response = asyncio.run(self.workflow.run())
-        print(response)
-        assert(response == "{'final_prompt': 'This is a test input'}")
+        print(f"==={response}===")
+        assert("This is a test input" in response.get("final_prompt"))
 
 if __name__ == '__main__':
     unittest.main()
