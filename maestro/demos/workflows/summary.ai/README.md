@@ -7,14 +7,22 @@ A multi-agent workflow using Maestro: Allows an user to specify a topic from Arx
 <!-- MERMAID_START -->
 ```mermaid
 sequenceDiagram
-participant Search Arxiv
+participant paper retriever
 participant Abstract Agent
 participant Summary Agent
 participant Choose Paper
-Search Arxiv->>Choose Paper: retreive papers
+paper retriever->>Choose Paper: retreive papers
 Choose Paper->>Abstract Agent: choose paper
 Abstract Agent->>Summary Agent: retrieve abstract
 Summary Agent->>Summary Agent: get summary
+alt cron "0 0 * * *"
+  cron->>paper retriever: retreive papers
+  cron->>Choose Paper: choose paper
+  cron->>Abstract Agent: retrieve abstract
+  cron->>Summary Agent: get summary
+else
+  cron->>exit: True
+end
 ```
 <!-- MERMAID_END -->
 

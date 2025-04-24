@@ -7,8 +7,8 @@ This is a simple demonstration of a workflow that uses a third party agent - in 
 <!-- MERMAID_START -->
 ```mermaid
 sequenceDiagram
-participant activity_planner.ActivityPlannerCrew.activity_crew
-activity_planner.ActivityPlannerCrew.activity_crew->>activity_planner.ActivityPlannerCrew.activity_crew: begin
+participant ActivityPlannerCrew
+ActivityPlannerCrew->>ActivityPlannerCrew: begin
 ```
 <!-- MERMAID_END -->
 
