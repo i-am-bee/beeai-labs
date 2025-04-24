@@ -42,8 +42,8 @@ server_params = StdioServerParameters(
     command="npx",
     args=["-y", "@modelcontextprotocol/server-slack"],
     env={
-        "SLACK_BOT_TOKEN": os.environ["SLACK_BOT_TOKEN"],
-        "SLACK_TEAM_ID": os.environ["SLACK_TEAM_ID"],
+        "SLACK_BOT_TOKEN": os.getenv("SLACK_BOT_TOKEN", default=""),
+        "SLACK_TEAM_ID": os.getenv("SLACK_TEAM_ID", default=""),
         "PATH": os.getenv("PATH", default=""),
     },
 )
