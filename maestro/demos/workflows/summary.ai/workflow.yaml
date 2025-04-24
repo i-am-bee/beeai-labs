@@ -12,12 +12,13 @@ spec:
         project: maestro-demo
     event:
       cron: "0 0 * * *"
-      name: multi step cron
+      name: daily run
       steps:
         - retreive papers
         - choose paper
         - retrieve abstract
         - get summary
+      exit: "True"
     agents:
       - paper retriever
       - Abstract Agent
