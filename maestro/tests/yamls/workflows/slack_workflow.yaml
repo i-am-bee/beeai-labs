@@ -13,7 +13,7 @@ spec:
         use-case: test
     agents:
         - slack
-    prompt: Post a message Hi! to the slack channel "C08PC6Z99CN"
+    prompt: Post a message Hi! to the slack channel set "SLACK_BOT_TOKEN" and "SLACK_TEAM_ID"
     steps:
       - name: slackstep
         agent: slack
