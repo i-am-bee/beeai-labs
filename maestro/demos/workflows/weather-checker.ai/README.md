@@ -34,19 +34,9 @@ Create the agents (and enable the tools): `maestro create ./demos/workflows/weat
 
 To run the workflow:
 
-If you already created the agents and enabled the tool: `maestro run None ./demos/workflows/weather-checker.ai/workflow.yaml`
+If you already created the agents and enabled the tool: `maestro run ./demos/workflows/weather-checker.ai/workflow.yaml`
 
 OR
 
-Directly run the workflow: `maestro run ./demos/workflows/weather-checker.ai/agents.yaml ./demos/workflows/weather-checker.ai/workflow.yaml`
-
-If in the actual weather demo directory, you can also directly run using: `./run.sh`.
-(To run for a different city, change the `prompt` field in `workflow.yaml`)
-
-### Installing Dependencies
-
-Create a python3.11 virtual environment and activate
-Install `pip3 install -r requirements.txt`, this is in the hive directory
-Install `pip3 install -e .` in the maestro directory, which is the poetry lock file.
-Need to further install any additional libraries.
-CrewAI specific problem: `pip3 install crewai litellm==1.67.0.post1`
+Directly deploy the workflow via streamlit: `maestro deploy ./demos/workflows/weather-checker.ai/agents.yaml ./demos/workflows/weather-checker.ai/workflow.yaml`
+(To run for a different city, change the `prompt` field in `workflow.yaml`, or directly as a prompt in the UI)
