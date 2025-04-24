@@ -96,19 +96,19 @@ maestro validate workflow_schema.json workflow.yaml
 * Execute the workflow:
 
 ```bash
-maestro run agent.yaml workflow.yaml
+maestro run workflow.yaml
 ```
 
-OR if the agents have already been created:
-
-```bash
-maestro run None workflow.yaml
-```
-
-* Deploy the workflow locally:
+* Deploy the workflow locally via streamlit:
 
 ```bash
 maestro deploy agent.yaml workflow.yaml
+```
+
+or if you want to change the prompt via CLI:
+
+```bash
+maestro deploy agent.yaml workflow.yaml --prompt
 ```
 
 or
@@ -119,14 +119,25 @@ maestro deploy agent.yaml workflow.yaml --dry-run # to use mock agents for quick
 
 This will start the workflow in a [`streamlit`]() server and you can access it from your browser: http://localhost:8501/?embed=true
 
+## Mermaid Support
+
+Maestro supports the creation of visual diagrams of how the workflow will execute. In a given demo,  one can run the following command to visualize:
+
+```bash
+maestro mermaid workflow.yaml
+```
+
+Additionally, to auto update all maestro readme demos with mermaid (after changes are made in the workflow file), you can use `./tools/update_readme.sh`
+
 ## Local environment
 
+* Create a Python3.11 virtual environment
 * Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
   * [Helpful tips](./demos/README.md) on setting up the stack
 
-* Install dependencies: `poetry shell && poetry install`
+* Install dependencies: `poetry shell && poetry install` and/or `pip3 install -r requirements.txt`, `pip3 install -e .`
 
-  * If using **crewAI**: `pip install crewai litellm==1.67.0.post1`
+  * If using **crewAI**: `pip install crewai litellm==1.67.0.post1` to bypass a local error.
 `
 
 * Configure environmental variables: `cp example.env .env`
