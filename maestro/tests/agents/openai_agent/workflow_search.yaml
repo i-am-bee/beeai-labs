@@ -1,0 +1,17 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: openai_test_search
+  labels:
+    app: testapp_search
+spec:
+  template:
+    metadata:
+      labels:
+        app: testapp_search
+    agents:
+      - openai_test
+    prompt: What are the top news headlines in the United Kingdom today
+    steps:
+      - name: begin
+        agent: openai_test_search
