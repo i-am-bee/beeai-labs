@@ -90,7 +90,9 @@ class Mermaid:
             i = i + 1
         # if workflow has global on event handling
         if self.workflow['spec']['template'].get('event'):
-            sb += self.__to_sequenceDiagram_event(self.workflow['spec']['template']['event'])
+            event = self.workflow['spec']['template'].get('event')
+            if event and 'cron' not in event:
+                sb += self.__to_sequenceDiagram_event(self.workflow['spec']['template']['event'])
         # if workflow has global exception then add at the end
         if self.workflow['spec']['template'].get('exception'):
             sb += self.__to_sequenceDiagram_exception(steps, self.workflow['spec']['template']['exception'])
