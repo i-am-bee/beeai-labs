@@ -13,7 +13,10 @@
 # limitations under the License.
 
 import os
-from typing import Final, Optional, List # Added Optional, List
+from typing import Final, Optional, List, Any
+import asyncio
+import traceback
+from contextlib import AsyncExitStack
 
 # TODO Only agent *needs* aliasing
 from agents import (
@@ -23,16 +26,16 @@ from agents import (
     set_default_openai_api,
     set_default_openai_client,
     set_tracing_disabled,
-    # Import necessary Tool types
     Tool,
-    WebSearchTool, # Only tool supported
+    WebSearchTool,
 )
-# from agents.mcp import MCPServer, MCPServerStdio # Commented out as not used
+# MCPServer might be unused now if only SSE is used, but keep for context
+from agents.mcp import MCPServer, MCPServerSse
 
 from src.agents.agent import Agent
 
 
-# --- Handle integrated openAI API tools - currently only web_search is feasible and requires responses API
+# --- Handle integrated openAI API tools - currently only web_search (requires responses API)
 
 SUPPORTED_TOOL_NAME = "web_search"
 TOOL_REQUIRES_RESPONSES_API = True
@@ -48,11 +51,11 @@ def _openai_tools_from_agent_definition(
     tool_requested = agent_tool_names and SUPPORTED_TOOL_NAME in agent_tool_names
 
     if not tool_requested:
-        if agent_tool_names: # Tools were specified, but not the one we support
+        if agent_tool_names:
             print_func(f"WARN [OpenAIAgent {agent_name}]: Specified tools {agent_tool_names} do not include the only supported tool: '{SUPPORTED_TOOL_NAME}'. No tools will be added.")
         else:
             print_func(f"DEBUG [OpenAIAgent {agent_name}]: No tools specified or '{SUPPORTED_TOOL_NAME}' not requested.")
-        return openai_tools # Return empty list
+        return openai_tools
 
     # --- 'web_search' was requested, now check compatibility ---
     print_func(f"DEBUG [OpenAIAgent {agent_name}]: Tool '{SUPPORTED_TOOL_NAME}' requested.")
@@ -60,35 +63,44 @@ def _openai_tools_from_agent_definition(
     # Check API compatibility: WebSearchTool needs Responses API
     if TOOL_REQUIRES_RESPONSES_API and uses_chat_completions_api:
         print_func(
-            f"WARN [OpenAIAgent {agent_name}]: Skipping tool '{SUPPORTED_TOOL_NAME}'. OpenAI Responses API not available"
+            f"WARN [OpenAIAgent {agent_name}]: Skipping tool '{SUPPORTED_TOOL_NAME}'. OpenAI Responses API not available (using chat_completions API)."
             )
         return openai_tools
 
+    # --- Compatible: Add the tool ---
     try:
         tool_instance = WebSearchTool()
         openai_tools.append(tool_instance)
         print_func(f"INFO [OpenAIAgent {agent_name}]: Added supported tool: {SUPPORTED_TOOL_NAME}")
-    except Exception as e: # Catch potential instantiation errors
+    except Exception as e:
         print_func(f"ERROR [OpenAIAgent {agent_name}]: Failed to instantiate tool '{SUPPORTED_TOOL_NAME}': {e}")
-        return [] # Return empty list on error
+        return []
 
     return openai_tools
+# --- End of tool processing function ---
 
 
 class OpenAIAgent(Agent):
     """
     OpenAI extends the Agent class to load and run a agent using OpenAI.
     Simplified version supporting only the 'web_search' tool.
+    Can connect to multiple MCP servers defined via environment variable
+    MAESTRO_MCP_ENDPOINTS.
     """
     def __init__(self, agent: dict) -> None:
+        """
+        Initializes the workflow for the specified OpenAI agent.
 
+        Args:
+            agent (dict): The agent definition dictionary.
+        """
         super().__init__(agent)
 
         OPENAI_DEFAULT_URL: Final[str] = "https://api.openai.com/v1"
         self.base_url = os.getenv("OPENAI_BASE_URL", OPENAI_DEFAULT_URL)
         self.api_key = os.getenv("OPENAI_API_KEY")
         spec_dict = agent.get('spec', {})
-        self.model_name: str = spec_dict.get('model', "gpt-4o-mini")
+        self.model_name: str = spec_dict.get('model', "gpt-4o-mini") # Keep internal ref
 
         self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Using Base URL: {self.base_url}")
         self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Using Model: {self.model_name}")
@@ -106,55 +118,104 @@ class OpenAIAgent(Agent):
         self.uses_chat_completions = self.base_url != OPENAI_DEFAULT_URL
         if self.uses_chat_completions:
             set_default_openai_api("chat_completions")
-            self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Non-default base URL detected. Using chat_completions API.") 
+            # Changed log level to INFO as it's an important configuration detail
+            self.print(f"INFO [OpenAIAgent {self.agent_name}]: Non-default base URL detected. Forcing 'chat_completions' API. The '{SUPPORTED_TOOL_NAME}' tool may be unavailable.")
+        else:
+            # Assuming default URL uses Responses API implicitly if available via the library
+            self.print(f"INFO [OpenAIAgent {self.agent_name}]: Using default base URL. Assuming Responses API is available for tools if supported by the model/library.")
 
 
         # Add requested static tools to the client (only web_search supported)
         agent_spec = agent.get("spec", {})
         self.tools: List[Tool] = _openai_tools_from_agent_definition(
-            agent_tool_names=agent_spec.get("tools"), # Pass the list of names safely
+            agent_tool_names=agent_spec.get("tools"),
             agent_name=self.agent_name,
             uses_chat_completions_api=self.uses_chat_completions,
             print_func=self.print
         )
 
-        self.agent_id=self.agent_name
+        self.agent_id=self.agent_name   
 
+
+    # For MCP set environment to point to list of MCP servers (running SSE) ie
+    # export MAESTRO_MCP_ENDPOINTS="http://localhost:8000/sse,http://mcp-server-2:8001/sse"
     async def run(self, prompt: str) -> str:
         """
-        Runs the agent with the given prompt.
+        Runs the agent with the given prompt, potentially using multiple MCP servers.
         Args:
             prompt (str): The prompt to run the agent with.
         """
-        # Ensure model_name is accessible here, using self.model_name
-        openai_agent = OAIAgent(
-            name=self.agent_name,
-            instructions=self.instructions,
-            model=self.model_name, # Use the model name from __init__
-            tools=self.tools
-            # mcp_servers=[self.mcp_server] # Commented out as mcp_server is not defined/used
-            )
+        mcp_endpoints_str = os.getenv("MAESTRO_MCP_ENDPOINTS", "")
+        mcp_endpoint_urls = [url.strip() for url in mcp_endpoints_str.split(',') if url.strip()]
 
-        self.print(f"Running {self.agent_name}...")
-        
+        active_mcp_servers: List[MCPServerSse] = []
+        result = None
+
         try:
-            result = await OAIRunner.run(openai_agent, prompt)
+            # Use AsyncExitStack a
+            async with AsyncExitStack() as stack:
+                if not mcp_endpoint_urls:
+                    self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: No MCP endpoints configured in MAESTRO_MCP_ENDPOINTS.")
+                else:
+                    self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Attempting to connect to MCP Servers: {mcp_endpoint_urls}...")
 
-            final_output = getattr(result, 'final_output', None)
-            if final_output is None:
-                self.print(f"WARN [OpenAIAgent {self.agent_name}]: Agent run completed but no 'final_output' found in the result object.")
-                messages = getattr(result, 'messages', [])
-                last_message_content = messages[-1].content if messages and hasattr(messages[-1], 'content') else "No message content available."
-                final_output_str = f"Agent run finished without explicit final output. Last message: {last_message_content}"
-                self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: {final_output_str}")
-                return final_output_str
-            else:
-                final_output_str = str(final_output) # Ensure it's a string
-                self.print(f"Response from {self.agent_name}: {final_output_str}")
-                return final_output_str
+                    for i, url in enumerate(mcp_endpoint_urls):
+                        server_name = f"{self.agent_name}_MCP_Server_{i+1}"
+                        try:
+                            server = MCPServerSse(
+                                name=server_name,
+                                params={"url": url},
+                            )
+
+                            await stack.enter_async_context(server)
+                            self.print(f"INFO [OpenAIAgent {self.agent_name}]: MCP Server connected: {server.name} ({url})")
+                            active_mcp_servers.append(server) # Add the active server to the list
+                        except ConnectionRefusedError:
+                            self.print(f"WARN [OpenAIAgent {self.agent_name}]: MCP Server connection refused: {server_name} ({url})")
+                        except Exception as conn_err:
+                            self.print(f"WARN [OpenAIAgent {self.agent_name}]: Failed to connect MCP Server {server_name} ({url}): {conn_err}")
+
+                if not active_mcp_servers and mcp_endpoint_urls:
+                    self.print(f"WARN [OpenAIAgent {self.agent_name}]: Failed to connect to any configured MCP servers. Running without MCP.")
+                elif active_mcp_servers:
+                    self.print(f"INFO [OpenAIAgent {self.agent_name}]: Running agent with {len(active_mcp_servers)} active MCP server(s).")
+
+                openai_agent = OAIAgent(
+                    name=self.agent_name,
+                    instructions=self.instructions,
+                    model=self.model_name,
+                    tools=self.tools,
+                    mcp_servers=active_mcp_servers,
+                    # TODO: Needs more investigation - auto, required, could be model specific
+                    # model_settings=ModelSettings(tool_choice="required")
+                )
+
+                self.print(f"Running {self.agent_name} with prompt...")
+                result = await OAIRunner.run(openai_agent, prompt)
+                self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Agent run completed.")
+
         except Exception as e:
-            self.print(f"ERROR [OpenAIAgent {self.agent_name}]: Agent run failed: {e}")
+            error_msg = f"ERROR [OpenAIAgent {self.agent_name}]: Agent run failed: {e}"
+            self.print(error_msg)
+            self.print(traceback.format_exc())
             return f"Error during agent execution: {e}"
+
+        if result is None:
+            self.print(f"ERROR [OpenAIAgent {self.agent_name}]: Agent run did not produce a result object.")
+            return "Error: Agent run failed to produce a result."
+
+        final_output = getattr(result, 'final_output', None)
+        if final_output is None:
+            self.print(f"WARN [OpenAIAgent {self.agent_name}]: Agent run completed but no 'final_output' found in the result object.")
+            messages = getattr(result, 'messages', [])
+            last_message_content = messages[-1].content if messages and hasattr(messages[-1], 'content') else "No message content available."
+            final_output_str = f"Agent run finished without explicit final output. Last message: {last_message_content}"
+            self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: {final_output_str}")
+            return final_output_str
+        else:
+            final_output_str = str(final_output)
+            self.print(f"Response from {self.agent_name}: {final_output_str}")
+            return final_output_str
 
 
     async def run_streaming(self, prompt: str) -> str:

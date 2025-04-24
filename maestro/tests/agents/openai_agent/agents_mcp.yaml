@@ -1,0 +1,13 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: openai_test_mcp
+  labels:
+    app: testapp_mcp
+spec:
+  model: "gpt-4o-mini"
+  description: test
+  instructions: You are a helpful agent. Respond to the users question, making use of any required tools
+  framework: openai
+  mode: local
+

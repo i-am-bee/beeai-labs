@@ -1,0 +1,17 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: openai_test_mcp
+  labels:
+    app: testapp_mcp
+spec:
+  template:
+    metadata:
+      labels:
+        app: testapp_mcp
+    agents:
+      - openai_test
+    prompt: What tools do you have access to?
+    steps:
+      - name: begin
+        agent: openai_test_mcp
