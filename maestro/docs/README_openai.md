@@ -134,7 +134,7 @@ The agent will attempt to connect to all defined servers. The tools from all suc
 The following MCP servers are used in the example variable setting above:
 
 * The [official github MCP server](https://github.com/github/github-mcp-server)
-  * Download the binary (in go) and ensure it is pointed to by the path to `github-mcp-server` in the example above. This has a number of tools to support github activities
+  * Download the binary (in go) and ensure it is pointed to by the path to `github-mcp-server` in the example above. This has a number of tools to support github activities. Note that this tool also requires that `GITHUB_PERSONAL_ACCESS_TOKEN` is set.
 * A [test remote MCP server](https://github.com/planetf1/mcp-server)
   * Clone the project, and follow the launch instructions in the README. If running on the same machine the URL in the variable should be correct. This has a variety of tools but is provided only to demonstrate mcp capability. Do not rely on the tool implementations.
 
