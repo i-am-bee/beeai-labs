@@ -7,6 +7,8 @@ from .crewai_agent import CrewAIAgent
 from .openai_agent import OpenAIAgent
 from .remote_agent import RemoteAgent
 from .mock_agent import MockAgent
+from .custom_agent import CustomAgent
+from .slack_agent import SlackAgent
 
 class AgentFramework(StrEnum):
     """Enumeration of supported frameworks"""
@@ -15,6 +17,7 @@ class AgentFramework(StrEnum):
     OPENAI = 'openai'
     MOCK = 'mock'
     REMOTE = 'remote'
+    CUSTOM = 'custom'
 
     # Not yet supported
     # LANGFLOW = 'langflow'
@@ -43,6 +46,8 @@ class AgentFactory:
             AgentFramework.REMOTE: RemoteAgent,
             AgentFramework.MOCK: MockAgent
         }
+        if framework == "custom":
+            return CustomAgent
 
         if framework not in factories and framework not in remote_factories:
             raise ValueError(f"Unknown framework: {framework}")

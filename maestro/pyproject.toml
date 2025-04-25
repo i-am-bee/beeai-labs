@@ -26,6 +26,7 @@ openapi = "^2.0.0"
 openai-agents = "^0.0.11"
 pycron = "^3.1.2"
 beeai-framework = "^0.1.17"
+slack_sdk = "^3.35.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"

@@ -1,0 +1,20 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: slack workflow
+  labels:
+    app: example2
+spec:
+  template:
+    metadata:
+      name: slack agent
+      labels:
+        app: slack agent
+        use-case: test
+    agents:
+        - slack
+    prompt: Post a message Hi! to the slack channel set "SLACK_BOT_TOKEN" and "SLACK_TEAM_ID"
+    steps:
+      - name: slackstep
+        agent: slack
+

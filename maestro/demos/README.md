@@ -84,3 +84,7 @@ curl -X POST http://localhost:11434/api/generate -d '{
   "prompt": "Hello, world!"
 }'
 ```
+
+##### SlackBot support
+
+Please set `SLACK_BOT_TOKEN` and `SLACK_TEAM_ID` as environment variables. See `./tests/yamls/agents/slack_agent.yaml` and `./tests/yamls/workflow_agent.yaml` for details. The output of slack message will be whatever is passed into the prompt.
