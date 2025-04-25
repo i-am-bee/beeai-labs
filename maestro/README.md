@@ -179,4 +179,9 @@ Additionally, to auto update all maestro readme demos with mermaid (after change
     * `podman ps | grep maestro`
     * by default, should be deployed at `127.0.0.1:5000`
 
+### Running agents with the OpenAI Agents API
+
+This allows the execution of Agents on OpenAI, or compatible endpoints (including Ollama), and supports the use of local and remote MCP tools. See [README_openai.md](docs/README_openai.md)
+
+# Contributing
 * Learn about [contributing](./demos/CONTRIBUTING.md)
