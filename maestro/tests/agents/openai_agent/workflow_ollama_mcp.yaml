@@ -11,7 +11,7 @@ spec:
         app: testapp_mcp_ollama
     agents:
       - openai_test_ollama
-    prompt: What tools do you have access to?
+    prompt: What tools do you have access to? Include all kinds of different types of tools
     steps:
       - name: begin
         agent: openai_test_mcp_ollama
