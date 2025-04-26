@@ -170,6 +170,8 @@ spec:
             papers.append(entry.title)
 
         return papers
+  tools:
+    - 'ibm-arXiv'
 
 ---
 apiVersion: maestro/v1alpha1
@@ -211,3 +213,26 @@ spec:
             "published": result.published.strftime("%Y-%m-%d"),
             "abstract":  result.summary.strip()
         }
+  tools:
+    - 'get_abstract_by_title'
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: generate summary
+  labels:
+    app: mas-example 
+spec:
+  model: llama3.1
+  framework: beeai
+  mode: remote
+  description: "Retrieve metadata for a given arxiv paper"
+  instructions: |
+    You will be given the metadata to an arxiv research paper, including categories like title, author, date published, and abstract. Use all these fields to generate a formatted text summary. In addition to this, please add onto/extend the abstract to be more comprehensive as a whole, explaining terms, ideas, concepts that might be difficult to understand.
+
+    Example output:
+    Title, by Authors, published date.
+    Augmented abstract/summary....
+  tools: 
+    - 'LLM'
