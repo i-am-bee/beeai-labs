@@ -41,6 +41,7 @@ spec:
       - Paper Finder
       - get metadata
       - generate summary
+      - slack
     prompt: find_ibm_papers("stat.ML",30)
     steps:
       - name: Step1
@@ -49,3 +50,5 @@ spec:
         agent: get metadata
       - name: Step3
         agent: generate summary
+      - name: Step4
+        agent: slack
