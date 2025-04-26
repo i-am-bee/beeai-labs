@@ -99,3 +99,74 @@ spec:
   mode: remote
   description: slack agent
   instructions: post a message to slack
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Paper Finder
+  labels:
+    app: mas-example 
+spec:
+  model: llama3.1
+  framework: beeai
+  mode: remote
+  description: "Retrieve IBM related papers from a certain topic in a certain time frame"
+  instructions: |
+    Input:
+          • category (string)           # e.g. "quantum-ph"
+          • since_days (int)  # e.g. "1" for the last 1 days since today's date.
+
+        Task:
+          1. Call the ibm-arXiv tool to search for all papers on `category` published in the last `since_days`. All the functionality is already implemented in the funciton, simply execute the function with the given parameters as the input, and then return the output (which should be titles of research papers) into a list.
+  code: |
+    import arxiv
+    import feedparser
+    from datetime import datetime, timedelta, timezone
+    from typing import List, Dict
+    from urllib.parse import urlencode
+
+    def find_ibm_papers(
+        category: str,
+        since_days: int,
+    ) -> List[Dict]:
+        """
+        Search ArXiv in `category`, pre-filter by abstract keywords, then
+        post-filter by author affiliation tags—handling URL encoding properly.
+        """
+      
+        ibm_keywords = ["ibm", "watson", "powerai", "ibm research"]
+
+        cutoff = datetime.now(timezone.utc) - timedelta(days=since_days)
+        abs_filter = " OR ".join(f'abs:"{kw}"' for kw in ibm_keywords)
+        query = f"cat:{category} AND ({abs_filter})"
+        params = {
+            "search_query": query,
+            "start": 0,
+            "max_results": 100,
+            "sortBy": "submittedDate",
+            "sortOrder": "descending",
+        }
+        base_url = "http://export.arxiv.org/api/query?"
+        url = base_url + urlencode(params)
+
+        feed = feedparser.parse(url)
+        papers = []
+
+        for entry in feed.entries:
+            published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+            if published < cutoff:
+                continue
+
+            abstract = entry.summary.lower()
+            keyword_match = any(kw.lower() in abstract for kw in ibm_keywords)
+
+            affs = entry.get("arxiv_affiliation", [])
+            affiliation_match = any("ibm" in aff.lower() for aff in affs)
+
+            if not (keyword_match or affiliation_match):
+                continue
+
+            papers.append(entry.title)
+
+        return papers
