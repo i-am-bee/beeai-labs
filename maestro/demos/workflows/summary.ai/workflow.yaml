@@ -10,30 +10,42 @@ spec:
       name: summary-ai
       labels:
         project: maestro-demo
-    event:
-      cron: "0 0 * * *"
-      name: daily run
-      steps:
-        - retreive papers
-        - choose paper
-        - retrieve abstract
-        - get summary
-      exit: "True"
+    # event:
+    #   cron: "0 0 * * *"
+    #   name: daily run
+    #   steps:
+    #     - retreive papers
+    #     - choose paper
+    #     - retrieve abstract
+    #     - get summary
+    #   exit: "True"
+    # agents:
+    #   - paper retriever
+    #   - Abstract Agent
+    #   - Summary Agent
+    #   - Choose Paper
+    #   - slack
+    # prompt: topic = quantum, n=2
+    # steps:
+    #   - name: retreive papers
+    #     agent: paper retriever
+    #   - name: choose paper
+    #     agent: Choose Paper
+    #   - name: retrieve abstract 
+    #     agent: Abstract Agent
+    #   - name: get summary
+    #     agent: Summary Agent
+    #   - name: slackstep
+    #     agent: slack
     agents:
-      - paper retriever
-      - Abstract Agent
-      - Summary Agent
-      - Choose Paper
-      - slack
-    prompt: topic = quantum, n=2
+      - Paper Finder
+      - get metadata
+      - generate summary
+    prompt: find_ibm_papers("stat.ML",30)
     steps:
-      - name: retreive papers
-        agent: paper retriever
-      - name: choose paper
-        agent: Choose Paper
-      - name: retrieve abstract 
-        agent: Abstract Agent
-      - name: get summary
-        agent: Summary Agent
-      - name: slackstep
-        agent: slack
+      - name: Step1
+        agent: Paper Finder
+      - name: Step2
+        agent: get metadata
+      - name: Step3
+        agent: generate summary

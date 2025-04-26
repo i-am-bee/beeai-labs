@@ -119,6 +119,7 @@ spec:
 
         Task:
           1. Call the ibm-arXiv tool to search for all papers on `category` published in the last `since_days`. All the functionality is already implemented in the funciton, simply execute the function with the given parameters as the input, and then return the output (which should be titles of research papers) into a list.
+          Directly print out the list in the output.
   code: |
     import arxiv
     import feedparser
@@ -189,12 +190,25 @@ spec:
     The input will be a title to a research paper from arxiv, which we can call `title`. This will be used as a parameter for the function in step 1. 
 
     Step1:
-    Use the get_abstract tool, passing in the given title to retreive the abstract for the paper.  The function call should just be `get_abstract_by_title(title)`.
+    Use the get_metadata tool, passing in the given title to retreive the abstract for the paper.  The function call should just be `get_metadata_by_title(title)`. 
+
+    Currently you are using the Thought, Result, and Reason step which is the final output that is generated. However, I want you to stop at the Result step (which should directly just be the output of the function).
+    *STRICTLY output the result of the function and nothing else*
+
+    Example output that the user should see:
+    {
+      "title": inputted title,
+      "authors": [
+          actual authors retrieved by the function
+      ],
+      "published": actual date retrieved by the function,
+      "abstract": actual abstract retrieved by the function
+    }
   code: |
     import arxiv
     from typing import Optional
 
-    def get_abstract_by_title(title: str) -> Optional[str]:
+    def get_metadata_by_title(title: str) -> Optional[str]:
         """
         Given the exact title of an arXiv paper, fetch its abstract.
         Returns None if no match is found.
@@ -214,7 +228,7 @@ spec:
             "abstract":  result.summary.strip()
         }
   tools:
-    - 'get_abstract_by_title'
+    - 'get_metadata_by_title'
 
 ---
 apiVersion: maestro/v1alpha1
