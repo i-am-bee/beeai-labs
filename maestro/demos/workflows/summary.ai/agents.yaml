@@ -170,3 +170,44 @@ spec:
             papers.append(entry.title)
 
         return papers
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: get metadata
+  labels:
+    app: mas-example 
+spec:
+  model: llama3.1
+  framework: beeai
+  mode: remote
+  description: "Retrieve metadata for a given arxiv paper"
+  instructions: |
+    The input will be a title to a research paper from arxiv, which we can call `title`. This will be used as a parameter for the function in step 1. 
+
+    Step1:
+    Use the get_abstract tool, passing in the given title to retreive the abstract for the paper.  The function call should just be `get_abstract_by_title(title)`.
+  code: |
+    import arxiv
+    from typing import Optional
+
+    def get_abstract_by_title(title: str) -> Optional[str]:
+        """
+        Given the exact title of an arXiv paper, fetch its abstract.
+        Returns None if no match is found.
+        """
+        client = arxiv.Client()
+        search = arxiv.Search(
+            query=f'ti:"{title}"',
+            max_results=1
+        )
+        result = next(client.results(search), None)
+        if not result:
+            return None
+        return {
+            "title":     result.title,
+            "authors":   [a.name for a in result.authors],
+            "published": result.published.strftime("%Y-%m-%d"),
+            "abstract":  result.summary.strip()
+        }
