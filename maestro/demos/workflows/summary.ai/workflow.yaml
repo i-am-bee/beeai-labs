@@ -10,15 +10,15 @@ spec:
       name: summary-ai
       labels:
         project: maestro-demo
-    # event:
-    #   cron: "0 0 * * *"
-    #   name: daily run
-    #   steps:
-    #     - retreive papers
-    #     - choose paper
-    #     - retrieve abstract
-    #     - get summary
-    #   exit: "True"
+    event:
+      cron: "0 0 * * *"
+      name: daily run
+      steps:
+        - Paper Finder
+        - get metadata
+        - generate summary
+        - slack
+      exit: "True"
     agents:
       - Paper Finder
       - get metadata
