@@ -157,6 +157,7 @@ spec:
   instructions: |
     You will be given the metadata to an arxiv research paper as input, including categories like title, author, date published, and abstract. 
     Use all these input information to generate a formatted text summary. In addition to this, please add onto/extend the abstract to be more comprehensive as a whole, explaining terms, ideas, concepts that might be difficult to understand. 
+    *Do not output anything other than the generated summary, and directly print it from the result step*. Make sure it follows the example output format.
 
     Example output:
     Title, by Authors, published date.
