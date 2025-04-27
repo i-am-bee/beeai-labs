@@ -52,7 +52,7 @@ If you already created the agents and enabled necessary tools: `maestro run ./de
 
 Go into the UI and make 2 tools for this demo:
 
-1) Name: ibm-arXiv
+##### Name: ibm-arXiv
 
 Code:
 
@@ -106,7 +106,7 @@ def find_ibm_papers(category: str, since_days: int) -> List[Dict]:
     return papers
 ```
 
-2) Name: get_metadata
+##### Name: get_metadata
 
 Code:
 
