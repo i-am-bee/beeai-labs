@@ -1,91 +1,3 @@
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: Abstract Agent
-#   labels:
-#     app: mas-example 
-# spec:
-#   model: llama3.1
-#   framework: beeai
-#   mode: remote
-#   description: "Get the abstract of the desired paper."
-#   instructions: |
-#     "You will be given the title of a research paper from arXiv. Your task is to use the arXiv tool to search for the paper by using only the provided paper title as your search parameter. Once you have located the paper, retrieve its summary (abstract) and output it directly here in a markdown format for readability. Do not use any SQL queries or database commands."
-#   tools: 
-#     - 'arxiv'
-
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: Summary Agent
-#   labels:
-#     app: mas-example 
-# spec:
-#   model: llama3.1
-#   framework: beeai
-#   mode: remote
-#   description: "Get the summary of the desired paper"
-#   instructions: |
-#     You will be given an abstract of a research paper. Your job is to expand on it and generate a summary from it. Make sure the concept is more clear, try to make the summary long and detailed. Go into detail about each topic mentioned. Please add onto the summary. Produce your final answer/summary in a single markdown code block, Show everything directly in the final output.
-
-#     Example output {the following below should be in a code block):
-
-#     ```markdown
-#     The summary/output you generated
-#     ```
-#   tools: 
-#     - 'LLM'
-
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: Choose Paper
-#   labels:
-#     app: mas-example 
-# spec:
-#   model: llama3.1
-#   framework: beeai
-#   mode: remote
-#   description: "Choose a paper from the list of titles."
-#   instructions: |
-#     You will be provided a list of titles, simply output one at random. Note, the outputted title must be in the list.
-
-#     Example:
-#     Input: [`title1`, `title2`, `title3`]
-#     Output: `title3`
-    
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: paper retriever
-#   labels:
-#     app: mas-example 
-# spec:
-#   model: llama3.1
-#   framework: beeai
-#   mode: remote
-#   description: "Choose a paper from the list of titles."
-#   instructions: |
-#     Input: A topic (string) and a number n (integer) indicating how many papers to retrieve.
-
-#     Task:
-#     Use the arXiv tool to search for the most recent papers related to the given topic. Do not perform any SQL queries or database commands, use the tool directly to get these papers.
-#     Retrieve exactly n papers sorted by their publication date (most recent first).
-#     Extract only the titles of these papers.
-#     Output the titles in a list format (i.e., a Python list). Do not include any additional text or formatting.
-
-#     Example Input:
-#     topic: "quantum", n: 2
-
-#     Output:
-#     ['title1_related_quantum', 'title2_quantum']
-#   tools: 
-#     - 'arxiv'
-
-# ---
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
@@ -114,7 +26,7 @@ spec:
   description: "Retrieve IBM related papers from a certain topic in a certain time frame"
   instructions: |
     Input:
-          • category (string)           # e.g. "quantum-ph"
+          • category (string) # e.g. "quantum-ph"
           • since_days (int)  # e.g. "1" for the last 1 days since today's date.
 
         Task:

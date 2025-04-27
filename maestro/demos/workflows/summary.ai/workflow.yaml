@@ -19,24 +19,6 @@ spec:
     #     - retrieve abstract
     #     - get summary
     #   exit: "True"
-    # agents:
-    #   - paper retriever
-    #   - Abstract Agent
-    #   - Summary Agent
-    #   - Choose Paper
-    #   - slack
-    # prompt: topic = quantum, n=2
-    # steps:
-    #   - name: retreive papers
-    #     agent: paper retriever
-    #   - name: choose paper
-    #     agent: Choose Paper
-    #   - name: retrieve abstract 
-    #     agent: Abstract Agent
-    #   - name: get summary
-    #     agent: Summary Agent
-    #   - name: slackstep
-    #     agent: slack
     agents:
       - Paper Finder
       - get metadata
