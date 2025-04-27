@@ -1,6 +1,6 @@
 # Summary.ai Example
 
-A multi-agent workflow using Maestro: Allows an user to specify a topic from Arxiv they want to look at, choose a number of potential papers to summarize.
+A multi-agent workflow using Maestro: Allows user to retrieve the latests ArXiV papers published by IBM specified by category (arxiv tags), and release time period from today. Then, generates a summary from metadata and abstract that is retrieved.
 
 ## Mermaid Diagram
 
@@ -38,20 +38,6 @@ end
 
 * Copy `.env` to common directory: `cp .env ./../common/src`
 
-### Allowing maestro to be run from anywhere
-
-Modify wrapper script: `nano ~/.local/bin/maestro`
-Set the script path to run relative to your location, whereever in the terminal:
-
-```bash
-#!/bin/bash
-export PYTHONPATH="/Users/REPLACEwUser/Desktop/work/bee-hive:$PYTHONPATH"
-python3 -m maestro.cli.maestro "$@"
-```
-
-Make sure the script is executable: `chmod +x ~/.local/bin/maestro`
-Verify maestro is running properly: `maestro --help`
-
 ## Running the Workflow
 
 Assuming you are in maestro top level:
@@ -60,76 +46,91 @@ Assuming you are in maestro top level:
 
 To run the workflow:
 
-If you already created the agents and enabled the tool: `maestro run None ./demos/workflows/summary.ai/workflow.yaml`
-
-OR
-
-Directly run the workflow: `maestro run ./demos/workflows/summary.ai/agents.yaml ./demos/workflows/summary.ai/workflow.yaml`
-
-If in the actual demo directory, you can also directly run using: `./run.sh`.
+If you already created the agents and enabled necessary tools: `maestro run ./demos/workflows/summary.ai/workflow.yaml`
 
 ### NOTE: Custom Tools Required for this Demo
 
 Go into the UI and make 2 tools for this demo:
 
-1) Fetch tool:
-
-Name: Fetch
+1) Name: ibm-arXiv
 
 Code:
 
 ```Python
-import urllib.request
+import arxiv
+import feedparser
+from datetime import datetime, timedelta, timezone
+from typing import List, Dict
+from urllib.parse import urlencode
 
-def fetch_arxiv_titles(topic: str, k: int = 10):
-  """Fetches the k most recent article titles from arXiv on a given topic."""
-  url = f"http://export.arxiv.org/api/query?search_query=all:{topic}&sortBy=submittedDate&sortOrder=descending&max_results={k}"
-
-  with urllib.request.urlopen(url) as response:
-      data = response.read().decode()
-
-  titles = [line.split("<title>")[1].split("</title>")[0] for line in data.split("\n") if "<title>" in line][1:k+1]
-  return titles
-```
-
-2) Filtering tool:
-
-Name: Filter
-
-Code:
-
-```Python
-import urllib.request
-import urllib.parse
-import re
-
-def fetch_valid_arxiv_titles(titles: list):
+def find_ibm_papers(category: str, since_days: int) -> List[Dict]:
     """
-    Fetches titles that have an available abstract on ArXiv.
-
-    Args:
-        titles (list): List of paper titles.
-
-    Returns:
-        list: Titles that have an abstract.
+    Search ArXiv in `category`, pre-filter by abstract keywords, then
+    post-filter by author affiliation tags—handling URL encoding properly.
     """
-    base_url = "http://export.arxiv.org/api/query?search_query="
-    valid_titles = []
 
-    for title in titles:
-        search_query = f'all:"{urllib.parse.quote(title)}"'
-        url = f"{base_url}{search_query}&max_results=1"
-        try:
-            with urllib.request.urlopen(url) as response:
-                data = response.read().decode()
-        except Exception as e:
+    ibm_keywords = ["ibm", "watson", "powerai", "ibm research"]
+
+    cutoff = datetime.now(timezone.utc) - timedelta(days=since_days)
+    abs_filter = " OR ".join(f'abs:"{kw}"' for kw in ibm_keywords)
+    query = f"cat:{category} AND ({abs_filter})"
+    params = {
+        "search_query": query,
+        "start": 0,
+        "max_results": 100,
+        "sortBy": "submittedDate",
+        "sortOrder": "descending",
+    }
+    base_url = "http://export.arxiv.org/api/query?"
+    url = base_url + urlencode(params)
+
+    feed = feedparser.parse(url)
+    papers = []
+
+    for entry in feed.entries:
+        published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+        if published < cutoff:
             continue
 
-        abstract_match = re.search(r"<summary>(.*?)</summary>", data, re.DOTALL)
+        abstract = entry.summary.lower()
+        keyword_match = any(kw.lower() in abstract for kw in ibm_keywords)
 
-        if abstract_match:
-            valid_titles.append(title)
-        else:
-            print(f"❌ No abstract found: {title}")
-    return valid_titles
+        affs = entry.get("arxiv_affiliation", [])
+        affiliation_match = any("ibm" in aff.lower() for aff in affs)
+
+        if not (keyword_match or affiliation_match):
+            continue
+
+        papers.append(entry.title)
+
+    return papers
+```
+
+2) Name: get_metadata
+
+Code:
+
+```Python
+import arxiv
+from typing import Optional
+
+def get_metadata_by_title(title: str) -> Optional[str]:
+    """
+    Given the exact title of an arXiv paper, fetch its abstract.
+    Returns None if no match is found.
+    """
+    client = arxiv.Client()
+    search = arxiv.Search(
+        query=f'ti:"{title}"',
+        max_results=1
+    )
+    result = next(client.results(search), None)
+    if not result:
+        return None
+    return {
+        "title":     result.title,
+        "authors":   [a.name for a in result.authors],
+        "published": result.published.strftime("%Y-%m-%d"),
+        "abstract":  result.summary.strip()
+    }
 ```
