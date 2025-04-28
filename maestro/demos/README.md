@@ -87,7 +87,7 @@ curl -X POST http://localhost:11434/api/generate -d '{
 
 #### Allowing maestro to be run from anywhere
 
-Modify wrapper script: `nano ~/.local/bin/maestro`
+Create wrapper script: `nano ~/.local/bin/maestro`
 Set the script path to run relative to your location, whereever in the terminal:
 
 ```bash
