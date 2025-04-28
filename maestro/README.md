@@ -183,5 +183,10 @@ Additionally, to auto update all maestro readme demos with mermaid (after change
 
 This allows the execution of Agents on OpenAI, or compatible endpoints (including Ollama), and supports the use of local and remote MCP tools. See [README_openai.md](docs/README_openai.md)
 
+### Observability with Langfuse
+
+This provides insight into the execution of the workflow. Currently this 
+only supports the agent/LLM interactions when using the OpenAI support. See [README_observability.md](docs/README_observability.md)
+
 # Contributing
 * Learn about [contributing](./demos/CONTRIBUTING.md)

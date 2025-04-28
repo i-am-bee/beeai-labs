@@ -28,11 +28,13 @@ from agents import (
     set_tracing_disabled,
     Tool,
     WebSearchTool,
+    trace,
 )
 # Import both SSE and Stdio MCP Server types
 from agents.mcp import MCPServerSse, MCPServerStdio
 
 from src.agents.agent import Agent
+from src.utils.observability import setup_langfuse_tracing
 
 
 # Integrated tools - only web_search for now - requires responses API (could be extended)
@@ -77,19 +79,20 @@ def _openai_tools_from_agent_definition(
 class OpenAIAgent(Agent):
     """
     OpenAI extends the Agent class to load and run a agent using OpenAI.
-    Simplified version supporting only the 'web_search' tool.
-    Can connect to multiple MCP servers defined via environment variable
-    MAESTRO_MCP_ENDPOINTS. Endpoints can be remote (HTTP SSE URLs) or
-    local (command strings for Stdio). Comma separated.
+    Supports optional Langfuse tracing if LANGFUSE_* environment variables are set.
+    Supports built-in 'web_search' tool and external MCP servers (SSE/Stdio).
     """
     def __init__(self, agent: dict) -> None:
         """
         Initializes the workflow for the specified OpenAI agent.
+        Sets up optional Langfuse tracing if configured via environment variables.
 
         Args:
             agent (dict): The agent definition dictionary.
         """
         super().__init__(agent)
+
+        self.langfuse_enabled = setup_langfuse_tracing(self.print)
 
         OPENAI_DEFAULT_URL: Final[str] = "https://api.openai.com/v1"
         self.base_url = os.getenv("OPENAI_BASE_URL", OPENAI_DEFAULT_URL)
@@ -104,17 +107,31 @@ class OpenAIAgent(Agent):
             base_url=self.base_url,
             api_key=self.api_key,
         )
-        # Update the parms for the endpoint. Tracing uses OpenAI backend, so disable tracing too
+
+        # --- Configure agents library client and tracing state ---
+        # Pass use_for_tracing=False if Langfuse is handling tracing via OTEL/logfire
+        # Otherwise, let the agents library handle its own tracing if needed (though we disable it below if langfuse isn't on)
         set_default_openai_client(client=self.client, use_for_tracing=False)
-        set_tracing_disabled(disabled=True)
+
+        # avoid double tracing
+        if not self.langfuse_enabled:
+            if set_tracing_disabled:
+                set_tracing_disabled(disabled=True)
+                self.print("DEBUG [OpenAIAgent {self.agent_name}]: Langfuse not enabled, ensuring agents library tracing is disabled.")
+            else:
+                self.print("WARN [OpenAIAgent {self.agent_name}]: Langfuse not enabled and cannot disable agents library tracing (set_tracing_disabled not found).")
+        # ---------------------------------------------------------
 
         # Use chat completions if we're not using the default endpoint
-        # This affects tool compatibility (WebSearch needs Responses API)
         self.uses_chat_completions = self.base_url != OPENAI_DEFAULT_URL
         if self.uses_chat_completions:
             set_default_openai_api("chat_completions")
+            self.print(f"INFO [OpenAIAgent {self.agent_name}]: Non-default base URL detected. Forcing 'chat_completions' API. The '{SUPPORTED_TOOL_NAME}' tool may be unavailable.")
+        else:
+            self.print(f"INFO [OpenAIAgent {self.agent_name}]: Using default base URL. Assuming Responses API is available for tools if supported by the model/library.")
 
-        # Add requested static tools to the client (only web_search supported)
+
+        # Add requested static tools
         agent_spec = agent.get("spec", {})
         self.tools: List[Tool] = _openai_tools_from_agent_definition(
             agent_tool_names=agent_spec.get("tools"),
@@ -126,118 +143,93 @@ class OpenAIAgent(Agent):
         self.agent_id=self.agent_name
 
 
-    # For MCP set environment to point to list of MCP servers (running SSE or Stdio) ie
-    # export MAESTRO_MCP_ENDPOINTS="http://localhost:8000/sse,/path/to/mcp/binary stdio arg1,https://remote-mcp.com/sse"
     async def run(self, prompt: str) -> str:
         """
-        Runs the agent with the given prompt, potentially using multiple MCP servers (remote SSE or local Stdio).
-        MCP servers are configured via the MAESTRO_MCP_ENDPOINTS environment variable,
-        which is a comma-separated list. URLs starting with 'http://' or 'https://'
-        are treated as remote SSE servers. Other strings are treated as commands
-        to launch local Stdio servers (parsed using shlex).
+        Runs the agent with the given prompt, potentially using multiple MCP servers.
 
         Args:
             prompt (str): The prompt to run the agent with.
         """
         mcp_endpoints_str = os.getenv("MAESTRO_MCP_ENDPOINTS", "")
-        # Split endpoints and strip whitespace
         mcp_endpoint_definitions = [ep.strip() for ep in mcp_endpoints_str.split(',') if ep.strip()]
-
-        # Use Union type hint for clarity
         active_mcp_servers: List[Union[MCPServerSse, MCPServerStdio]] = []
         result = None
 
-        try:
-            async with AsyncExitStack() as stack:
-                if not mcp_endpoint_definitions:
-                    self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: No MCP endpoints configured in MAESTRO_MCP_ENDPOINTS.")
-                else:
-                    self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Attempting to connect to MCP Servers: {mcp_endpoint_definitions}...")
+        trace_name = f"Maestro OpenAI Agent Run: {self.agent_name}"
+        with trace(trace_name):
+            try:
+                async with AsyncExitStack() as stack:
+                    if not mcp_endpoint_definitions:
+                        self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: No MCP endpoints configured.")
+                    else:
+                        self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Attempting to connect to MCP Servers: {mcp_endpoint_definitions}...")
+                        for i, endpoint_def in enumerate(mcp_endpoint_definitions):
+                            server_name = f"{self.agent_name}_MCP_Server_{i+1}"
+                            server = None
+                            server_type = "Unknown"
+                            server_id = endpoint_def
+                            try:
+                                if endpoint_def.startswith(("http://", "https://")):
+                                    server_type = "SSE"
+                                    server = MCPServerSse(name=f"{server_name}_SSE", params={"url": endpoint_def})
+                                else:
+                                    server_type = "Stdio"
+                                    parts = shlex.split(endpoint_def)
+                                    if not parts:
+                                        self.print(f"WARN [OpenAIAgent {self.agent_name}]: Skipping invalid empty MCP command: '{endpoint_def}'")
+                                        continue
+                                    command, args = parts[0], parts[1:]
+                                    current_env = os.environ.copy()
+                                    server = MCPServerStdio(
+                                        name=f"{server_name}_Stdio",
+                                        params={"command": command, "args": args, "env": current_env}
+                                    )
+                                    server_id = endpoint_def
 
-                    for i, endpoint_def in enumerate(mcp_endpoint_definitions):
-                        server_name = f"{self.agent_name}_MCP_Server_{i+1}"
-                        server = None
-                        server_type = "Unknown"
-                        server_id = endpoint_def
-                        try:
-                            if endpoint_def.startswith(("http://", "https://")):
-                                # Remote SSE Server
-                                server_type = "SSE"
-                                server = MCPServerSse(
-                                    name=f"{server_name}_SSE",
-                                    params={"url": endpoint_def},
-                                )
-                                server_id = endpoint_def
-                            else:
-                                # Local Stdio Server
-                                server_type = "Stdio"
-                                parts = shlex.split(endpoint_def)
-                                if not parts:
-                                    self.print(f"WARN [OpenAIAgent {self.agent_name}]: Skipping invalid empty command string for MCP server: '{endpoint_def}'")
-                                    continue
+                                await stack.enter_async_context(server)
+                                self.print(f"INFO [OpenAIAgent {self.agent_name}]: MCP Server ({server_type}) connected: {server.name} ({server_id})")
+                                active_mcp_servers.append(server)
 
-                                command = parts[0]
-                                args = parts[1:]
+                            except ConnectionRefusedError:
+                                self.print(f"WARN [OpenAIAgent {self.agent_name}]: MCP Server ({server_type}) connection refused: {server.name if server else server_name} ({server_id})")
+                            except FileNotFoundError:
+                                self.print(f"WARN [OpenAIAgent {self.agent_name}]: MCP Server ({server_type}) command not found: {server.name if server else server_name} ({server_id})")
+                            except Exception as conn_err:
+                                self.print(f"WARN [OpenAIAgent {self.agent_name}]: Failed to connect/start MCP Server {server.name if server else server_name} ({server_id}): {conn_err}")
 
-                                # TODO: Consider how to safely pass a restricted environment - for now pass everything
-                                current_env = os.environ.copy()
+                    if not active_mcp_servers and mcp_endpoint_definitions:
+                        self.print(f"WARN [OpenAIAgent {self.agent_name}]: Failed to connect to any configured MCP servers. Running without MCP.")
+                    elif active_mcp_servers:
+                        self.print(f"INFO [OpenAIAgent {self.agent_name}]: Running agent with {len(active_mcp_servers)} active MCP server(s).")
 
-                                server = MCPServerStdio(
-                                    name=f"{server_name}_Stdio",
-                                    params={
-                                        "command": command,
-                                        "args": args,
-                                        "env": current_env
-                                    }
-                                )
-                                server_id = endpoint_def # Use the full command string as identifier
+                    # --- Create and Run the Agent ---
+                    openai_agent = OAIAgent(
+                        name=self.agent_name,
+                        instructions=self.instructions,
+                        model=self.model_name,
+                        tools=self.tools,
+                        mcp_servers=active_mcp_servers,
+                    )
 
-                            await stack.enter_async_context(server)
-                            self.print(f"INFO [OpenAIAgent {self.agent_name}]: MCP Server ({server_type}) connected: {server.name} ({server_id})")
-                            active_mcp_servers.append(server) # Add the active server to the list
+                    self.print(f"Running {self.agent_name} with prompt...")
+                    result = await OAIRunner.run(openai_agent, prompt)
+                    self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Agent run completed.")
+                    # --------------------------------
 
-                        except ConnectionRefusedError:
-                            self.print(f"WARN [OpenAIAgent {self.agent_name}]: MCP Server ({server_type}) connection refused: {server.name if server else server_name} ({server_id})")
-                        except FileNotFoundError:
-                            self.print(f"WARN [OpenAIAgent {self.agent_name}]: MCP Server ({server_type}) command not found: {server.name if server else server_name} ({server_id})")
-                        except Exception as conn_err:
-                            self.print(f"WARN [OpenAIAgent {self.agent_name}]: Failed to connect/start MCP Server {server.name if server else server_name} ({server_id}): {conn_err}")
-                            # self.print(traceback.format_exc())
+            except Exception as e:
+                error_msg = f"ERROR [OpenAIAgent {self.agent_name}]: Agent run failed: {e}"
+                self.print(error_msg)
+                self.print(traceback.format_exc())
 
-                if not active_mcp_servers and mcp_endpoint_definitions:
-                    self.print(f"WARN [OpenAIAgent {self.agent_name}]: Failed to connect to any configured MCP servers. Running without MCP.")
-                elif active_mcp_servers:
-                    self.print(f"INFO [OpenAIAgent {self.agent_name}]: Running agent with {len(active_mcp_servers)} active MCP server(s).")
+                return f"Error during agent execution: {e}"
 
-                # Run the Agent
-                openai_agent = OAIAgent(
-                    name=self.agent_name,
-                    instructions=self.instructions,
-                    model=self.model_name,
-                    tools=self.tools,
-                    mcp_servers=active_mcp_servers,
-                    # TODO: Needs more investigation - auto, required, could be model specific
-                    # model_settings=ModelSettings(tool_choice="required")
-                )
-
-                self.print(f"Running {self.agent_name} with prompt...")
-                result = await OAIRunner.run(openai_agent, prompt)
-                self.print(f"DEBUG [OpenAIAgent {self.agent_name}]: Agent run completed.")
-
-        except Exception as e:
-            error_msg = f"ERROR [OpenAIAgent {self.agent_name}]: Agent run failed: {e}"
-            self.print(error_msg)
-            self.print(traceback.format_exc())
-            return f"Error during agent execution: {e}"
-
-        # --- Process the result ---
         if result is None:
             self.print(f"ERROR [OpenAIAgent {self.agent_name}]: Agent run did not produce a result object.")
             return "Error: Agent run failed to produce a result."
 
         final_output = getattr(result, 'final_output', None)
         if final_output is None:
-            self.print(f"WARN [OpenAIAgent {self.agent_name}]: Agent run completed but no 'final_output' found in the result object.")
+            self.print(f"WARN [OpenAIAgent {self.agent_name}]: Agent run completed but no 'final_output' found.")
             messages = getattr(result, 'messages', [])
             last_message_content = messages[-1].content if messages and hasattr(messages[-1], 'content') else "No message content available."
             final_output_str = f"Agent run finished without explicit final output. Last message: {last_message_content}"
@@ -251,11 +243,9 @@ class OpenAIAgent(Agent):
 
     async def run_streaming(self, prompt: str) -> str:
         """
-        Runs the agent in streaming mode with the given prompt.
+        Runs the agent in streaming mode. Currently falls back to non-streaming.
         Args:
             prompt (str): The prompt to run the agent with.
         """
-        # TODO: Implement actual streaming logic if the underlying library supports it easily.
-        # For now, it just calls the non-streaming run method.
         self.print(f"WARN [OpenAIAgent {self.agent_name}]: Streaming not fully implemented, falling back to non-streaming run.")
         return await self.run(prompt)

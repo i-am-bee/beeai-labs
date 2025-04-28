@@ -27,6 +27,8 @@ openai-agents = "^0.0.11"
 pycron = "^3.1.2"
 beeai-framework = "^0.1.17"
 slack_sdk = "^3.35.0"
+nest-asyncio = "^1.6.0"
+pydantic-ai = {extras = ["logfire"], version = "^0.1.6"}
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
