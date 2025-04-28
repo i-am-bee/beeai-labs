@@ -1,16 +1,4 @@
-# Copyright © 2025 IBM
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 
 import os
 import base64
@@ -72,7 +60,6 @@ def setup_langfuse_tracing(print_func: callable = print) -> bool:
 
     print_func("INFO [Observability]: Found Langfuse configuration. Attempting to set up tracing...")
 
-    # --- Validate credentials (basic format check) ---
     if not public_key.startswith("pk-lf"):
         print_func("ERROR [Observability]: LANGFUSE_PUBLIC_KEY must start with 'pk-lf'. Aborting Langfuse setup.")
         return False
@@ -107,7 +94,7 @@ def setup_langfuse_tracing(print_func: callable = print) -> bool:
         # logfire is useful intercept->otel, but we don't actually send to logfire service
         logfire.configure(
             send_to_logfire=False,
-            service_name='maestro' # Sets the service name for OTEL traces
+            service_name='maestro'
         )
 
         # adds actual hook that intruments openai
@@ -127,6 +114,5 @@ def setup_langfuse_tracing(print_func: callable = print) -> bool:
 
     except Exception as e:
         print_func(f"ERROR [Observability]: Failed during Langfuse setup: {e}")
-        # Log the full traceback for better debugging
         print_func(traceback.format_exc())
         return False
