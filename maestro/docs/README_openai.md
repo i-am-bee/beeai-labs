@@ -24,6 +24,11 @@ In addition to regular maestro yaml, the following environment variables are nee
   *   For **OpenAI API:** Set the `OPENAI_API_KEY` environment variable.
   *   For **Custom Endpoints (like Ollama):** Ensure the endpoint is running and accessible. You will need to set `OPENAI_BASE_URL`.
   *   For **MCP Servers:** Ensure the servers are running (for remote SSE) or the binaries are accessible (for local Stdio). Set `MAESTRO_MCP_ENDPOINTS`.
+  *   **Streaming Override (Optional):** Set `MAESTRO_OPENAI_STREAMING` to control streaming behavior.
+      *   `true`: Forces streaming mode, even if `run()` is called.
+      *   `false`: Forces non-streaming mode, even if `run_streaming()` is called.
+      *   `auto` (or unset): Uses the called method (`run()` for non-streaming, `run_streaming()` for streaming). This is primarily for development/debugging.
+
 
 Observability can be added using LangFuse. See [README_observability.md](../README_observability.md) for more details.
 
