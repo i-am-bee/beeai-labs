@@ -78,11 +78,20 @@ find "$WORKFLOWS_DIR" -mindepth 1 -type d -print0 | while IFS= read -r -d '' dem
         cd "$REPO_ROOT/maestro"
         bash "$COMMON_DIR/doctor.sh" || { echo "❌ doctor.sh failed for demo at $demo"; exit 1; }
         
-        echo "🧪 Running common test.sh for demo..."
         cd "$REPO_ROOT/maestro"
-        # Use a here-string to pass empty input while ensuring the environment variable is set
-        MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" bash "$COMMON_DIR/test.sh" "$demo" <<< "" || { echo "❌ test.sh failed for demo at $demo"; exit 1; }
-    
+
+        # TODO: Demos may need complex setup/environment. For now they can create their own
+        # test.sh which can call the common one, but do additional steps before/after
+        # ie install libs, set env, Parsing of output to validate the test is working 
+        if [[ -x "$demo/test.sh" ]]; then
+            echo "🧪 Running custom test.sh for demo..."
+            bash "$demo/test.sh" "$COMMON_DIR/test.sh" "$demo" || { echo "❌ custom test.sh failed for demo at $demo"; exit 1; }
+        else
+            echo "🧪 Running common test.sh for demo..."
+            # Use a here-string to pass empty input while ensuring the environment variable is set
+            MAESTRO_DEMO_OLLAMA_MODEL="ollama/llama3.2:3b" bash "$COMMON_DIR/test.sh" "$demo" <<< "" || { echo "❌ test.sh failed for demo at $demo"; exit 1; }
+        fi
+        
         CURRENT_COUNT=$(cat "$TEST_COUNT_FILE")
         echo $((CURRENT_COUNT + 1)) > "$TEST_COUNT_FILE"
     else

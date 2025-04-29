@@ -34,10 +34,8 @@ jobs:
           cd maestro
           poetry run maestro --help
       - name: Install Ollama
-        uses: pydantic/ollama-action@v3
-        with:
-          # Small model - 7GB max in this runner
-          model: llama3.1:latest
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
       - name: Run and tests all demo workflows
         run: |
           cd maestro

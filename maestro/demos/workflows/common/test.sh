@@ -42,4 +42,9 @@ poetry run maestro validate "$WORKFLOW_SCHEMA_PATH" "$WORKFLOW_YAML" || { echo "
 echo "🧪 Running workflow in dry-run mode..."
 echo "" | poetry run maestro run --dry-run "$AGENTS_YAML" "$WORKFLOW_YAML" || { echo "❌ Workflow test failed!"; exit 1; }
 
+# TODO: Improve configuration for enabling a real run
+if [[ -r "$DEMO_DIR/.run" ]]; then
+    echo "🧪 Running workflow in real run mode..."
+    echo "" | poetry run maestro run "$AGENTS_YAML" "$WORKFLOW_YAML" || { echo "❌ Workflow test failed (real run)!"; exit 1; }
+fi
 echo "✅ Workflow tests passed for $DEMO_DIR!"
