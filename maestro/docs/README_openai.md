@@ -143,6 +143,16 @@ The following MCP servers are used in the example variable setting above:
 * A [test remote MCP server](https://github.com/planetf1/mcp-server)
   * Clone the project, and follow the launch instructions in the README. If running on the same machine the URL in the variable should be correct. This has a variety of tools but is provided only to demonstrate mcp capability. Do not rely on the tool implementations.
 
+### Observability
+
+As mentioned above, the OpenAI agent feature supports logging OpenAI api calls to an [Open Telemetry](https://opentelemetry.io/) endpoint. Many other SDKs also support Open Telemetry via various integrations. Maestro uses Pydantic's [logfire](https://logfire.pydantic.dev/docs/integrations/). 
+
+There are various collectors available - one simple option to get started is [Phoenix Arise](https://phoenix.arize.com/):
+
+* Run `export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:6006/v1/traces`
+* Run the self-hosted arise server with `podman run -p 6006:6006 -p 4317:4317 -i -t arizephoenix/phoenix:latest` (or use docker)
+* Run the maestro agent. Traces will be visible in the phoenix UI at http://localhost:6006
+
 For *OpenAI*
 ```
 maestro run tests/agents/openai_agent/agents_mcp.yaml test/agents/openai_agent/workflow_mcp.yaml
