@@ -67,7 +67,7 @@ This will connect to OpenUI using the [new Responses API](https://platform.opena
 The full example can be run with:
 
 ```shell
-maestro run tests/agents/openai_agent/agents.yaml test/agents/openai_agent/workflow.yaml
+maestro run tests/agents/openai_agent/agents.yaml tests/agents/openai_agent/workflow.yaml
 ```
 ### Using Built-in Tools (web_search)
 
@@ -97,7 +97,7 @@ The web_search tool requires the OpenAI "Responses API", which is  available whe
 The full example can be run with:
 
 ```shell
-maestro run tests/agents/openai_agent/agents_search.yaml test/agents/openai_agent/workflow_search.yaml
+maestro run tests/agents/openai_agent/agents_search.yaml tests/agents/openai_agent/workflow_search.yaml
 ```
 
 ### Connecting to Custom OpenAI-Compatible Endpoints (e.g., Ollama)
@@ -109,7 +109,7 @@ Setting this also forces the use of the older chat_completions API internally wi
 An example that assumes Ollama with the `granite3.3:8b model available` can be run with:
 
 ```shell
-maestro run tests/agents/openai_agent/agents_search.yaml test/agents/openai_agent/workflow_search.yaml
+maestro run tests/agents/openai_agent/agents_search.yaml tests/agents/openai_agent/workflow_search.yaml
 ```
 
 ### Using MCP Tools
@@ -157,7 +157,7 @@ The following MCP servers are used in the example variable setting above:
 
 For *OpenAI* :
 ```shell
-maestro run tests/agents/openai_agent/agents_mcp.yaml test/agents/openai_agent/workflow_mcp.yaml
+maestro run tests/agents/openai_agent/agents_mcp.yaml tests/agents/openai_agent/workflow_mcp.yaml
 ```
 
 ### Using LiteLLM
@@ -183,11 +183,11 @@ To use a different model provider via LiteLLM (e.g., Anthropic's Claude 3 Opus):
 4.  **Run Maestro:**
 
 ```shell
-maestro run tests/agents/openai_agent/agents_mcp.yaml test/agents/openai_agent/workflow_mcp.yaml
+maestro run tests/agents/openai_agent/agents_mcp.yaml tests/agents/openai_agent/workflow_mcp.yaml
 ```shell
 or with *Ollama*
 ```shell
-maestro run tests/agents/openai_agent/agents_ollama_mcp.yaml test/agents/openai_agent/workflow_ollama_mcp.yaml
+maestro run tests/agents/openai_agent/agents_ollama_mcp.yaml tests/agents/openai_agent/workflow_ollama_mcp.yaml
 ```
 
 ### Observability
