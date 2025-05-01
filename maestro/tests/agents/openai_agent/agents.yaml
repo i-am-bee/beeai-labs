@@ -10,5 +10,3 @@ spec:
   instructions: echo your prompt
   framework: openai
   mode: local
-  tools:
-    - web_search
