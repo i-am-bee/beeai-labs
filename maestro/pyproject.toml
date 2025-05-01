@@ -23,7 +23,7 @@ streamlit = "^1.44.0"
 streamlit-mermaid = "^0.3.0"
 psutil = "^7.0.0"
 openapi = "^2.0.0"
-openai-agents = "^0.0.11"
+openai-agents = {extras = ["litellm"], version = "^0.0.14"}
 pycron = "^3.1.2"
 beeai-framework = "^0.1.17"
 slack_sdk = "^3.35.0"
