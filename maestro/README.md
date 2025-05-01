@@ -135,10 +135,9 @@ Additionally, to auto update all maestro readme demos with mermaid (after change
 * Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
   * [Helpful tips](./demos/README.md) on setting up the stack
 
-* Install dependencies: `poetry shell && poetry install` and/or `pip3 install -r requirements.txt`, `pip3 install -e .`
+* Install dependencies: `poetry shell` (creates interactive shell/venv), `poetry lock` (resolves and pins versions), `poetry install` (read and install the lockfile)
 
   * If using **crewAI**: `pip install crewai litellm==1.67.0.post1` to bypass a local error.
-`
 
 * Configure environmental variables: `cp example.env .env`
 
