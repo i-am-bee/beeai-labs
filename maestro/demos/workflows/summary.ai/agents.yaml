@@ -99,23 +99,21 @@ spec:
   mode: remote
   description: "Retrieve metadata for a given arxiv paper"
   instructions: |
-    The input will be a title to a research paper from arxiv, which we can call `title`. This will be used as a parameter for the function in step 1. 
+    The input will be a title (in list format) to a research paper. Extract this from the list and use it as the input for a parameter for the function in step 1.  Example given input might be like this: ["This is an example input title"]. We only want to extract and use the string inside, "This is an exmaple input title" and set this as our title.
 
     Step1:
-    Use the get_metadata tool, passing in the given title to retreive the abstract for the paper.  The function call should just be `get_metadata_by_title(title)`. 
+    Use the *get_metadata tool*, passing in the given title to retreive the abstract for the paper.  The function call should just be `get_metadata_by_title(title)`. 
 
-    Currently you are using the Thought, Result, and Reason step which is the final output that is generated. However, I want you to stop at the Result step (which should directly just be the output of the function).
-    *STRICTLY output the result of the function and nothing else*
-
+    Currently you are using the Thought, Result, and Reason step which is the final output that is generated. However, I want you to stop at the Result step (which should directly just be the output of the function). *STRICTLY output the result of the function and nothing else*
     Example output that the user should see:
-    {
-      "title": inputted title,
-      "authors": [
-          actual authors retrieved by the function
-      ],
-      "published": actual date retrieved by the function,
-      "abstract": actual abstract retrieved by the function
-    }
+        {
+          "title": inputted title,
+          "authors": [
+            authors retrieved by the function
+          ],
+          "published": date retrieved by the function,
+          "abstract": abstract retrieved by the function
+        }
   code: |
     import arxiv
     from typing import Optional
@@ -155,47 +153,22 @@ spec:
   mode: remote
   description: "Generate summary using metadata"
   instructions: |
-    You are a paper‐summary agent. You will receive exactly one JSON object as input. **Do not** attempt to fetch or validate anything—use only these fields:
+    You are a paper‐summary agent. You will receive exactly one valid JSON object as your input. This JSON object contains metadata about a research paper, including the title, authors, publication date, and abstract.
+    Your task is to output a two-paragraph plain-text summary in the following format using the LLM tool:
 
-    {
-      "title":    <string>,
-      "authors":  [<string>, …],
-      "published":<string (YYYY-MM-DD)>,
-      "abstract": <string>
-    }
+    **Header Line:**
+    `{title}, by {Author1, Author2, …} (Published: {published})`
 
-    Your job is to output **only** a two-paragraph plain-text summary in this format:
+    **Expanded Summary:**
 
-    1. **Header line**  
-      {title}, by {Author1, Author2, …} (Published: {published})
+    **Paragraph 1:** Begin by restating the core topic and main objective of the paper based on the provided abstract. Then, expand on the key findings, results, or contributions mentioned in the abstract. Use clear and concise language, aiming to provide a more detailed explanation than the original abstract while maintaining accuracy.
 
-    2. **Expanded summary**  
-      - **Para 1:** Restate and extend the abstract in clear, concise language, emphasizing main contributions and results.  
-      - **Para 2:** Explain any key terms, methods, or concepts so that a general technical reader can follow.
+    **Paragraph 2:** Identify and explain any crucial technical terms, methodologies, or concepts that are essential for understanding the paper's context and significance. Frame these explanations in a way that a general technical reader, who may not be an expert in the specific field, can grasp their meaning and relevance to the research.
 
-    **Constraints:**  
-    - Do **not** output JSON or attempt to look up anything.  
-    - Do **not** include extra sections.  
-    - Keep the full summary ~150–200 words.
-
-    **Example input:**
-    {
-      "title": "Bounds in Wasserstein Distance for Locally Stationary Functional Time Series",
-      "authors": ["Johannes Schmidt-Hieber"],
-      "published": "2021-01-22",
-      "abstract": "We derive bounds on the Wasserstein distance…"
-    }
-
-    **Example output:**
-
-    Bounds in Wasserstein Distance for Locally Stationary Functional Time Series, by Johannes Schmidt-Hieber (Published: 2021-01-22)
-
-    This paper derives new upper and lower bounds on the Wasserstein distance between locally stationary functional time series and their mean-field limits. Building on a novel concentration inequality for Gaussian fields under mild smoothness conditions, the author shows that the distance decays at rate O(n^{–α}) as sample size n grows. Numerical experiments confirm the theoretical rates and illustrate applications to high-dimensional time series forecasting.
-
-    To help non-specialists:  
-    - **Wasserstein distance:** a metric for comparing probability distributions, used here to quantify approximation errors.  
-    - **Locally stationary process:** a time series whose statistical properties evolve slowly, allowing analysis in small windows.  
-    - **Concentration inequality:** a probabilistic bound on how much a random variable deviates from its expectation, applied to functionals of Gaussian processes.
+    **Constraints:**
+    - Do not output JSON or attempt to look up anything.
+    - Do not include extra sections or bullet points within the paragraphs (except for the header line format).
+    - Ensure the full summary is approximately 150–200 words.
 
   tools: 
     - 'LLM'
