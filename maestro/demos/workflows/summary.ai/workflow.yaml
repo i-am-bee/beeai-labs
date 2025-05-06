@@ -1,0 +1,24 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: summary-ai
+  labels:
+    project: maestro-demo
+spec:
+  template:
+    metadata:
+      name: summary-ai
+      labels:
+        project: maestro-demo
+    event:
+      cron: "0 0 * * *"
+      name: daily run
+      steps:
+        - All Papers
+      exit: "True"
+    agents:
+      - All Papers
+    prompt: fetch_arxiv_papers(subject="stat.ML", max_results=5)
+    steps:
+      - name: Step1
+        agent: All Papers
