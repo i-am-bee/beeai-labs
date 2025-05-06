@@ -15,10 +15,22 @@ spec:
       name: daily run
       steps:
         - All Papers
+        - get metadata
+        - generate summary
+        - slack
       exit: "True"
     agents:
       - All Papers
-    prompt: fetch_arxiv_papers(subject="stat.ML", max_results=5)
+      - get metadata
+      - generate summary
+      - slack
+    prompt: fetch_arxiv_papers(subject="stat.ML", max_results=1)
     steps:
       - name: Step1
         agent: All Papers
+      - name: Step2
+        agent: get metadata
+      - name: Step3
+        agent: generate summary
+      - name: Step4
+        agent: slack
