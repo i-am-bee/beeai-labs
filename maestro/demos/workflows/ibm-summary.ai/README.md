@@ -1,6 +1,6 @@
-# Summary.ai Example
+# IBM Summary.ai Example
 
-A multi-agent workflow using Maestro: Allows user to retrieve the latests ArXiV papers published by IBM specified by category (arxiv tags), and release time period from today. Then, generates a summary from metadata and abstract that is retrieved.
+A multi-agent workflow using Maestro: Allows user to retrieve the latests ArXiV papers published by IBM specified by category (arxiv tags), and release time period from today. Then, generates a summary from metadata and abstract that is retrieved to send to slack.
 
 ## Mermaid Diagram
 
@@ -52,7 +52,7 @@ If you already created the agents and enabled necessary tools: `maestro run ./de
 
 Go into the UI and make 2 tools for this demo:
 
-##### Name: ibm-arXiv
+#### Name: ibm-arXiv
 
 Code:
 
@@ -106,7 +106,7 @@ def find_ibm_papers(category: str, since_days: int) -> List[Dict]:
     return papers
 ```
 
-##### Name: get_metadata
+#### Name: get_metadata
 
 Code:
 
