@@ -119,6 +119,8 @@ maestro deploy agent.yaml workflow.yaml --dry-run # to use mock agents for quick
 
 This will start the workflow in a [`streamlit`]() server and you can access it from your browser: http://localhost:8501/?embed=true
 
+After running, use the `maestro clean` command to shut down the instance.
+
 ## Mermaid Support
 
 Maestro supports the creation of visual diagrams of how the workflow will execute. In a given demo,  one can run the following command to visualize:
