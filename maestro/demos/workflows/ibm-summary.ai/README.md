@@ -42,11 +42,11 @@ end
 
 Assuming you are in maestro top level:
 
-* Creating the agents(with the ability to manually add tools): `maestro create ./demos/workflows/summary.ai/agents.yaml`
+* Creating the agents(with the ability to manually add tools): `maestro create ./demos/workflows/ibm-summary.ai/agents.yaml`
 
 To run the workflow:
 
-If you already created the agents and enabled necessary tools: `maestro run ./demos/workflows/summary.ai/workflow.yaml`
+If you already created the agents and enabled necessary tools: `maestro run ./demos/workflows/ibm-summary.ai/workflow.yaml`
 
 ### NOTE: Custom Tools Required for this Demo
 

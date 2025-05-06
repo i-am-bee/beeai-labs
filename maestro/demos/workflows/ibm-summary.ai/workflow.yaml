@@ -1,13 +1,13 @@
 apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: summary-ai
+  name: ibm-summary-ai
   labels:
     project: maestro-demo
 spec:
   template:
     metadata:
-      name: summary-ai
+      name: ibm-summary-ai
       labels:
         project: maestro-demo
     event:
