@@ -21,7 +21,7 @@ jobs:
           which kind
       - name: Create Kind cluster
         run: |
-          kind create cluster --config maestro/tests/integration/deploys/kind-config.yaml 
+          kind create cluster --config tests/integration/deploys/kind-config.yaml 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
