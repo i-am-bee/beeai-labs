@@ -7,14 +7,16 @@ A multi-agent workflow using Maestro: Allows user to retrieve the latests ArXiV 
 <!-- MERMAID_START -->
 ```mermaid
 sequenceDiagram
+participant Query Interpreter
 participant All Papers
 participant get metadata
 participant generate summary
 participant slack
-All Papers->>get metadata: Step1
-get metadata->>generate summary: Step2
-generate summary->>slack: Step3
-slack->>slack: Step4
+Query Interpreter->>All Papers: Step1
+All Papers->>get metadata: Step2
+get metadata->>generate summary: Step3
+generate summary->>slack: Step4
+slack->>slack: Step5
 alt cron "0 0 * * *"
   cron->>None: All Papers
   cron->>None: get metadata
