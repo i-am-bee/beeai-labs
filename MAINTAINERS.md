@@ -16,6 +16,5 @@ Maintainers are listed in alphabetical order by last name.
 | George Liu | [george-lhj](https://github.com/george-lhj) |
 | Dr. Michael Maximilien | [maximilien](https://github.com/maximilien) |
 | Paul Schweigert | [psschwei](https://github.com/psschwei) |
-| Jenna Winkler | [jenna-winkler](https://github.com/jenna-winkler) |
 
 For more details on the process of becoming a maintainer, see the [Governance](https://github.com/i-am-bee/community/blob/main/GOVERNANCE.md) document.
