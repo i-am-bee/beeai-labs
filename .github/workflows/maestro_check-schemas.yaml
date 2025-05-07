@@ -29,7 +29,6 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
-          cd maestro
           poetry install
           poetry run pip install crewai
       - name: Filter changed files for demos
@@ -44,12 +43,10 @@ jobs:
         if: steps.filter.outputs.demos == 'true'
         run: |
           # Go to project root (from maestro folder) and run the update script
-          cd maestro
           cd ..
           chmod +x tools/update_all_readme.sh
           ./tools/update_all_readme.sh
 
       - name: Check schema
         run: |
-          cd maestro
           poetry run tools/check-schemas.sh

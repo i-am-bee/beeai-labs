@@ -26,21 +26,17 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
-          cd maestro
           poetry install
           poetry run pip install crewai
       - name: Verify Maestro Installation
         run: |
-          cd maestro
           poetry run maestro --help
       - name: Install Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
       - name: Run and tests all demo workflows
         run: |
-          cd maestro
           bash ./tools/run-demos.sh
       - name: Run meta_agent workflows
         run: |
-          cd maestro
           bash ./tools/run-meta-agent.sh

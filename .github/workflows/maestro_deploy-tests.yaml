@@ -34,12 +34,10 @@ jobs:
           poetry self add poetry-plugin-shell
       - name: Install dependencies
         run: |
-          cd maestro
           poetry install
           poetry run pip install crewai
       - name: Run deploy integration tests/
         run: |
-          cd maestro
           export IMAGE_PUSH_CMD='kind load docker-image docker.io/library/maestro:latest'
           export IMAGE_TAG_CMD='docker tag localhost/maestro:latest docker.io/library/maestro:latest'
           export DEPLOY_DOCKER_TEST=1
