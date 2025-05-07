@@ -20,17 +20,20 @@ spec:
         - slack
       exit: "True"
     agents:
+      - Query Interpreter
       - All Papers
       - get metadata
       - generate summary
       - slack
-    prompt: fetch_arxiv_papers(subject="stat.ML", max_results=1)
+    prompt: I want to search the quant-ph category and return the 1st most recent paper using the given fetch papers tool. Please provide the correct function call.
     steps:
       - name: Step1
-        agent: All Papers
+        agent: Query Interpreter
       - name: Step2
-        agent: get metadata
+        agent: All Papers
       - name: Step3
-        agent: generate summary
+        agent: get metadata
       - name: Step4
+        agent: generate summary
+      - name: Step5
         agent: slack
