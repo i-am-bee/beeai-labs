@@ -43,8 +43,8 @@ jobs:
         if: steps.filter.outputs.demos == 'true'
         run: |
           # Go to project root (from maestro folder) and run the update script
-          chmod +x tools/update_all_readme.sh
-          ./tools/update_all_readme.sh
+          chmod +x tools/update_readmes.sh
+          ./tools/update_readmes.sh
 
       - name: Check schema
         run: |
