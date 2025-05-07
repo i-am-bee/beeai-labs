@@ -3,11 +3,11 @@ on:
   push:
     branches: [ 'main' ]
     paths:
-    - 'maestro/**'
+    - '**'
   pull_request:
     branches: [ 'main' ]
     paths:
-    - 'maestro/**'
+    - '**'
     - '.github/workflows/**'
 jobs:
   demo-tests:

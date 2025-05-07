@@ -3,13 +3,13 @@ on:
   push:
     branches: [ 'main' ]
     paths:
-      - 'maestro/**'
+      - '**'
       - 'demos/**'
       - 'tools/update_all_readme.sh'
   pull_request:
     branches: [ 'main' ]
     paths:
-      - 'maestro/**'
+      - '**'
       - 'demos/**'
       - 'tools/update_all_readme.sh'
 jobs:
