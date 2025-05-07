@@ -1,6 +1,40 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
+  name: Query Interpreter
+  labels:
+    app: mas-example 
+spec:
+  model: llama3.1
+  framework: beeai
+  mode: remote
+  description: Parses user input, which may be an English description or function call
+  instructions: |
+    You will receive a single input, either:
+        1. A natural language request to search arXiv, e.g.:
+          “I want to search the stat.ML category and return the n most recent papers”
+        2. A direct function call, e.g.:
+          fetch_arxiv_papers(subject="quant-ph", max_results=n)
+        
+    Your job is to output exactly one line: the corresponding
+    `fetch_arxiv_papers(subject="CATEGORY", max_results=COUNT)` call.
+    **Do not** output any other text, explanation, or formatting.
+        
+    **Examples:**
+        ```
+        Input: I want to search the stat.ML category and return the 1st most recent paper
+        Output: fetch_arxiv_papers(subject="stat.ML", max_results=1)
+
+        Input: fetch_arxiv_papers(subject="quant-ph", max_results=5)
+        Output: fetch_arxiv_papers(subject="quant-ph", max_results=5)
+        ```
+  tools:
+    - 'LLM'
+    
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
   name: All Papers
   labels:
     app: mas-example 

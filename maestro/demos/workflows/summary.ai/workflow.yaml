@@ -14,12 +14,14 @@ spec:
       cron: "0 0 * * *"
       name: daily run
       steps:
+        - Query Interpreter
         - All Papers
         - get metadata
         - generate summary
         - slack
       exit: "True"
     agents:
+      - Query Interpreter
       - All Papers
       - get metadata
       - generate summary
@@ -27,10 +29,12 @@ spec:
     prompt: fetch_arxiv_papers(subject="stat.ML", max_results=1)
     steps:
       - name: Step1
-        agent: All Papers
+        agent: Query Interpreter
       - name: Step2
-        agent: get metadata
+        agent: All Papers
       - name: Step3
-        agent: generate summary
+        agent: get metadata
       - name: Step4
+        agent: generate summary
+      - name: Step5
         agent: slack
