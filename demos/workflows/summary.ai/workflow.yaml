@@ -16,10 +16,10 @@ spec:
         - slack
       exit: "True"
     agents:
-      - Query Interpreter
-      - All Papers
-      - get metadata
-      - generate summary
+      - query-interpreter
+      - all-papers
+      - get-metadata
+      - generate-summary
       - slack
     prompt: I want to search the quant-ph category and return the 1st most recent paper using the given fetch papers tool. Please provide the correct function call.
     steps:
