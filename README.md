@@ -13,7 +13,7 @@ In this initial version you are going to find some examples showing how to run a
 * Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
   * [Helpful tips](./demos/README.md) on setting up the stack
 
-* Install dependencies: Use the `setup_maestro.sh` script in order to install required libraries using poetry. Run `source setup_maestro.sh` in order to install the dependencies and activate a virtual environment.
+* Install dependencies: Use the `setup_maestro.sh` script in order to install required libraries using poetry. Run `source ./tools/setup_maestro.sh` in order to install the dependencies and activate a virtual environment. 
 
 * Configure environmental variables: `cp example.env .env`
 
