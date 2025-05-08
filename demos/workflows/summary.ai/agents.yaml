@@ -219,7 +219,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Query Interpreter
+  name: query-interpreter
   labels:
     app: mas-example 
 spec:

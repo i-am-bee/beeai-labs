@@ -10,9 +10,9 @@ spec:
       cron: "0 0 * * *"
       name: daily run
       steps:
-        - Paper Finder
-        - get metadata
-        - generate summary
+        - paper-finder
+        - get-metadata
+        - generate-summary
         - slack
       exit: "True"
     agents:
@@ -24,12 +24,12 @@ spec:
     prompt: I want to search the quant-ph category and return the 1st most recent paper using the given fetch papers tool. Please provide the correct function call.
     steps:
       - name: Step1
-        agent: Query Interpreter
+        agent: query-interpreter
       - name: Step2
-        agent: All Papers
+        agent: all-papers
       - name: Step3
-        agent: get metadata
+        agent: get-metadata
       - name: Step4
-        agent: generate summary
+        agent: generate-summary
       - name: Step5
         agent: slack
