@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Format Workflow Agent V2
+  name: format-workflow-agent-v2
   labels:
     app: meta-agent
 spec:
@@ -68,7 +68,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: NLP Agent Planner V2
+  name: nlp-agent-planner-v2
   labels:
     app: meta-agent
 spec:
@@ -117,7 +117,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: Workflow V2
+  name: workflow-v2
   labels:
     app: meta-agent
 spec:
@@ -201,7 +201,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: markdown formatter
+  name: markdown-formatter
   labels:
     app: meta-agent
 spec:
@@ -218,7 +218,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: tagger agent
+  name: tagger-agent
   labels:
     app: meta-agent
 spec:
