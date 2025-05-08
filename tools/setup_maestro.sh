@@ -15,4 +15,4 @@ poetry install
 VENV_PATH=$(poetry env info --path)
 source "$VENV_PATH/bin/activate"
 
-pip install crewai litellm==1.67.0.post1
+pip install crewai litellm==1.67.0.post1 # bypass crewai dependency issue
