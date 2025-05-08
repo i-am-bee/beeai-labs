@@ -1,7 +1,8 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: openai_test_ollama
+  name: openai-test-
+  ollama
   labels:
     app: testapp_ollama
 spec:

@@ -1,17 +1,14 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
-  name: openai_test
+  name: openai-test
   labels:
     app: testapp
 spec:
   template:
-    metadata:
-      labels:
-        app: testapp
     agents:
-      - openai_test
+      - openai-test
     prompt: Welcome OpenAI to the AI Agent OSS party
     steps:
       - name: begin
-        agent: openai_test
+        agent: openai-test

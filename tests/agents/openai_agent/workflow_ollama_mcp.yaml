@@ -1,17 +1,14 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
-  name: openai_test_mcp_ollama
+  name: openai-test-mcp-ollama
   labels:
     app: testapp_mcp_ollama
 spec:
   template:
-    metadata:
-      labels:
-        app: testapp_mcp_ollama
     agents:
-      - openai_test_ollama
+      - openai-test-ollama
     prompt: What tools do you have access to? Include all kinds of different types of tools
     steps:
       - name: begin
-        agent: openai_test_mcp_ollama
+        agent: openai-test-mcp-ollama

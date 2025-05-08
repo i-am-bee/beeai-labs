@@ -1,6 +1,6 @@
 # Summary.ai Example
 
-A multi-agent workflow using Maestro: Allows user to retrieve the latests ArXiV papers by category (arxiv tags). Then, generates a summary from metadata and abstract that is retrieved and gets sent to slackbot.
+A multi-agent workflow using Maestro: Allows user to retrieve the latests ArXiV papers published by IBM specified by category (arxiv tags), and release time period from today. Then, generates a summary from metadata and abstract that is retrieved.
 
 ## Mermaid Diagram
 
@@ -18,7 +18,7 @@ get metadata->>generate summary: Step3
 generate summary->>slack: Step4
 slack->>slack: Step5
 alt cron "0 0 * * *"
-  cron->>None: All Papers
+  cron->>None: Paper Finder
   cron->>None: get metadata
   cron->>None: generate summary
   cron->>None: slack
@@ -54,51 +54,61 @@ If you already created the agents and enabled necessary tools: `maestro run ./de
 
 Go into the UI and make 2 tools for this demo:
 
-#### Name: Fetch Papers
+##### Name: ibm-arXiv
 
 Code:
 
 ```Python
-import urllib.request
-import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
+import arxiv
+import feedparser
+from datetime import datetime, timedelta, timezone
+from typing import List, Dict
+from urllib.parse import urlencode
 
-def fetch_arxiv_papers(subject: str, max_results: int = 25) -> list[str]:
+def find_ibm_papers(category: str, since_days: int) -> List[Dict]:
     """
-    Fetches titles of papers in the given arXiv subject that were
-    submitted *yesterday* (UTC).
-
-    Args:
-        subject (str): e.g. "cs.AI", "quant-ph", etc.
-        max_results (int): how many recent papers to fetch for filtering.
-
-    Returns:
-        A list of paper titles submitted yesterday.
+    Search ArXiv in `category`, pre-filter by abstract keywords, then
+    post-filter by author affiliation tags—handling URL encoding properly.
     """
-    yesterday = (datetime.utcnow().date() - timedelta(days=1)).isoformat()
-    url = (
-        "http://export.arxiv.org/api/query?"
-        f"search_query=cat:{subject}"
-        f"&sortBy=submittedDate"
-        f"&sortOrder=descending"
-        f"&max_results={max_results}"
-    )
-    with urllib.request.urlopen(url) as resp:
-        xml_data = resp.read()
-    root = ET.fromstring(xml_data)
-    ns = {"atom": "http://www.w3.org/2005/Atom"}
 
-    titles = []
-    for entry in root.findall("atom:entry", ns):
-        pub = entry.find("atom:published", ns).text
-        if pub.startswith(yesterday):
-            title = entry.find("atom:title", ns).text.strip().replace("\n", " ")
-            titles.append(title)
+    ibm_keywords = ["ibm", "watson", "powerai", "ibm research"]
 
-    return titles
+    cutoff = datetime.now(timezone.utc) - timedelta(days=since_days)
+    abs_filter = " OR ".join(f'abs:"{kw}"' for kw in ibm_keywords)
+    query = f"cat:{category} AND ({abs_filter})"
+    params = {
+        "search_query": query,
+        "start": 0,
+        "max_results": 100,
+        "sortBy": "submittedDate",
+        "sortOrder": "descending",
+    }
+    base_url = "http://export.arxiv.org/api/query?"
+    url = base_url + urlencode(params)
+
+    feed = feedparser.parse(url)
+    papers = []
+
+    for entry in feed.entries:
+        published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+        if published < cutoff:
+            continue
+
+        abstract = entry.summary.lower()
+        keyword_match = any(kw.lower() in abstract for kw in ibm_keywords)
+
+        affs = entry.get("arxiv_affiliation", [])
+        affiliation_match = any("ibm" in aff.lower() for aff in affs)
+
+        if not (keyword_match or affiliation_match):
+            continue
+
+        papers.append(entry.title)
+
+    return papers
 ```
 
-#### Name: get_metadata
+##### Name: get_metadata
 
 Code:
 

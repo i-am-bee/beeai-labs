@@ -1,4 +1,4 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
   name: summary-ai
@@ -6,15 +6,11 @@ metadata:
     project: maestro-demo
 spec:
   template:
-    metadata:
-      name: summary-ai
-      labels:
-        project: maestro-demo
     event:
       cron: "0 0 * * *"
       name: daily run
       steps:
-        - All Papers
+        - Paper Finder
         - get metadata
         - generate summary
         - slack

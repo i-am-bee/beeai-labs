@@ -1,16 +1,11 @@
-apiVersion: maestro/v1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
-  name: simple cron workflow
+  name: simple-cron-workflow
   labels:
     app: cron-example    
 spec:
   template:
-    metadata:
-      name: cron-example
-      labels:
-        app: cron
-        use-case: test
     event:
        cron: "10 14 * * 1"
        name: cron event

@@ -1,4 +1,4 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
   name: test1
@@ -17,7 +17,7 @@ spec:
 
 ---
 
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
   name: test2
@@ -35,7 +35,7 @@ spec:
 
 ---
 
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
   name: test3
@@ -53,7 +53,7 @@ spec:
 
 ---
 
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
   name: test4
@@ -71,7 +71,7 @@ spec:
 
 ---
 
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
   name: test5

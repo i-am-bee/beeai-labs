@@ -1,18 +1,11 @@
-apiVersion: maestro/v1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
-  name: loop workflow
+  name: loop-workflow
   labels:
     app: example
 spec:
-  strategy:
-    type: sequence
   template:
-    metadata:
-      name: loop-workflow
-      labels:
-        app: example
-        use-case: test
     agents:
         - generate1-10
         - countdown

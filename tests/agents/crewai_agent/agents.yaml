@@ -1,7 +1,7 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: DummyCrew
+  name: dummycrew
   labels:
     app: crewaitest
     module: tests.agents.crewai_agent.crew_dummy

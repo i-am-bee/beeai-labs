@@ -1,7 +1,7 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: Temperature Agent
+  name: temperature-agent
   labels:
     app: mas-example
 spec:
@@ -14,10 +14,10 @@ spec:
     - weather
   instructions: An input is given of a location.  Use the OpenMeteo tool to get today's current forecast for the location. Return results in the format - location, temperature in Fahrenheit, and date.
 ---
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: hot-or-not Agent
+  name: hot-or-not-agent
   labels:
     app: mas-example
 spec:
