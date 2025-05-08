@@ -1,4 +1,4 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
   name: maestro-deployment
@@ -6,15 +6,12 @@ metadata:
     app: mas-example
 spec:
   template:
-    metadata:
-      labels:
-        app: mas-example
     agents:
-      - Temperature Agent
-      - hot-or-not Agent
+      - temperature-agent
+      - hot-or-not-agent
     prompt: New York City
     steps:
       - name: get_temperature
-        agent: Temperature Agent
+        agent: temperature-agent
       - name: compare_temperature
-        agent: hot-or-not Agent
+        agent: hot-or-not-agent

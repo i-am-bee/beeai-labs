@@ -126,7 +126,7 @@
                     "type": "object",
                     "description": "looping construct",
                     "properties": {
-                      "step": {
+                      "agent": {
                         "type": "string"
                       },
                       "until": {

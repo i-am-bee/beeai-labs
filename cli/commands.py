@@ -143,6 +143,12 @@ class ValidateCmd(Command):
                 return ValidateCmd.TOOL_SCHEMA_FILE
             elif kind == 'Workflow':
                 return ValidateCmd.WORKFLOW_SCHEMA_FILE
+            elif kind == 'WorkflowRun':
+                Console.ok("WorkflowRun is not supported")
+                return None
+            elif kind == 'CustomResourceDefinition':
+                Console.ok("CustomResourceDefinition is not supported")
+                return None
             else:
                 raise f"Unknown kind: {kind}"
         except Exception as e:
@@ -187,6 +193,8 @@ class ValidateCmd(Command):
             discovered_schema_file = ''
             try:
                 discovered_schema_file = self.__discover_schema_file(self.YAML_FILE())
+                if not discovered_schema_file:
+                    return 0
             except Exception as e:
                 Console.error(f"Invalid YAML file: {self.YAML_FILE()}: {str(e)}")
                 return 1

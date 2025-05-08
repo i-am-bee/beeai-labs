@@ -1,7 +1,7 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: Create Agent YAML
+  name: create-agent-yaml
   labels:
     app: meta-agent
 spec:
@@ -26,7 +26,7 @@ spec:
                 
                 An example output with a format you can follow is something like this:
                 ```
-                apiVersion: maestro/v1alpha1
+                apiVersion: maestro.i-am-bee.com/v1alpha1
                 kind: Agent
                 metadata:
                   name: current-affairs
@@ -40,7 +40,7 @@ spec:
                     - weather
                   instructions: An input is given of a location.  Use the OpenMeteo tool to get today's current forecast for the location. Return results in the format - location, temperature in Fahrenheit, and date.
                 ---
-                apiVersion: maestro/v1alpha1
+                apiVersion: maestro.i-am-bee.com/v1alpha1
                 kind: Agent
                 metadata:
                   name: hot-or-not
@@ -77,10 +77,10 @@ spec:
                 return {"schema": {}} # Return an empty schema in case of error
 
 ---
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: Format Input Agent
+  name: format-input-agent
   labels:
     app: meta-agent
 spec:
@@ -133,10 +133,10 @@ spec:
 
 
 ---
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: NLP Agent Planner
+  name: nlp-agent-planner
   labels:
     app: meta-agent
 spec:

@@ -1,4 +1,4 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Workflow
 metadata:
   name: beetest-deployment
@@ -6,9 +6,6 @@ metadata:
     app: testapp
 spec:
   template:
-    metadata:
-      labels:
-        app: testapp
     agents:
       - beetest
     prompt: Welcome

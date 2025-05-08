@@ -1,7 +1,7 @@
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: Create Workflow YAML
+  name: create-workflow-yaml
   labels:
     app: meta-agent
 spec:
@@ -27,7 +27,7 @@ spec:
                       (Optional): Define any necessary `condition` or `parallel` execution logic.
 
                 The output should be a **fully-formed workflow structure in YAML format**, and here is a final version of a workflow for reference:
-                apiVersion: maestro/v1alpha1
+                apiVersion: maestro.i-am-bee.com/v1alpha1
                 kind: Workflow
                 metadata:
                   name: maestro-deployment
@@ -68,10 +68,10 @@ spec:
                 return {"schema": {}}  # Return an empty schema if fetching fails
 
 ---
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: Format Workflow Agent
+  name: format-workflow-agent
   labels:
     app: meta-agent
 spec:
@@ -133,10 +133,10 @@ spec:
                     - The output **must match the given structure exactly**."
 
 ---
-apiVersion: maestro/v1alpha1
+apiVersion: maestro.i-am-bee.com/v1alpha1
 kind: Agent
 metadata:
-  name: NLP Agent Planner
+  name: nlp-agent-planner
   labels:
     app: meta-agent
 spec:
