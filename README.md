@@ -7,6 +7,16 @@ A multi-agent platform with the vision to facilitate deployment and running of A
 
 In this initial version you are going to find some examples showing how to run a group of agents, that you can build using the current and more mature TypeScript [Bee AI Agent framework](https://github.com/i-am-bee/bee-agent-framework), or experiment with the new [Python version](../framework/bee-py).
 
+## Local environment Setup
+
+* Create a Python3.11 virtual environment
+* Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
+  * [Helpful tips](./demos/README.md) on setting up the stack
+
+* Install dependencies: Use the `setup_maestro.sh` script in order to install required libraries using poetry. Run `source setup_maestro.sh` in order to install the dependencies and activate a virtual environment.
+
+* Configure environmental variables: `cp example.env .env`
+
 ## Usage
 
 There are two steps to running a workflow: defining some agents and creating a workflow to run those agents.
@@ -130,18 +140,6 @@ maestro mermaid workflow.yaml
 ```
 
 Additionally, to auto update all maestro readme demos with mermaid (after changes are made in the workflow file), you can use `./tools/update_readme.sh`
-
-## Local environment
-
-* Create a Python3.11 virtual environment
-* Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
-  * [Helpful tips](./demos/README.md) on setting up the stack
-
-* Install dependencies: `poetry shell` (creates interactive shell/venv), `poetry lock` (resolves and pins versions), `poetry install` (read and install the lockfile)
-
-  * If using **crewAI**: `pip install crewai litellm==1.67.0.post1` to bypass a local error.
-
-* Configure environmental variables: `cp example.env .env`
 
 ### Run workflow in streamlit (default deploy)
 
