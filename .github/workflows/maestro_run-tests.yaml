@@ -2,31 +2,27 @@ name: Maestro Tests
 on:
   push:
     branches: [ 'main' ]
-    paths:
-    - '**'
   pull_request:
     branches: [ 'main' ]
-    paths:
-    - '**'
 jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Set up Python & Poetry
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Setup poetry
-        run: |
+      - run: |
           pipx ensurepath
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           pipx install poetry
           poetry self add poetry-plugin-shell
-      - name: Install dependencies
+      - name: Bootstrap Maestro (deps + venv)
+        shell: bash
         run: |
-          poetry install
-          poetry run pip install crewai
+          chmod +x ./tools/setup_maestro.sh
+          source ./tools/setup_maestro.sh
       - name: Run unit tests
         run: |
           poetry run pytest --ignore=tests/integration/deploys
