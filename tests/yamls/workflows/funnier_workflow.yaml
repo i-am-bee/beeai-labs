@@ -1,15 +1,19 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: funnier-workflow
+  name: funnier workflow
   labels:
     app: mas-example
 spec:
   template:
+    metadata:
+      labels:
+        app: mas-example
     agents:
       - expert
       - colleague
     prompt: Tell me a joke about IBM
+    start: expert
     steps:
       - name: expert
         agent: expert

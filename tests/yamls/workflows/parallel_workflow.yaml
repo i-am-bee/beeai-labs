@@ -1,11 +1,16 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1
 kind: Workflow
 metadata:
-  name: parallel-workflow
+  name: parallel workflow
   labels:
     app: input
 spec:
   template:
+    metadata:
+      name: input_workflow
+      labels:
+        app: example
+        use-case: test
     agents:
         - test1
         - test2

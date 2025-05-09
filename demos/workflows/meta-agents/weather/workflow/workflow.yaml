@@ -1,19 +1,23 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: meta-agent-workflow
+  name: meta_agent_workflow
   labels:
     project: maestro-demo
 spec:
   template:
+    metadata:
+      name: meta_agent_workflow
+      labels:
+        project: maestro-demo
     agents:
-      - nlp-agent-planner
-      - format-workflow-agent
-      - create-workflow-yaml
+      - NLP Agent Planner
+      - Format Workflow Agent
+      - Create Workflow YAML
     prompt: I want to compare the current weather with the historical averages. To do this, I will need 2 agents, one to retrieve the weather and one to compare to the historical average.
     steps:
       - name: English Instructions to Prompt
-        agent: nlp-agent-planner
+        agent: NLP Agent Planner
       - name: input
         input:
           prompt: |
@@ -22,6 +26,6 @@ spec:
                   agent2: temperature_comparator – Compares the retrieved temperature with historical averages using OpenMeteo tool.  
           template: "{CONNECTOR}"
       - name: Specify Agents for Workflow Generation
-        agent: format-workflow-agent
+        agent: Format Workflow Agent
       - name: Creating Workflow YAML file
-        agent: create-workflow-yaml
+        agent: Create Workflow YAML

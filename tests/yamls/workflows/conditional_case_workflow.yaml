@@ -1,16 +1,22 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1
 kind: Workflow
 metadata:
-  name: conditional-case-workflow
+  name: conditional case workflow
   labels:
     app: example2
 spec:
   template:
+    metadata:
+      name: maestro-deployment
+      labels:
+        app: example
+        use-case: test
     agents:
       - agent1
       - agent2
       - agent3
     prompt: This is a prompt
+    start: step1
     exception:
         name: step3
         agent: agent3

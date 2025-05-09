@@ -1,7 +1,7 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: create-agent-yaml-v2
+  name: Create Agent YAML V2
   labels:
     app: meta-agent
 spec:
@@ -31,7 +31,7 @@ spec:
 
       Use the following format as an example:
       """
-      apiVersion: maestro.i-am-bee.com/v1alpha1
+      apiVersion: maestro/v1alpha1
       kind: Agent
       metadata:
         name: current-temperature
@@ -78,10 +78,10 @@ spec:
                 return {"schema": {}} # Return an empty schema in case of error
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: format-input-agent-v2
+  name: Format Input Agent V2
   labels:
     app: meta-agent
 spec:
@@ -124,10 +124,10 @@ spec:
     - 'LLM'
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: nlp-agent-alanner-v2
+  name: NLP Agent Planner V2
   labels:
     app: meta-agent
 spec:
@@ -173,10 +173,10 @@ spec:
     - 'LLM'
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: workflow-v2
+  name: Workflow V2
   labels:
     app: meta-agent
 spec:
@@ -189,7 +189,7 @@ spec:
 
     Requirements:
     The output must include:
-    apiVersion: maestro.i-am-bee.com/v1alpha1
+    apiVersion: maestro/v1alpha1
     kind: Workflow
     metadata with keys such as name and labels (e.g., project or app).
     Spec Template:
@@ -219,7 +219,7 @@ spec:
     The final output should be a valid structured workflow in YAML format, please make it easily readable in a code block."""
     Example Output for the Weather Workflow:
     """
-    apiVersion: maestro.i-am-bee.com/v1alpha1
+    apiVersion: maestro/v1alpha1
     kind: Workflow
     metadata:
       name: maestro-deployment
@@ -257,10 +257,10 @@ spec:
               return {"schema": {}}  # Return an empty schema if fetching fails
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: format-workflow-agent-v2
+  name: Format Workflow Agent V2
   labels:
     app: meta-agent
 spec:
@@ -324,10 +324,10 @@ spec:
     - 'LLM'
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: markdown-formatter
+  name: markdown formatter
   labels:
     app: meta-agent
 spec:
@@ -341,10 +341,10 @@ spec:
     - 'LLM'
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: tagger-agent
+  name: tagger agent
   labels:
     app: meta-agent
 spec:
@@ -361,7 +361,7 @@ spec:
     </file>
     Example Input:
 
-    apiVersion: maestro.i-am-bee.com/v1alpha1
+    apiVersion: maestro/v1alpha1
     kind: Workflow
     metadata:
       name: maestro-deployment
@@ -384,7 +384,7 @@ spec:
     Example Output:
 
     <file start>
-    apiVersion: maestro.i-am-bee.com/v1alpha1
+    apiVersion: maestro/v1alpha1
     kind: Workflow
     metadata:
       name: maestro-deployment

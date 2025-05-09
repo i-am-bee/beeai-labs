@@ -1,26 +1,30 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
-  name: meta-agent-workflow
+  name: meta_agent_workflow
   labels:
     project: maestro-demo
 spec:
   template:
+    metadata:
+      name: meta_agent_workflow
+      labels:
+        project: maestro-demo
     agents:
-      - nlp-agent-planner-v2
-      - format-workflow-agent-v2
-      - workflow-v2
-      - markdown-formatter
-      - tagger-agent
+      - NLP Agent Planner V2
+      - Format Workflow Agent V2
+      - Workflow V2
+      - markdown formatter
+      - tagger agent
     prompt: I want to compare the current weather with the historical averages. To do this, I probably will need 2 agents, one to retrieve the weather and one to compare to the historical average.
     steps:
       - name: English Instructions to Prompt
-        agent: nlp-agent-planner-v2
+        agent: NLP Agent Planner V2
       - name: Specify Agents for Workflow Generation
-        agent: format-workflow-agent-v2
+        agent: Format Workflow Agent V2
       - name: Creating Workflow YAML file
-        agent: workflow-v2
+        agent: Workflow V2
       - name: Readable output
-        agent: markdown-formatter
+        agent: markdown formatter
       - name: add tags
-        agent: tagger-agent
+        agent: tagger agent
