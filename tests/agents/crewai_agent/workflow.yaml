@@ -1,4 +1,4 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Workflow
 metadata:
   name: maestro-deployment
@@ -6,9 +6,12 @@ metadata:
     app: crewaitest
 spec:
   template:
+    metadata:
+      labels:
+        app: crewaitest
     agents:
-      - dummycrew
+      - DummyCrew
     prompt: Show me some activities to do in London in the cold weather
     steps:
       - name: begin
-        agent: dummycrew
+        agent: DummyCrew

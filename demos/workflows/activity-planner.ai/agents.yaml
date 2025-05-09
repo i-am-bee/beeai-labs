@@ -1,4 +1,4 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: current-temperature
@@ -16,7 +16,7 @@ spec:
     Example output - New York City, 44.9°F, March 26, 2025
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: hot-or-not
@@ -35,7 +35,7 @@ spec:
     Example output - The location is New York City, and the historical temperature was 56.3°F which is hotter than your input of 45.3°F.
 
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: cold-activities
@@ -54,7 +54,7 @@ spec:
     Example Input - 'New York is colder'
     Example Output - 'Go to a bar, go to the gym, go to the muesuem, visit Columbia, go to a club'
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: hot-activities

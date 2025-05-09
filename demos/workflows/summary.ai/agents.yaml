@@ -1,7 +1,7 @@
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: all-papers
+  name: All Papers
   labels:
     app: mas-example 
 spec:
@@ -62,7 +62,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: get-metadata
+  name: get metadata
   labels:
     app: mas-example 
 spec:
@@ -116,7 +116,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: generate-summary
+  name: generate summary
   labels:
     app: mas-example 
 spec:
@@ -164,7 +164,7 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: query-interpreter
+  name: Query Interpreter
   labels:
     app: mas-example 
 spec:

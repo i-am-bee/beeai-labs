@@ -1,4 +1,4 @@
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: colleague
@@ -12,7 +12,7 @@ spec:
   description: this is a simple agent
   
 ---
-apiVersion: maestro.i-am-bee.com/v1alpha1
+apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
   name: expert
