@@ -11,9 +11,9 @@ declare -i fail=0
 WORKFLOW_FILES=$(find . -name '*workflow*.yaml')
 AGENT_FILES=$(find . -name '*agents*.yaml')
 EXCLUDE_FILES=("./tests/yamls/workflowrun/simple_workflow_run.yaml"
-	       "./operator/config/crd/bases/maestro.i-am-bee.com_workflowruns.yaml"
-	       "./operator/config/crd/bases/maestro.i-am-bee.com_workflows.yaml"
-	       "./operator/config/crd/bases/maestro.i-am-bee.com_agents.yaml")
+	       "./operator/config/crd/bases/maestro.ai4quantum.com_workflowruns.yaml"
+	       "./operator/config/crd/bases/maestro.ai4quantum.com_workflows.yaml"
+	       "./operator/config/crd/bases/maestro.ai4quantum.com_agents.yaml")
 
 echo "|Filename|Type|Stats|" >> "$GITHUB_STEP_SUMMARY"
 echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
