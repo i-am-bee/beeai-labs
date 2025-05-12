@@ -29,8 +29,6 @@ jobs:
         run: |
           chmod +x ./tools/setup_maestro.sh
           source ./tools/setup_maestro.sh
-          which maestro
-          maestro --help
       - name: Install Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
