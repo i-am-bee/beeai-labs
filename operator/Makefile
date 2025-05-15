@@ -144,6 +144,9 @@ run: manifests generate fmt vet ## Run a controller from your host.
 docker-build: ## Build docker image with the manager.
 	$(CONTAINER_TOOL) build -t ${IMG} .
 
+engine-docker-build: ## Build docker image with the manager.
+	cd ..;$(CONTAINER_TOOL) build -t maestro-engine:latest -f operator/Dockerfile-engine .; cd -
+
 .PHONY: docker-push
 docker-push: ## Push docker image with the manager.
 	$(CONTAINER_TOOL) push ${IMG}
