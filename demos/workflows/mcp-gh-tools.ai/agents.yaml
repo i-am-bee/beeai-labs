@@ -1,0 +1,32 @@
+# apiVersion: maestro/v1alpha1
+# kind: Agent
+# metadata:
+#   name: search_repos
+#   labels:
+#     app: testapp_mcp_ollama
+# spec:
+#   model: llama3.1
+#   framework: openai
+#   mode: local
+#   description: test
+#   instructions: You are a helpful agent. Respond to the users question, making use of any required tools inside of Github-MCP specifically.
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: getme
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3
+  description: me info
+  instructions: |
+    Tell me about me, the authenticated user on github
+    Keep the output fairly concise
+    Remember these important rules:
+      - You are an agent - please keep going until the user's query is completely resolved, before ending your turn and yielding back to the user. Only terminate your turn when you are sure that the problem is solved.
+      - If you are not sure about file content or codebase structure pertaining to the user's request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer.
+      - You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully.
+      - you should check the name of the tool you are going to use carefully against what is available
+  framework: openai
+  mode: local

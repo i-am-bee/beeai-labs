@@ -1,0 +1,34 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: openai_test_mcp_ollama
+  labels:
+    app: testapp_mcp_ollama
+spec:
+  template:
+    metadata:
+      labels:
+        app: testapp_mcp_ollama
+    agents:
+      - test_mcp_ollama
+      - search_repos
+    prompt: |
+      I want to learn about the authenticated GitHub user (myself).
+      **Plan & reflect:**  
+      1. Think through which MCP tool you need to call to get my user profile.  
+      2. Use up to 3 relevant github MCP tools to get the information.
+      3. After you receive the response, reflect on what fields are most important (login, name, email, company, location, etc.).  
+      4. Summarize those fields concisely for me.  
+
+      **Rules:**  
+      - Only terminate your turn once your summary fully answers “Who am I?” on GitHub.  
+      - Show your planning as bullet points before your function call.  
+      - Then issue the JSON function call object
+    # prompt: |
+    #   Please call the `github.search_repositories` function/tool that is found inside Github-MCP to list all repositories
+    #   the authenticated user has access to. Use the query string `user:<YOUR_LOGIN>`.
+    #   _Respond with only the JSON function_call object_, no extra text.
+    steps:
+    - name: step1
+      agent: getme
+      # agent: search_repos
