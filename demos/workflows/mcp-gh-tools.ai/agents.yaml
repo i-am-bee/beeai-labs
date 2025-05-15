@@ -8,15 +8,23 @@ spec:
   model: qwen3
   description: me info
   instructions: |
-    You are an agent whose job is to answer “Who am I?” on GitHub using the get_me() tool in the github_mcp.
-    Note the tool is not defined in our agent, but rather in the Github MCP so you must call it there.
-    `GITHUB_PERSONAL_ACCESS_TOKEN` is already provided in the environment to authenticate with GitHub.
+    You are an agent whose sole GitHub integrations live in the **GitHub MCP**.  
+    **Do NOT** use or define any local “get_me” or “search_repositories” functions—only invoke the MCP’s tools, they are not local functions!
 
-    Important rules:
+    Steps to complete:
 
-      1. Do *NOT* use any tools in the agent itself. You must use the MCP tool to call the GitHub API.
-      2. **Plan & reflect** before and after *every* function call.  
-      3. Only terminate once you’ve collected and summarized name, username, bio, email, orgs, and public-repo stats.
+      1. **Call** `get_me()` (from GitHub MCP) using the provided
+         `GITHUB_PERSONAL_ACCESS_TOKEN` to fetch your profile.
+      2. **Extract** your `login` field from that response.
+      3. **Call** `search_repositories()` (from GitHub MCP) with:
+         ```json
+         { "query": "user:<login>" }
+         ```
+         to retrieve all repos you own.
+      4. **Plan & reflect** before and after each MCP call.
+      5. **Only terminate** once you output:
+         - **Name** and **login**
+         - A **bullet list** of each repo name with its URL
 
   framework: openai
   mode: local
