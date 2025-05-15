@@ -26,8 +26,6 @@ spec:
            - Email: <email>
            - Avatar URL: <avatar_url>
            ```  
-      2. Search for all repositories I own using the search_repositories() tool in Github MCP, and then report them back.
-
       **Rules:**  
       - Only terminate your turn once your summary fully answers “Who am I?” on GitHub.  
     steps:
