@@ -1,0 +1,59 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - maestro.ai4quantum.com
+  resources:
+  - agents
+  - workflowruns
+  - workflows
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - maestro.ai4quantum.com
+  resources:
+  - workflowruns/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - maestro.ai4quantum.com
+  resources:
+  - workflowruns/status
+  verbs:
+  - get
+  - patch
+  - update

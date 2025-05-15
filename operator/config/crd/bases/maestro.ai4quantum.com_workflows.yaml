@@ -73,8 +73,8 @@ spec:
                     type: string
                   steps:
                     items:
-                      description: "type Parallel struct {\n\tAgent string `json:\"agent,omitempty\"`
-                        // ???\n}"
+                      description: "\ttype Parallel struct {\n\t\tAgent string `json:\"agent,omitempty\"`
+                        // ???\n\t}"
                       properties:
                         agent:
                           type: string
