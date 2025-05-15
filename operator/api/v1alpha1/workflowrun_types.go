@@ -30,8 +30,7 @@ type WorkflowRunSpec struct {
 }
 
 type WorkflowRunStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
 // +kubebuilder:object:root=true
@@ -60,7 +59,7 @@ type Input struct {
 	Template string `json:"template,omitempty"`
 }
 type Loop struct {
-	Agent  string `json:"agent,omitempty"`
+	Agent string `json:"agent,omitempty"`
 	Until string `json:"until,omitempty"`
 }
 type Condition struct {
@@ -71,16 +70,17 @@ type Condition struct {
 	Do      string `json:"do,omitempty"`
 	Default string `json:"default,omitempty"`
 }
-//type Parallel struct {
-//	Agent string `json:"agent,omitempty"` // ???
-//}
+
+//	type Parallel struct {
+//		Agent string `json:"agent,omitempty"` // ???
+//	}
 type Step struct {
 	Name      string      `json:"name,omitempty"`
 	Agent     string      `json:"agent,omitempty"`
 	Input     Input       `json:"input,omitempty"`
 	Loop      Loop        `json:"loop,omitempty"`
 	Condition []Condition `json:"condition,omitempty"`
-	Parallel  []string  `json:"parallel,omitempty"`
+	Parallel  []string    `json:"parallel,omitempty"`
 }
 type Exception struct {
 	Name  string `json:"name,omitempty"`

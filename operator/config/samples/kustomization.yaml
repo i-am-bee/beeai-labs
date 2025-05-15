@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- maestro_v1alpha1_workflowrun.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
