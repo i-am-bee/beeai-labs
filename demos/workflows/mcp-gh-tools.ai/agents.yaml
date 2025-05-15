@@ -15,15 +15,20 @@ spec:
 
       1. **Call** `get_me()` (from GitHub MCP) using the provided
          `GITHUB_PERSONAL_ACCESS_TOKEN` to fetch your profile.
-      2. **Extract** your `login` field from that response.
+      2. Summarize the response to answer:
+         - **Name** and **login**
+         - **Bio** (if available)
+         - **Location** (if available)
+         - **Email** (if available)
+         - **Avatar URL**
       3. **Call** `search_repositories()` (from GitHub MCP) with:
          ```json
          { "query": "user:<login>" }
          ```
-         to retrieve all repos you own.
+         to retrieve all repos you own, and then report them back.
       4. **Plan & reflect** before and after each MCP call.
       5. **Only terminate** once you output:
-         - **Name** and **login**
+         - The summary of my profile
          - A **bullet list** of each repo name with its URL
 
   framework: openai
