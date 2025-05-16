@@ -11,7 +11,8 @@ OPENAI_BASE_URL="http://localhost:11434/v1"
 GITHUB_PERSONAL_ACCESS_TOKEN=token
 ```
 
-Currently, we are running `qwen3` model by default, to change simply adjust in [`agents.yaml`](./agents.yaml). The `llama3.1` model also supports tools.
+To download the github-mcp-server locally, follow the process listed in the `README.md` under ["Example Process using go to binaries"](../openai-mcp.ai/README.md)
+Currently, we are running `qwen3:8b` model by default, to change simply adjust in [`agents.yaml`](./agents.yaml).
 
 ### Streaming
 
@@ -21,6 +22,12 @@ Currently, we are running `qwen3` model by default, to change simply adjust in [
 
 Make sure to enable MCP tools and have exported the github personal access token:
 `/file_location/github-mcp-server stdio --toolsets all`
+
+To enable logging:
+
+```bash
+github-mcp-server stdio --enable-command-logging --log-file /var/log/github-mcp-server.log
+```
 
 To run:
 `maestro run demos/workflows/mcp-gh-tools.ai/agents.yaml demos/workflows/mcp-gh-tools.ai/workflow.yaml`

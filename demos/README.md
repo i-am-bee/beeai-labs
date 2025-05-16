@@ -49,7 +49,7 @@ and navigate to llama3.1 model: <https://ollama.com/library/llama3.1>.
 
 To use a different model, use `ollama pull` and choose from the official models. If using a different model, make sure to define in the agents.yaml file correctly. 
 
-For MCP tools, certain models support tools while others do not. Models that current support tooling that are tested include `llama3.1` and `qwen3`.
+For MCP tools, certain models support tools while others do not. Models that current support tooling that are tested include `llama3.1:8b`, `llama3.3-70b-instruct` and `qwen3:8b`. To note, one of the best performing models we tested `gpt-4o-mini` requires external API credit.
 
 ### Create a Podman machine
 
