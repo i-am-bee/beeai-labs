@@ -11,3 +11,6 @@ spec:
   - test2
   workflow: sequence-test-deployment
   loglevel: DEBUG
+  nodeport: 30051
+  environments: myconfigmap
+  secrets: mysecret
