@@ -77,8 +77,8 @@ func (r *WorkflowRunReconciler) Deployment(
 
 	configMap := &corev1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: workflowrun.Name, // Name of your ConfigMap
-			Namespace: workflowrun.Namespace, 
+			Name:      workflowrun.Name, // Name of your ConfigMap
+			Namespace: workflowrun.Namespace,
 		},
 		Data: data,
 	}
@@ -109,12 +109,18 @@ func (r *WorkflowRunReconciler) Deployment(
 						Type:   intstr.Int,
 						IntVal: 5000,
 					},
-					NodePort: 30051,
+					// NodePort: 30051,
 				},
 			},
-			Type: corev1.ServiceTypeNodePort,
+			// Type: corev1.ServiceTypeNodePort,
 		},
 	}
+	// Set NodePort
+	if workflowrun.Spec.NodePort != 0 {
+		service.Spec.Type = corev1.ServiceTypeNodePort
+		service.Spec.Ports[0].NodePort = int32(workflowrun.Spec.NodePort)
+	}
+
 	if err := ctrl.SetControllerReference(workflowrun, service, r.Scheme); err != nil {
 		log.Error(err, "failed to set controller owner reference")
 		return nil, err
