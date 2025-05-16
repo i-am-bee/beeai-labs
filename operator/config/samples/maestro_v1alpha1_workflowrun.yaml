@@ -1,0 +1,16 @@
+apiVersion: maestro.ai4quantum.com/v1alpha1
+kind: WorkflowRun
+metadata:
+  labels:
+    app.kubernetes.io/name: operator
+    app.kubernetes.io/managed-by: kustomize
+  name: workflowrun-sample
+spec:
+  agents:
+  - test1
+  - test2
+  workflow: sequence-test-deployment
+  loglevel: DEBUG
+  nodeport: 30051
+  environments: myconfigmap
+  secrets: mysecret

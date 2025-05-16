@@ -1,0 +1,11 @@
+apiVersion: maestro.i-am-bee.com/v1alpha1
+kind: WorkflowRun
+metadata:
+  name: simple-workflow-run
+  labels:
+    app: example2
+spec:
+  agents:
+    - simple-agents
+  workflow: simple_workflow
+
