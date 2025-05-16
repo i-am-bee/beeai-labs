@@ -12,13 +12,12 @@ what the tools do).
 
 The automated test makes use of [GitHub mcp server](https://github.com/github/github-mcp-server).
 
-Download the latest release, and use the path to the `github-mcp-server` in the environment settings below.
+### Example Process using go to build binaries
+  1) Clone the MCP Server Repo and go into github-mcp-server directory
+  2) Build the binary located inside `cmd/github-mcp-server` using `go build -o github-mcp-server`
+  3) Point Maestro at the server: `export MAESTRO_MCP_ENDPOINTS="/full/path/to/github-mcp-server stdio"`
 
-The `GITHUB_PERSONAL_ACCESS_TOKEN` is needed for derivations of this demo which may do real github work. For the purpose of automated testing this is set to a dummy value.
-
-All commands below are relative to the `maestro` subdirectory of the repository.
-
-## Standalone execution
+### Relative exports needed for standalone execution
 
 ```shell
 export GITHUB_PERSONAL_ACCESS_TOKEN=<github-token>
@@ -26,6 +25,16 @@ export OPENAI_API_KEY=ollama
 export OPENAI_BASE_URL="http://localhost:11434/v1" 
 export MAESTRO_MCP_ENDPOINTS="/Users/jonesn/bin/github-mcp-server stdio"
 maestro run demos/workflows/openai-mcp.ai/agents.yaml demos/workflows/openai-mcp.ai/workflow.yaml
+```
+
+The `GITHUB_PERSONAL_ACCESS_TOKEN` is needed for derivations of this demo which may do real github work. For the purpose of automated testing this is set to a dummy value.
+
+All commands below are relative to the `maestro` subdirectory of the repository.
+
+Successful connection should output:
+```shell
+🔓 INFO [openai_test_mcp_ollama - MCP Setup]: MCP Server (Stdio) connected: openai_test_mcp_ollama_MCP_Server_1_Stdio (/github-mcp-server-file-path stdio)
+🔓 INFO [openai_test_mcp_ollama - MCP Setup]: Successfully connected to 1 MCP server(s).
 ```
 
 ## Automated execution

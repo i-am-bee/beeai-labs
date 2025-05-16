@@ -5,7 +5,7 @@ metadata:
   labels:
     app: testapp_mcp_ollama
 spec:
-  model: "granite3.3:2b"
+  model: llama3.1
   description: test
   instructions: You are a helpful agent. Respond to the users question, making use of any required tools
   framework: openai

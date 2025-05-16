@@ -46,8 +46,10 @@ Verify the installation by running: \
 
 By default, the .env file and api runs on llama version 3.1. Download ollama: <https://ollama.com/>
 and navigate to llama3.1 model: <https://ollama.com/library/llama3.1>.
-If using a different model, make sure to [change the model](https://github.com/i-am-bee/bee-stack?tab=readme-ov-file#custom-models) in the api connection (currently untested).
-Verify Ollama is installed by running command `ollama list` in terminal.
+
+To use a different model, use `ollama pull` and choose from the official models. If using a different model, make sure to define in the agents.yaml file correctly. 
+
+For MCP tools, certain models support tools while others do not. Models that current support tooling that are tested include `llama3.1:8b`, `llama3.3-70b-instruct` and `qwen3:8b`. To note, one of the best performing models we tested `gpt-4o-mini` requires external API credit.
 
 ### Create a Podman machine
 

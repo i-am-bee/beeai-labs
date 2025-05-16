@@ -12,7 +12,7 @@ spec:
     agents:
       - openai_test_ollama
     prompt: | 
-      What tools do you have access to? Include all kinds of different types of tools? Print
+      What tools do you have access to in Github-MCP? Include all kinds of different types of tools? Print
       out as much information about them as you can, but you MUST also include the text "Tools found [nnn]: 
       followed by a list of exact tool names only, all on a single line. Replace nnn with the number of tools found.
     steps:
