@@ -24,9 +24,12 @@ import (
 type WorkflowRunSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Agents   []string `json:"agents,omitempty"`
-	Workflow string   `json:"workflow,omitempty"`
-	LogLevel string   `json:"loglevel,omitempty"`
+	Agents       []string `json:"agents,omitempty"`
+	Workflow     string   `json:"workflow,omitempty"`
+	LogLevel     string   `json:"loglevel,omitempty"`
+	Secrets      string   `json:"secrets,omitempty"`
+	Environments string   `json:"environments,omitempty"`
+	NodePort     int32    `json:"nodeport,omitempty"`
 }
 
 type WorkflowRunStatus struct {

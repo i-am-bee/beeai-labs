@@ -42,7 +42,14 @@ spec:
                 items:
                   type: string
                 type: array
+              environments:
+                type: string
               loglevel:
+                type: string
+              nodeport:
+                format: int32
+                type: integer
+              secrets:
                 type: string
               workflow:
                 type: string
