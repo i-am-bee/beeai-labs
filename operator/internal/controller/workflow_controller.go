@@ -189,6 +189,27 @@ func (r *WorkflowRunReconciler) Deployment(
 			},
 		},
 	}
+	if workflowrun.Spec.Environments != "" {
+		env := corev1.EnvFromSource{
+			ConfigMapRef: &corev1.ConfigMapEnvSource{
+				LocalObjectReference: corev1.LocalObjectReference{
+					Name: workflowrun.Spec.Environments,
+				},
+			},
+		}
+		dep.Spec.Template.Spec.Containers[0].EnvFrom = append(dep.Spec.Template.Spec.Containers[0].EnvFrom, env)
+	}
+
+	if workflowrun.Spec.Secrets != "" {
+		env := corev1.EnvFromSource{
+			SecretRef: &corev1.SecretEnvSource{
+				LocalObjectReference: corev1.LocalObjectReference{
+					Name: workflowrun.Spec.Secrets,
+				},
+			},
+		}
+		dep.Spec.Template.Spec.Containers[0].EnvFrom = append(dep.Spec.Template.Spec.Containers[0].EnvFrom, env)
+	}
 
 	// Set the ownerRef for the Deployment
 	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents/
