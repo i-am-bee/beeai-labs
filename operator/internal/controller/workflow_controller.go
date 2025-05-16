@@ -78,25 +78,26 @@ func (r *WorkflowRunReconciler) Deployment(
 	configMap := &corev1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: workflowrun.Name, // Name of your ConfigMap
+			Namespace: workflowrun.Namespace, 
 		},
 		Data: data,
 	}
-	//	if err := ctrl.SetControllerReference(workflowrun, configMap, r.Scheme); err != nil {
-	//		log.Error(err, "failed to set controller owner reference")
-	//		return nil, err
-	//	}
+	//if err := ctrl.SetControllerReference(workflowrun, configMap, r.Scheme); err != nil {
+	//	log.Error(err, "failed to set controller owner reference")
+	//	return nil, err
+	//}
 
 	_, err = clientset.CoreV1().ConfigMaps("default").Create(context.TODO(), configMap, metav1.CreateOptions{})
 	if err != nil {
 		log.Error(err, "failed creating configmap")
-		return nil, err
+		// return nil, err
 	}
 
 	// Create the Service
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      workflowrun.Name,
-			Namespace: "default",
+			Namespace: workflowrun.Namespace,
 		},
 		Spec: corev1.ServiceSpec{
 			Selector: map[string]string{"app.kubernetes.io/instance": workflowrun.Name},
@@ -113,6 +114,10 @@ func (r *WorkflowRunReconciler) Deployment(
 			},
 			Type: corev1.ServiceTypeNodePort,
 		},
+	}
+	if err := ctrl.SetControllerReference(workflowrun, service, r.Scheme); err != nil {
+		log.Error(err, "failed to set controller owner reference")
+		return nil, err
 	}
 
 	_, err = clientset.CoreV1().Services("default").Create(context.TODO(), service, metav1.CreateOptions{})
@@ -147,7 +152,7 @@ func (r *WorkflowRunReconciler) Deployment(
 				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
-						Image:           "localhost/maestro:latest",
+						Image:           "localhost/maestro-engine:latest",
 						Name:            workflowrun.Name,
 						ImagePullPolicy: corev1.PullIfNotPresent,
 						Ports: []corev1.ContainerPort{{
