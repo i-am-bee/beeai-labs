@@ -29,6 +29,7 @@ beeai-framework = "^0.1.17"
 slack_sdk = "^3.35.0"
 nest-asyncio = "^1.6.0"
 pydantic-ai = {extras = ["logfire"], version = "^0.1.8"}
+opik = "^1.7.22"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
