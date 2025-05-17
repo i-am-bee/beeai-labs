@@ -1,48 +1,51 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from src.agents.agent import Agent
-from opik.evaluation.metrics import Hallucination, AnswerRelevance
+from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
 class MetricsAgent(Agent):
     """
-    Generic agent that takes any two inputs (prompt & response)
-    and returns the original response plus Opik judge metrics.
+    Agent that takes a single input (previous step's output string)
+    prints an evaluation string to the terminal containing relevance & hallucination metrics,
+    but returns only the original response downstream.
     """
 
     def __init__(self, agent: dict) -> None:
         super().__init__(agent)
         spec_model = agent["spec"]["model"]
-        # need to set the model name to the one used by OpenAI to bypass LiteLLM error
+        # Auto-prefix for OpenAI-compatible routing
         if "/" not in spec_model:
             spec_model = f"openai/{spec_model}"
-        self._metrics = {
-            "relevance": AnswerRelevance(model=spec_model),
-            "hallucination": Hallucination(model=spec_model)
-        }
+        self._spec_model = spec_model
 
-    async def run(self, prompt: str, response: str):
+    async def run(self, response: str) -> str:
         """
         Args:
-          prompt:   the original input (e.g. location, user question)
-          response: the LLM’s output
+          response: the output string from the previous workflow step
 
         Returns:
-          dict with:
-            - response: the original response
-            - relevance: ScoreResult
-            - hallucination: ScoreResult
+          The original response string (metrics only printed, not returned)
         """
-        scores = {}
-        for name, metric in self._metrics.items():
-            scores[name] = metric.score(
-                input=prompt,
-                output=response,
-                context=[f"Context: {prompt}"]
-            )
+        # Compute metrics at runtime to avoid CLI pickle issues
+        rel_result = AnswerRelevance(model=self._spec_model).score(
+            input=response,
+            output=response,
+            context=[response]
+        )
+        hall_result = Hallucination(model=self._spec_model).score(
+            input=response,
+            output=response,
+            context=[response]
+        )
 
-        return {
-            "response": response,
-            **scores
-        }
+        rel = getattr(rel_result, "value", rel_result)
+        hall = getattr(hall_result, "value", hall_result)
+        metrics_line = f"relevance: {rel:.2f}, hallucination: {hall:.2f}"
+        evaluation_str = f"{response}\n[{metrics_line}]"
+        self.print(evaluation_str)
+
+        return response

@@ -1,27 +1,38 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-import os
 import asyncio
 import pytest
-import requests
+import litellm
 
 from src.agents.metrics_agent import MetricsAgent
-from opik.evaluation.metrics.score_result import ScoreResult
+from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
-def is_ollama_up(api_base: str) -> bool:
-    try:
-        return requests.get(f"{api_base}/models", timeout=2).ok
-    except:
-        return False
+# Auto-patch Litellm provider resolution to accept any model
+@pytest.fixture(autouse=True)
+def patch_litellm_provider(monkeypatch):
+    monkeypatch.setattr(
+        litellm, "get_llm_provider",
+        lambda model_name, **kwargs: (model_name, "openai", None, None)
+    )
 
-@pytest.mark.integration
-def test_metrics_agent_with_ollama():
-    api_base = os.getenv("OPENAI_API_BASE", "http://localhost:11434/v1")
-    api_key  = os.getenv("OPENAI_API_KEY", "ollama")
 
-    if not is_ollama_up(api_base):
-        pytest.skip(f"Ollama server not reachable at {api_base}")
+def test_metrics_agent_run_returns_original_and_prints(monkeypatch):
+    # Stub scoring to fixed values
+    class DummyScore:
+        def __init__(self, value):
+            self.value = value
+    monkeypatch.setattr(
+        AnswerRelevance, "score",
+        lambda self, input, output, context: DummyScore(0.75)
+    )
+    monkeypatch.setattr(
+        Hallucination, "score",
+        lambda self, input, output, context: DummyScore(0.25)
+    )
+
+    printed = []
+    monkeypatch.setattr(MetricsAgent, "print", lambda self, msg: printed.append(msg))
 
     agent_def = {
         "metadata": {"name": "metrics_agent", "labels": {}},
@@ -32,15 +43,19 @@ def test_metrics_agent_with_ollama():
             "instructions": "instr"
         }
     }
-
     agent = MetricsAgent(agent=agent_def)
-    result = asyncio.run(agent.run("What is the capital of France?", "Paris."))
 
-    assert result["response"] == "Paris."
-    rel = result.get("relevance")
-    assert isinstance(rel, ScoreResult)
-    assert 0.0 <= rel.value <= 1.0
+    # Invoke run()
+    original = "Test response"
+    output = asyncio.run(agent.run(original))
 
-    hall = result.get("hallucination")
-    assert isinstance(hall, ScoreResult)
-    assert 0.0 <= hall.value <= 1.0
+    # Return value should be the original response
+    assert isinstance(output, str)
+    assert output == original
+
+
+    assert len(printed) == 1, "Expected one print call for metrics"
+    printed_msg = printed[0]
+    assert original in printed_msg
+    assert "relevance: 0.75" in printed_msg
+    assert "hallucination: 0.25" in printed_msg
