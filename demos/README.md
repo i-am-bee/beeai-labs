@@ -102,3 +102,15 @@ Verify maestro is running properly: `maestro --help`
 ##### SlackBot support
 
 Please set `SLACK_BOT_TOKEN` and `SLACK_TEAM_ID` as environment variables. See `./tests/yamls/agents/slack_agent.yaml` and `./tests/yamls/workflow_agent.yaml` for details. The output of slack message will be whatever is passed into the prompt.
+
+##### Evaluation/Metrics Support
+
+The Metrics Agent integrates Opik's LLM as a judge metrics into our workflows. Automatically route `spec.model` in the agent definition and add to workflow to automatically evaluate using `AnswerRelevance` and `Hallucination` scores. 
+
+See `./tests/yamls/agents/metrics_agent.py` and `./tests/yamls/workflows/metrics_agents.py` for more details.
+
+There are 2 required exports as we use ollama for backend:
+```bash
+OPENAI_API_BASE=http://localhost:11434/v1
+OPENAI_API_KEY=ollama
+```
