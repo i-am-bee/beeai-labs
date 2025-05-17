@@ -1,6 +1,7 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
+import os
 from src.agents.agent import Agent
 from opik.evaluation.metrics import Hallucination, AnswerRelevance
 
@@ -12,11 +13,13 @@ class MetricsAgent(Agent):
 
     def __init__(self, agent: dict) -> None:
         super().__init__(agent)
-        # you could also read self.agent_config.get("metrics") here 
-        # to make it configurable via YAML
+        spec_model = agent["spec"]["model"]
+        # need to set the model name to the one used by OpenAI to bypass LiteLLM error
+        if "/" not in spec_model:
+            spec_model = f"openai/{spec_model}"
         self._metrics = {
-            "relevance": AnswerRelevance(),
-            "hallucination": Hallucination()
+            "relevance": AnswerRelevance(model=spec_model),
+            "hallucination": Hallucination(model=spec_model)
         }
 
     async def run(self, prompt: str, response: str):
@@ -28,8 +31,8 @@ class MetricsAgent(Agent):
         Returns:
           dict with:
             - response: the original response
-            - relevance: float score ∈ [0,1]
-            - hallucination: float score ∈ [0,1]
+            - relevance: ScoreResult
+            - hallucination: ScoreResult
         """
         scores = {}
         for name, metric in self._metrics.items():
