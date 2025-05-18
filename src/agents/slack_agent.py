@@ -59,7 +59,7 @@ class SlackAgent(Agent):
         answer = post_message_to_slack(self.channel, prompt)
         self.print(f"Response from {self.agent_name}: {answer}\n")
 
-    async def run_streaaming(self, prompt: str) -> str:
+    async def run_streaming(self, prompt: str) -> str:
         """
         Runs the BeeAI agent with the given prompt.
         Args:
