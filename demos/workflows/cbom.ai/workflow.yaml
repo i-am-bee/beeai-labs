@@ -1,0 +1,21 @@
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: cbom.ai
+  labels:
+    app: cbom.ai
+spec:
+  template:
+    metadata:
+      labels:
+        app: cbom.ai
+    agents:
+      - git fetcher
+    prompt: |
+      I want to retrieve all the .java files from the given repo at: `https://github.com/Mastercard/client-encryption-java/tree/main/src/main/java/com/mastercard/developer/encryption/aes`.
+      1. Use appropriate tool in Github MCP (search_code()) to go through the entire repository and output a list with all the .java files.
+      **Rules:**  
+      - Do not write any new code, just use the tool to get the list of files.
+    steps:
+    - name: step1
+      agent: git fetcher
