@@ -71,7 +71,7 @@ def process_workflow():
             position = 0
             thread = threading.Thread(target=start_workflow)
             thread.start()
-    name = workflow_yaml[0]["objectmeta"]["name"]
+    name = workflow_yaml[0]["metadata"]["name"]
     return render_template('index.html', result="", title=name, diagram=diagram)
 
 if __name__ == '__main__':
