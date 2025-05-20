@@ -41,7 +41,7 @@ type WorkflowRunStatus struct {
 
 type WorkflowRun struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" :"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" json:"metadata,omitempty"`
 
 	Spec   WorkflowRunSpec   `json:"spec,omitempty" yaml:"spec,omitempty"`
 	Status WorkflowRunStatus `json:"status,omitempty" yaml:"status,omitempty"`
@@ -69,7 +69,7 @@ type Condition struct {
 	If      string `json:"if,omitempty" yaml:"if,omitempty"`
 	Then    string `json:"then,omitempty" yaml:"then,omitempty"`
 	Else    string `json:"else,omitempty" yaml:"else,omitempty"`
-	Case    string `json:"case,omitempty" yaml:case,omitempty"`
+	Case    string `json:"case,omitempty" yaml:"case,omitempty"`
 	Do      string `json:"do,omitempty" yaml:"do,omitempty"`
 	Default string `json:"default,omitempty" yaml:"default,omitempty"`
 }
