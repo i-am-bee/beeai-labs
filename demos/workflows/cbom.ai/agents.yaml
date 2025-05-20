@@ -7,7 +7,7 @@ metadata:
 spec:
   model: llama3.1:latest
   description: |
-    output the java files given a repoistory
+    output the java files given a repository
   instructions: |
     You are the **Java Fetcher** agent.  
     **IMPORTANT**: After you invoke the `java-fetcher` tool, you MUST **directly return** its output — exactly character-for-character—and nothing else.  
@@ -54,44 +54,44 @@ spec:
         
         return java_urls
 
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: identify post-quantum
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3:latest
+  description: |
+    given a single java file, find every use of post-quantum-vulnerable crypto algorithms and output its line number, the function name and the full source line
+  instructions: |
+    You are a code‐analysis assistant. INPUT: a Java source file as plain text. TASK: find every use of post‐quantum‐vulnerable crypto algorithms (Assume functions like AES, RSA, DSA, 3DES, SHA-1, etc are vulnerable). There are more functions, that if you think behave similar you should add. For each occurrence, record:
+      • algorithm: the exact function used
+      • line: its 1-based line number  
+      • snippet: the full source line  
 
+    REQUIREMENTS:
+    - Do NOT output anything but a single, valid JSON array (or `null` if no matches).
+    - If in doubt, include the occurrence (“safe” over “silent”).
 
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: git fetcher
-#   labels:
-#     app: cbom.ai
-# spec:
-#   model: qwen3:latest
-#   description: |
-#     Use the GitHub MCP’s `search_code` tool to find every `.java` file
-#     in a repo, build their raw URLs, and dump them (one per line) into
-#     a local `java_files.txt`.
-#   instructions: |
-#     You are the **Git Fetcher** agent for CBOM.ai.
-#     **Do NOT** make direct HTTP calls yourself—only invoke the GitHub MCP’s tools.
+    EXAMPLE OUTPUT (if we found AES-128 and RSA-256 in our code):
+    [
+      {
+        "algorithm": "AES-128",
+        "line": 42,
+        "snippet": "Cipher cipher = Cipher.getInstance("AES-128");"
+      },
+      {
+        "algorithm": "RSA-256",
+        "line": 10,
+        "snippet": "KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA-256");"
+      }
+    ]
 
-#     **Prompt Example (to the agent):**
-#     ```plaintext
-#     Use the GitHub MCP’s `search_code` tool to find all files ending in
-#     `.java` within the path
-#     `src/main/java/com/mastercard/developer/encryption/aes`
-#     of the Mastercard/client-encryption-java repository, then return a Python-style
-#     list of their raw.githubusercontent.com URLs on the `main` branch.
-#     ```
+    *NOTE; this is simply an example of the format of the output.
 
-#     **Execution Steps:**
-#       1. You will call `search_code`.
-#       2. **Invoke** the MCP’s search tool in plain English, for example:
-#          ```plaintext
-#          search_code: search in repo "Mastercard/client-encryption-java"
-#                       path "src/main/java/com/mastercard/developer/encryption/aes"
-#                       for files with extension ".java"
-#          ```
-#       3. **Expect** a JSON response containing:
-#          - `total_count`
-#          - `incomplete_results`
-#          - `items`: array of objects with at least `path`
-#   framework: openai
-#   mode: local
+    If you do not identify any occurences, simply output 'None' and nothing else.
+  mode: remote
+  tools:
+    - LLM
