@@ -5,7 +5,7 @@ metadata:
   labels:
     app: cbom.ai
 spec:
-  model: llama3.1:latest
+  model: qwen3:latest
   description: |
     output the java files given a repository
   instructions: |
@@ -18,7 +18,7 @@ spec:
     **Steps:**  
       1. Invoke the tool:  
         ```Python
-        java-fetcher(owner="Mastercard", repo="client-encryption-java")
+        java-fetcher(owner="given owner input", repo="given repo input")
         ```  
       3. Receive the tool’s response, an array of URLs: ['url1', 'url2', 'url3', etc ...]
       4. **Immediately** print/output that array exactly as-is. *NOTHING ELSE AND NO EDITING*
@@ -54,65 +54,65 @@ spec:
         
         return java_urls
 
----
-apiVersion: maestro/v1alpha1
-kind: Agent
-metadata:
-  name: identify post-quantum
-  labels:
-    app: cbom.ai
-spec:
-  model: qwen3:latest
-  description: |
-    given a single java file, find every use of post-quantum-vulnerable crypto algorithms and output its line number, the function name and the full source line
-  instructions: |
-    You are a code‐analysis assistant. INPUT: a Java source file as plain text. TASK: find every use of post‐quantum‐vulnerable crypto algorithms (Assume functions like AES, RSA, DSA, 3DES, SHA-1, etc are vulnerable). There are more functions, that if you think behave similar you should add. For each occurrence, record:
-      • algorithm: the exact function used
-      • line: its 1-based line number  
-      • snippet: the full source line  
+# ---
+# apiVersion: maestro/v1alpha1
+# kind: Agent
+# metadata:
+#   name: identify post-quantum
+#   labels:
+#     app: cbom.ai
+# spec:
+#   model: qwen3:latest
+#   description: |
+#     given a single java file, find every use of post-quantum-vulnerable crypto algorithms and output its line number, the function name and the full source line
+#   instructions: |
+#     You are a code‐analysis assistant. INPUT: a Java source file as plain text. TASK: find every use of post‐quantum‐vulnerable crypto algorithms (Assume functions like AES, RSA, DSA, 3DES, SHA-1, etc are vulnerable). There are more functions, that if you think behave similar you should add. For each occurrence, record:
+#       • algorithm: the exact function used
+#       • line: its 1-based line number  
+#       • snippet: the full source line  
 
-    REQUIREMENTS:
-    - Do NOT output anything but a single, valid JSON array (or `null` if no matches).
-    - If in doubt, include the occurrence (“safe” over “silent”).
+#     REQUIREMENTS:
+#     - Do NOT output anything but a single, valid JSON array (or `null` if no matches).
+#     - If in doubt, include the occurrence (“safe” over “silent”).
 
-    EXAMPLE OUTPUT (if we found AES-128 and RSA-256 in our code):
-    [
-      {
-        "algorithm": "AES-128",
-        "line": 42,
-        "snippet": "Cipher cipher = Cipher.getInstance("AES-128");"
-      },
-      {
-        "algorithm": "RSA-256",
-        "line": 10,
-        "snippet": "KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA-256");"
-      }
-    ]
+#     EXAMPLE OUTPUT (if we found AES-128 and RSA-256 in our code):
+#     [
+#       {
+#         "algorithm": "AES-128",
+#         "line": 42,
+#         "snippet": "Cipher cipher = Cipher.getInstance("AES-128");"
+#       },
+#       {
+#         "algorithm": "RSA-256",
+#         "line": 10,
+#         "snippet": "KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA-256");"
+#       }
+#     ]
 
-    *NOTE; this is simply an example of the format of the output.
+#     *NOTE; this is simply an example of the format of the output.
 
-    If you do not identify any occurences, simply output 'None' and nothing else.
-  mode: remote
-  tools:
-    - LLM
+#     If you do not identify any occurences, simply output 'None' and nothing else.
+#   mode: remote
+#   tools:
+#     - LLM
 
----
-apiVersion: maestro/v1alpha1
-kind: Agent
-metadata:
-  name: raw gh reader
-  labels:
-    app: cbom.ai
-spec:
-  model: qwen3:latest
-  description: |
-    given a github url, fetch its contents directly using the fetch_code tool
-  instructions: |
-    You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url, fetch its contents directly using the fetch_code tool.
+# ---
+# apiVersion: maestro/v1alpha1
+# kind: Agent
+# metadata:
+#   name: raw gh reader
+#   labels:
+#     app: cbom.ai
+# spec:
+#   model: qwen3:latest
+#   description: |
+#     given a github url, fetch its contents directly using the fetch_code tool
+#   instructions: |
+#     You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url, fetch its contents directly using the fetch_code tool.
 
-    **Execution Steps:**
-      1. **Call**: fetch_code(given_url).
-      2. **Return** the `content` string exactly as received—no extra formatting or commentary.
-  mode: remote
-  tools:
-    - fetch_code
+#     **Execution Steps:**
+#       1. **Call**: fetch_code(given_url).
+#       2. **Return** the `content` string exactly as received—no extra formatting or commentary.
+#   mode: remote
+#   tools:
+#     - fetch_code
