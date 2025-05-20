@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"
-	"strings"
 
 	maestrov1alpha1 "github.com/ai4quantum/maestro/api/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -365,5 +364,5 @@ func (r *WorkflowRunReconciler) ReadCR(
 			return "", err
 		}
 	}
-	return strings.ReplaceAll(string(yamlData), "objectmeta", "metadata"), nil
+	return string(yamlData), nil
 }
