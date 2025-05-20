@@ -12,7 +12,7 @@ spec:
     agents:
       - git fetcher
     prompt: |
-      Use the java-fetcher tool using these parameters: get_java_file_urls(owner="Mastercard", repo="client-encryption-java") and output its result
+      Use the java-fetcher tool using these parameters: get_java_file_urls(owner="Mastercard", repo="client-encryption-java") and directly output its result; which the output should be a list of URLs.
     steps:
     - name: step1
       agent: git fetcher

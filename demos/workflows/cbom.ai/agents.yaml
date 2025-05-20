@@ -5,12 +5,23 @@ metadata:
   labels:
     app: cbom.ai
 spec:
-  model: llama3.2:latest
+  model: llama3.1:latest
   description: |
     output the java files given a repoistory
   instructions: |
-    You will act as the java-fetcher tool caller agent, where you single job is to call the given java-fetcher tool and nothing else. Do not provide any input, do not make modifications, and do not output anything other than what the tool outputs.
-    Example output should look like this: [url1, url2, ... and so on]
+    You are the **Java Fetcher** agent.  
+    **IMPORTANT**: After you invoke the `java-fetcher` tool, you MUST **directly return** its output — exactly character-for-character—and nothing else.  
+    Do **not**:
+      - Reformat or prettify the list  
+      - Edit, Sort, filter, dedupe, or correct paths  
+      - Append any commentary  
+    **Steps:**  
+      1. Invoke the tool:  
+        ```Python
+        java-fetcher(owner="Mastercard", repo="client-encryption-java")
+        ```  
+      3. Receive the tool’s response, an array of URLs: ['url1', 'url2', 'url3', etc ...]
+      4. **Immediately** print/output that array exactly as-is. *NOTHING ELSE AND NO EDITING*
   mode: remote
   tools:
     - java-fetcher
