@@ -95,3 +95,24 @@ spec:
   mode: remote
   tools:
     - LLM
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: raw gh reader
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3:latest
+  description: |
+    given a github url, fetch its contents directly using the fetch_code tool
+  instructions: |
+    You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url, fetch its contents directly using the fetch_code tool.
+
+    **Execution Steps:**
+      1. **Call**: fetch_code(given_url).
+      2. **Return** the `content` string exactly as received—no extra formatting or commentary.
+  mode: remote
+  tools:
+    - fetch_code
