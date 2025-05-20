@@ -5,35 +5,82 @@ metadata:
   labels:
     app: cbom.ai
 spec:
-  model: qwen3:latest
+  model: llama3.2:latest
   description: |
-    Use the GitHub MCP’s `search_code` tool to find every `.java` file
-    in a repo, build their raw URLs, and dump them (one per line) into
-    a local `java_files.txt`.
+    output the java files given a repoistory
   instructions: |
-    You are the **Git Fetcher** agent for CBOM.ai.
-    **Do NOT** make direct HTTP calls yourself—only invoke the GitHub MCP’s tools.
+    You will act as the java-fetcher tool caller agent, where you single job is to call the given java-fetcher tool and nothing else. Do not provide any input, do not make modifications, and do not output anything other than what the tool outputs.
+    Example output should look like this: [url1, url2, ... and so on]
+  mode: remote
+  tools:
+    - java-fetcher
+  code: |
+    import requests
 
-    **Prompt Example (to the agent):**
-    ```plaintext
-    Use the GitHub MCP’s `search_code` tool to find all files ending in
-    `.java` within the path
-    `src/main/java/com/mastercard/developer/encryption/aes`
-    of the Mastercard/client-encryption-java repository, then return a Python-style
-    list of their raw.githubusercontent.com URLs on the `main` branch.
-    ```
+    def get_java_file_urls(owner: str, repo: str, branch: str = "main") -> list[str]:
+        """
+        Retrieve raw.githubusercontent.com URLs for all .java files in a GitHub repo
+        by using the Git Trees API with recursion.
 
-    **Execution Steps:**
-      1. You will call `search_code`.
-      2. **Invoke** the MCP’s search tool in plain English, for example:
-         ```plaintext
-         search_code: search in repo "Mastercard/client-encryption-java"
-                      path "src/main/java/com/mastercard/developer/encryption/aes"
-                      for files with extension ".java"
-         ```
-      3. **Expect** a JSON response containing:
-         - `total_count`
-         - `incomplete_results`
-         - `items`: array of objects with at least `path`
-  framework: openai
-  mode: local
+        :param owner: GitHub org/user name (e.g., "Mastercard")
+        :param repo: Repository name (e.g., "client-encryption-java")
+        :param branch: Branch name (default: "main")
+        :param token: GitHub Personal Access Token (optional for private repos or rate limiting)
+        :return: List of raw.githubusercontent.com URLs for each .java file
+        """
+        
+        tree_api_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
+    
+        response = requests.get(tree_api_url)
+        response.raise_for_status()
+        tree_data = response.json().get("tree", [])
+        
+        java_urls = []
+        for entry in tree_data:
+            if entry.get("type") == "blob" and entry.get("path", "").endswith(".java"):
+                raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{entry['path']}"
+                java_urls.append(raw_url)
+        
+        return java_urls
+
+
+
+# apiVersion: maestro/v1alpha1
+# kind: Agent
+# metadata:
+#   name: git fetcher
+#   labels:
+#     app: cbom.ai
+# spec:
+#   model: qwen3:latest
+#   description: |
+#     Use the GitHub MCP’s `search_code` tool to find every `.java` file
+#     in a repo, build their raw URLs, and dump them (one per line) into
+#     a local `java_files.txt`.
+#   instructions: |
+#     You are the **Git Fetcher** agent for CBOM.ai.
+#     **Do NOT** make direct HTTP calls yourself—only invoke the GitHub MCP’s tools.
+
+#     **Prompt Example (to the agent):**
+#     ```plaintext
+#     Use the GitHub MCP’s `search_code` tool to find all files ending in
+#     `.java` within the path
+#     `src/main/java/com/mastercard/developer/encryption/aes`
+#     of the Mastercard/client-encryption-java repository, then return a Python-style
+#     list of their raw.githubusercontent.com URLs on the `main` branch.
+#     ```
+
+#     **Execution Steps:**
+#       1. You will call `search_code`.
+#       2. **Invoke** the MCP’s search tool in plain English, for example:
+#          ```plaintext
+#          search_code: search in repo "Mastercard/client-encryption-java"
+#                       path "src/main/java/com/mastercard/developer/encryption/aes"
+#                       for files with extension ".java"
+#          ```
+#       3. **Expect** a JSON response containing:
+#          - `total_count`
+#          - `incomplete_results`
+#          - `items`: array of objects with at least `path`
+#   framework: openai
+#   mode: local
