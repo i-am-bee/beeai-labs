@@ -9,7 +9,7 @@ on:
     paths:
     - '**'
 jobs:
-  image-build:
+  test-in-kind:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -38,3 +38,9 @@ jobs:
         cd operator
         kubectl apply -f config/crd/bases
         make deploy
+    - name: Deploy test agents, workflow, configmap and workflowrun
+      run: |
+        python deploycrd demos/workflows/weather-checker.ai/agents.yaml
+        python deploycrd demos/workflows/weather-checker.ai/workflow.yaml
+	kubectl apply -f operator/test/config/test-configmap.yaml
+	kubectl apply -f operator/test/config/test-workflowrun.yaml
