@@ -50,4 +50,5 @@ jobs:
         kubectl get pod -n operator-system -o yaml
         kubectl logs -l control-plane=controller-manager -n operator-system
         kubectl get pod -o yaml
+        kubectl logs -l app.kubernetes.io/instance=weather-checker-ai
         curl -L "http://127.0.0.1:30051/?Prompt=Los+angels"
