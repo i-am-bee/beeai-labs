@@ -41,7 +41,7 @@ ENV PYTHONUNBUFFERED=1
 # Install pip
 RUN python3.11 -m ensurepip --upgrade
 # Install dependencies and update then uninstall pip (not needed in final image)
-RUN python3.11 -m pip install openai pyyaml python-dotenv requests flask jsonschema docopt-ng langchain-community duckduckgo-search streamlit streamlit-mermaid psutil openai-agents pycron beeai-framework slack_sdk nest-asyncio pydantic-ai logfire litellm --no-cache-dir --upgrade && \
+RUN python3.11 -m pip install openai pyyaml python-dotenv requests flask jsonschema docopt-ng langchain-community duckduckgo-search streamlit streamlit-mermaid psutil openai-agents opik pycron beeai-framework slack_sdk nest-asyncio pydantic-ai logfire litellm --no-cache-dir --upgrade && \
     python3.11 -m pip uninstall -y pip
 
 COPY ./src ./src
