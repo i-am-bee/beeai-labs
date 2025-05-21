@@ -42,5 +42,5 @@ jobs:
       run: |
         python deploycrd demos/workflows/weather-checker.ai/agents.yaml
         python deploycrd demos/workflows/weather-checker.ai/workflow.yaml
-	kubectl apply -f operator/test/config/test-configmap.yaml
-	kubectl apply -f operator/test/config/test-workflowrun.yaml
+        kubectl apply -f operator/test/config/test-configmap.yaml
+        kubectl apply -f operator/test/config/test-workflowrun.yaml
