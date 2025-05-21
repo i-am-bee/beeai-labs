@@ -11,8 +11,14 @@ spec:
         app: cbom.ai
     agents:
       - git fetcher
+      - selector
+      - raw gh reader
     prompt: |
       Use the java-fetcher tool using these parameters: get_java_file_urls(owner="Mastercard", repo="client-encryption-java") and directly output its result; which the output should be a list of URLs.
     steps:
     - name: step1
       agent: git fetcher
+    - name: step2
+      agent: selector
+    - name: step3
+      agent: raw gh reader
