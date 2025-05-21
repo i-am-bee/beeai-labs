@@ -44,7 +44,7 @@ jobs:
         python deploycr.py demos/workflows/weather-checker.ai/workflow.yaml
         kubectl apply -f operator/test/config/test-configmap.yaml
         kubectl apply -f operator/test/config/test-workflowrun.yaml
-	sleep 15
+        sleep 15
     - name: Send request
       run: |
         kubectl get pod -n operator-system -o yaml
