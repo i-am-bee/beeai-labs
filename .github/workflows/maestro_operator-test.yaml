@@ -40,8 +40,8 @@ jobs:
         make deploy
     - name: Deploy test agents, workflow, configmap and workflowrun
       run: |
-        python deploycrd.py demos/workflows/weather-checker.ai/agents.yaml
-        python deploycrd.py demos/workflows/weather-checker.ai/workflow.yaml
+        python deploycr.py demos/workflows/weather-checker.ai/agents.yaml
+        python deploycr.py demos/workflows/weather-checker.ai/workflow.yaml
         kubectl apply -f operator/test/config/test-configmap.yaml
         kubectl apply -f operator/test/config/test-workflowrun.yaml
     - name: Send request
