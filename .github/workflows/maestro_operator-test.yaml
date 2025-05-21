@@ -18,8 +18,8 @@ jobs:
         cd operator
         make docker-build
         make engine-docker-build
-	docker tag docker.io/library/controller:latest localhost/controller:latest
-	docker tag docker.io/library/maestro-engine:latest localhost/maestro-engine:latest
+        docker tag docker.io/library/controller:latest localhost/controller:latest
+        docker tag docker.io/library/maestro-engine:latest localhost/maestro-engine:latest
     - name: Install Kind
       run: |
         curl -Lo ./kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.20.0/kind-$(uname)-amd64"
