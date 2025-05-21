@@ -46,5 +46,7 @@ jobs:
         kubectl apply -f operator/test/config/test-workflowrun.yaml
     - name: Send request
       run: |
+        kubectl get pod -n operator-system -o yaml
+        kubectl logs -l control-plane=controller-manager -n operator-system
         kubectl get pod -o yaml
         curl -L "http://127.0.0.1:30051/?Prompt=Los+angels"
