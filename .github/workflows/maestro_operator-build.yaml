@@ -15,6 +15,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: |
+        make engine-docker-build
         cd operator
         make docker-build
-        make engine-docker-build
