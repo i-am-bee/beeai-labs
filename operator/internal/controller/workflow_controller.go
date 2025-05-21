@@ -55,44 +55,6 @@ func (r *WorkflowRunReconciler) Deployment(
 		return nil, err
 	}
 
-	// Create ConfigMap of workflow and agent definition
-	// Workflow
-	yamlData, err := r.ReadCR(ctx, req, workflowrun, "workflows", workflowrun.Spec.Workflow)
-	if err != nil {
-		return nil, err
-	}
-	data := make(map[string]string)
-	data["workflow"] = string(yamlData)
-
-	// Agents
-	agentYamlData := ""
-	for _, agent := range workflowrun.Spec.Agents {
-		yamlData, err := r.ReadCR(ctx, req, workflowrun, "agents", agent)
-		if err != nil {
-			return nil, err
-		}
-		agentYamlData = agentYamlData + "---\n" + yamlData
-	}
-	data["agents"] = string(agentYamlData)
-
-	configMap := &corev1.ConfigMap{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      workflowrun.Name, // Name of your ConfigMap
-			Namespace: workflowrun.Namespace,
-		},
-		Data: data,
-	}
-	//if err := ctrl.SetControllerReference(workflowrun, configMap, r.Scheme); err != nil {
-	//	log.Error(err, "failed to set controller owner reference")
-	//	return nil, err
-	//}
-
-	_, err = clientset.CoreV1().ConfigMaps("default").Create(context.TODO(), configMap, metav1.CreateOptions{})
-	if err != nil {
-		log.Error(err, "failed creating configmap")
-		// return nil, err
-	}
-
 	// Create the Service
 	service := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
@@ -130,6 +92,44 @@ func (r *WorkflowRunReconciler) Deployment(
 	if err != nil {
 		log.Error(err, "failed creating service")
 		return nil, err
+	}
+
+	// Create ConfigMap of workflow and agent definition
+	// Workflow
+	yamlData, err := r.ReadCR(ctx, req, workflowrun, "workflows", workflowrun.Spec.Workflow)
+	if err != nil {
+		return nil, err
+	}
+	data := make(map[string]string)
+	data["workflow"] = string(yamlData)
+
+	// Agents
+	agentYamlData := ""
+	for _, agent := range workflowrun.Spec.Agents {
+		yamlData, err := r.ReadCR(ctx, req, workflowrun, "agents", agent)
+		if err != nil {
+			return nil, err
+		}
+		agentYamlData = agentYamlData + "---\n" + yamlData
+	}
+	data["agents"] = string(agentYamlData)
+
+	configMap := &corev1.ConfigMap{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      workflowrun.Name, // Name of your ConfigMap
+			Namespace: workflowrun.Namespace,
+		},
+		Data: data,
+	}
+	if err := ctrl.SetControllerReference(workflowrun, configMap, r.Scheme); err != nil {
+		log.Error(err, "failed to set controller owner reference")
+		return nil, err
+	}
+
+	_, err = clientset.CoreV1().ConfigMaps("default").Create(context.TODO(), configMap, metav1.CreateOptions{})
+	if err != nil {
+		log.Error(err, "failed creating configmap")
+		// return nil, err
 	}
 
 	// Create the workflow deployment
