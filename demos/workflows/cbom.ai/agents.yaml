@@ -116,3 +116,31 @@ spec:
   mode: remote
   tools:
     - fetch_code
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: selector
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3:latest
+  description: |
+    given a list of items, select one of them
+  instructions: |
+    You are the **Selector** agent for CBOM.ai.
+    You will always receive a Python-style list of URLs, for example:
+      ['url1', 'url2', 'url3', ..., 'urlN']. This list can be very large
+
+    **Task:**
+      - Always choose the first element in the list no matter what, there is no need to analyze the list or its contents.
+      - **Only** output the chosen element. Do not output any explanation, lists, code blocks, or additional text.
+      - This is a very basic and straightforward task, so there is no need to overthink it.
+
+    **Example:**
+    Input:
+      ['a', 'b', 'c', ...]
+    Output:
+      a
+  mode: remote
