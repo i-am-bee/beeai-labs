@@ -1,5 +1,54 @@
 # Maestro Operator
 
+This is an experimental feature of the maestro deployment in kubernetes clusters.  
+
+This implements the maestro agent and workflow as kubernetes CRD.  An additional CRD workflowrun is defined to invoke the workflow execution.
+
+Maestro "agent" and "workflow" are mapped to "Agent" and "Workflow" custom resources.  For now, "deploycr.py" takes maestro yaml file and deploy the agent and workflow in the cluster as the custom resources.  Another custom resource "WorkflowRun" has agent and workflow custom resource names and other configuration to run the workflow in the cluster.  Creating the "WorkflowRun" custom resource instance invoke the Maestro workflow.
+Here is an example of the "WorkflowRun"
+
+The names of workflow and agent are updated to match kubernetes resource naming rules.  All capital letters are changed to lowercases and the all special characters including spaces except "-" are replace to "-".
+
+```
+apiVersion: maestro.ai4quantum.com/v1alpha1
+kind: WorkflowRun
+metadata:
+  labels:
+    app.kubernetes.io/name: operator
+    app.kubernetes.io/managed-by: kustomize
+  name: weather-checker-ai
+spec:
+  agents:                      # List of agent names used in the workflow
+  - temperature-agent
+  - hot-or-not-agent
+  workflow: maestro-deployment # Workflow name
+  loglevel: DEBUG              # Currentry no effect
+  nodeport: 30051              # Node port number for NodePort service, if it is not set, the service type is ClusterIP 
+  environments: myconfigmap    # ConfigMap name that has the environment variables
+  secrets: mysecret            # Secret name that has the secret environment variables
+```
+
+The necessary environment variables can be provided in the ConfigMap or Secret.
+
+```
+kind: ConfigMap
+metadata:
+  name: myconfigmap
+data:
+  BEE_API_KEY: sk-proj-testkey
+  BEE_API: "http://127.0.0.1:4000"
+```
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: kubernetes.io/basic-auth
+stringData:
+  username: admin
+  password: t0p-Secret
+``` 
 ## How to build and run operator:
 
 1. build images
