@@ -135,7 +135,7 @@ class Workflow:
         if agent_defs:
             if type(agent_defs[0]) == str:
                 for agent_name in agent_defs:
-                    self.agents[agent_name] = restore_agent(agent_def)
+                    self.agents[agent_name] = restore_agent(agent_name)
             else:
                 for agent_def in agent_defs:
                   # Use 'bee' if this value isn't set

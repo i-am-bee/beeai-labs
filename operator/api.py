@@ -8,7 +8,7 @@ import asyncio
 import threading
 
 import yaml
-from src.workflow import Workflow
+from src.workflow import Workflow, create_agents
 
 app = Flask(__name__)
 output = io.StringIO()
@@ -31,9 +31,9 @@ def generate():
         for line in lines:
             yield f"data: {line}\n\n"
         position = len(message)
-    #if thread and not thread.is_alive():
-    #    text = "data: Thread completed EndEnd\n\n"
-    #    yield text
+
+agents_yaml = parse_yaml("src/agents.yaml")
+create_agents(agents_yaml)
 
 @app.route('/stream')
 def stream():
@@ -60,7 +60,10 @@ def process_workflow():
         if prompt:
             workflow_yaml[0]["spec"]["template"]["prompt"] = prompt
         try:
-            workflow_instance = Workflow(agents_yaml, workflow_yaml[0])
+            agent_names = []
+            for agent_yaml in agents_yaml:
+                agent_names.append(agent_yaml["metadata"]["name"])
+            workflow_instance = Workflow(agent_names, workflow_yaml[0])
         except Exception as excep:
             raise RuntimeError("Unable to create agents") from excep
         diagram = workflow_instance.to_mermaid()
