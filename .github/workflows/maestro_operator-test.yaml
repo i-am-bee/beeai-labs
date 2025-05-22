@@ -45,6 +45,21 @@ jobs:
         kubectl apply -f operator/test/config/test-configmap.yaml
         kubectl apply -f operator/test/config/test-workflowrun.yaml
         sleep 15
+
+        svc=$(kubectl get svc ibm-summary-ai)
+        if [ -z "$svc" ]; then
+            exit 1
+        else
+            echo "Service is created"
+        fi
+	pods=$(kubectl get pod -l app.kubernetes.io/instance=ibm-summary-ai)
+        # Check if there are any pods
+        if [ -z "$pods" ]; then
+          exit 1
+        else
+          echo "Pod is created"
+        fi
+
     - name: Send request
       run: |
         kubectl get pod -n operator-system -o yaml
@@ -52,3 +67,11 @@ jobs:
         kubectl get pod -o yaml
         kubectl logs -l app.kubernetes.io/instance=weather-checker-ai
         curl -L "http://127.0.0.1:30051/?Prompt=Los+angels"
+
+        POD_DETAILS=$(kubectl get pod -l app.kubernetes.io/instance=ibm-summary-ai -o json)
+        RESTART_COUNT=$(echo $POD_DETAILS | jq -r '.items[0].status.containerStatuses[0].restartCount')
+        if [ "$RESTART_COUNT" -eq 0 ]; then
+            echo "Pod has not been restarted."
+        else
+            exit 1
+        fi
