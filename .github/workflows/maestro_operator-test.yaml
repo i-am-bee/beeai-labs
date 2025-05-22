@@ -52,7 +52,7 @@ jobs:
         else
             echo "Service is created"
         fi
-	pods=$(kubectl get pod -l app.kubernetes.io/instance=ibm-summary-ai)
+        pods=$(kubectl get pod -l app.kubernetes.io/instance=ibm-summary-ai)
         # Check if there are any pods
         if [ -z "$pods" ]; then
           exit 1
