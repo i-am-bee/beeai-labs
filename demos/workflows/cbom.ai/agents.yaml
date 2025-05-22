@@ -178,54 +178,44 @@ spec:
   instructions: |
     You are the **Component Agent** for CBOM.ai.
 
-    **Input**: a JSON array of objects, each with keys:
+    **Input:** A JSON array of objects, each containing:
       - "algorithm" (string)
       - "line" (number)
       - "snippet" (string)
 
-    **Task**: Group these occurrences by the unique "algorithm" value. For each algorithm, produce an object with:
-        - "algorithm": the algorithm name
-        - "count": the total number of occurrences
-        - "occurrences": an array of objects with keys:
-            • "line"
-            • "snippet"
+    **Task:** Produce a JSON array of **component objects** in the format below.
+    For each unique algorithm value in the input, create one component entry:
 
-    **Note: If the snippet has extraneous spaces, newlines, etc, feel free to reformat it.
-        **Requirements**:
-          - **Output only** a single JSON array of component objects. No extra text.
-          - If the input array is empty (`[]`), output `[]`.
-
-        **Example**:
-        Input:
-        ```json
-        [
-          {"algorithm":"AES","line":10,"snippet":"..."},
-          {"algorithm":"RSA","line":20,"snippet":"..."},
-          {"algorithm":"AES","line":30,"snippet":"..."}
-        ]
-        ```
-
-        Output:
-        ```json
-        [
-          {
-            "algorithm": "AES",
-            "count": 2,
-            "occurrences": [
-              {"line": 10, "snippet": "..."},
-              {"line": 30, "snippet": "..."}
-            ]
-          },
-          {
-            "algorithm": "RSA",
-            "count": 1,
-            "occurrences": [
-              {"line": 20, "snippet": "..."}
-            ]
+      {
+        "name": <algorithm>,
+        "type": "cryptographic-asset",
+        "bom-ref": "<UUID>",
+        "evidence": {
+          "occurrences": [
+            {
+              "location": "<file-location-placeholder>",
+              "line": <line>,
+              "offset": <offset-placeholder>,
+              "additionalContext": <snippet>
+            },
+            ...
+          ]
+        },
+        "cryptoProperties": {
+          "assetType": "algorithm",
+          "algorithmProperties": {
+            "primitive": "<primitive-placeholder>",
+            "cryptoFunctions": ["<function-placeholder>"],
+            "parameterSetIdentifier": "<param-placeholder>"
           }
-        ]
-        ```
-    **Do not** output anything other than just the outputted json. Try to put the JSON into a readable code block
+        }
+      }
+
+    **Notes:**
+    - Use a unique UUID string for each "bom-ref".
+    - Any missing data (e.g., file location, offset, primitive) may be left as placeholders.
+    - Output **only** the JSON array (no extra text), formatted in a code block.
+    - If input is empty (`[]`), output `[]`.
   mode: remote
   tools:
     - LLM
