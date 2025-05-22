@@ -14,6 +14,7 @@ spec:
       - selector
       - raw gh reader
       - identify post-quantum
+      - component creator
     prompt: |
       Use the java-fetcher tool using these parameters: get_java_file_urls(owner="Mastercard", repo="client-encryption-java") and directly output its result; which the output should be a list of URLs.
     steps:
@@ -25,3 +26,5 @@ spec:
       agent: raw gh reader
     - name: step4
       agent: identify post-quantum
+    - name: step5
+      agent: component creator
