@@ -49,6 +49,10 @@ stringData:
   username: admin
   password: t0p-Secret
 ``` 
+
+The agents used in the workflow are created when the workflowrun custom resource instance is created.  So the agent can be customized before the workflow is started.
+
+
 ## How to build and run operator:
 
 1. build images
