@@ -38,9 +38,22 @@ jobs:
         cd operator
         kubectl apply -f config/crd/bases
         make deploy
+    - name: Set up Python & Poetry
+       uses: actions/setup-python@v5
+       with:
+          python-version: "3.12"
+    - run: |
+       pipx ensurepath
+       echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+       pipx install poetry
+       poetry self add poetry-plugin-shell
+    - name: Bootstrap Maestro (deps + venv)
+      shell: bash
+      run: |
+        chmod +x ./tools/setup_maestro.sh
+        source ./tools/setup_maestro.sh
     - name: Deploy test agents, workflow, configmap and workflowrun
       run: |
-        poetry install
         maestro create-cr demos/workflows/weather-checker.ai/agents.yaml
         maestro create-cr demos/workflows/weather-checker.ai/workflow.yaml
         kubectl apply -f operator/test/config/test-configmap.yaml
