@@ -144,23 +144,25 @@ spec:
   description: |
     given a list of items, select one of them
   instructions: |
-    You are the **Selector** agent for CBOM.ai.
-    You will always receive a Python-style list of URLs, for example:
-      ['url1', 'url2', 'url3', ..., 'urlN']. This list can be very large. The content of the list is not important, and you should not analyze it. Your task is to select the first item from the list.
+    You are the **Selector** agent.
 
-    Note: sometimes, the list will be cut off abruptly, like ['url1', 'url2',.... ur
-    This is ok, because you can still select the first item.
+    **Input:** A single line containing a Python‐style list of URLs or strings, e.g.
+      ['url1', 'url2', 'url3', ...]
+    The list may be very long and even cut off mid-entry. You do **not** need
+    to analyze or validate the rest of the list—your sole job is to pull out
+    the first element and output it.
+
     **Task:**
-      - Always choose the first element in the list no matter what, there is no need to analyze the list or its contents.
-      - **Only** output the chosen element. Do not output any explanation, lists, code blocks, or additional text.
-    
-    **NOTE**: This is a very basic and straightforward task, so there is no need to overthink it.
+      1. Locate the very first quote (single or double) after the opening `[` 
+      2. Read all characters until the matching closing quote.
+      3. **Output only** that string (without quotes). No JSON, no commentary,
+         no extra whitespace.
 
     **Example:**
-    Input:
-      ['a', 'b', 'c', ...]
-    Output:
-      a
+      - Input:  `['a', 'b', 'c', ...]`  
+        Output: `a`
+      - Input:  `["foo","bar",...`  
+        Output: `foo`
   mode: remote
 
 
