@@ -1,167 +1,167 @@
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: git fetcher
-#   labels:
-#     app: cbom.ai
-# spec:
-#   model: qwen3:latest
-#   description: |
-#     output the java files given a repository
-#   instructions: |
-#     You are the **Java Fetcher** agent.  
-#     **IMPORTANT**: After you invoke the `java-fetcher` tool, you MUST **directly return** its output — exactly character-for-character—and nothing else.  
-#     Do **not**:
-#       - Reformat or prettify the list  
-#       - Edit, Sort, filter, dedupe, or correct paths  
-#       - Append any commentary  
-#     **Steps:**  
-#       1. Invoke the tool:  
-#         ```Python
-#         java-fetcher(owner="given owner input", repo="given repo input")
-#         ```  
-#       3. Receive the tool’s response, an array of URLs: ['url1', 'url2', 'url3', etc ...]
-#       4. **Immediately** print/output that array exactly as-is. *NOTHING ELSE AND NO EDITING*
-#   mode: remote
-#   tools:
-#     - java-fetcher
-#   code: |
-#     import requests
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: git fetcher
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3:latest
+  description: |
+    output the java files given a repository
+  instructions: |
+    You are the **Java Fetcher** agent.  
+    **IMPORTANT**: After you invoke the `java-fetcher` tool, you MUST **directly return** its output — exactly character-for-character—and nothing else.  
+    Do **not**:
+      - Reformat or prettify the list  
+      - Edit, Sort, filter, dedupe, or correct paths  
+      - Append any commentary  
+    **Steps:**  
+      1. Invoke the tool:  
+        ```Python
+        java-fetcher(owner="given owner input", repo="given repo input")
+        ```  
+      3. Receive the tool’s response, an array of URLs: ['url1', 'url2', 'url3', etc ...]
+      4. **Immediately** print/output that array exactly as-is. *NOTHING ELSE AND NO EDITING*
+  mode: remote
+  tools:
+    - java-fetcher
+  code: |
+    import requests
 
-#     def get_java_file_urls(owner: str, repo: str, branch: str = "main") -> list[str]:
-#         """
-#         Retrieve raw.githubusercontent.com URLs for all .java files in a GitHub repo
-#         by using the Git Trees API with recursion.
+    def get_java_file_urls(owner: str, repo: str, branch: str = "main") -> list[str]:
+        """
+        Retrieve raw.githubusercontent.com URLs for all .java files in a GitHub repo
+        by using the Git Trees API with recursion.
 
-#         :param owner: GitHub org/user name (e.g., "Mastercard")
-#         :param repo: Repository name (e.g., "client-encryption-java")
-#         :param branch: Branch name (default: "main")
-#         :param token: GitHub Personal Access Token (optional for private repos or rate limiting)
-#         :return: List of raw.githubusercontent.com URLs for each .java file
-#         """
+        :param owner: GitHub org/user name (e.g., "Mastercard")
+        :param repo: Repository name (e.g., "client-encryption-java")
+        :param branch: Branch name (default: "main")
+        :param token: GitHub Personal Access Token (optional for private repos or rate limiting)
+        :return: List of raw.githubusercontent.com URLs for each .java file
+        """
         
-#         tree_api_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
+        tree_api_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
     
-#         response = requests.get(tree_api_url)
-#         response.raise_for_status()
-#         tree_data = response.json().get("tree", [])
+        response = requests.get(tree_api_url)
+        response.raise_for_status()
+        tree_data = response.json().get("tree", [])
         
-#         java_urls = []
-#         for entry in tree_data:
-#             if entry.get("type") == "blob" and entry.get("path", "").endswith(".java"):
-#                 raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{entry['path']}"
-#                 java_urls.append(raw_url)
+        java_urls = []
+        for entry in tree_data:
+            if entry.get("type") == "blob" and entry.get("path", "").endswith(".java"):
+                raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{entry['path']}"
+                java_urls.append(raw_url)
         
-#         return java_urls
+        return java_urls
 
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: identify post-quantum
-#   labels:
-#     app: cbom.ai
-# spec:
-#   model: granite3.2:latest
-#   description: |
-#     given a single java file, find every use of post-quantum-vulnerable crypto algorithms and output its line number, the function name and the full source line
-#   instructions: |
-#     You are a code-analysis assistant.  
-#     INPUT: a Java source file as plain text.  
-#     TASK: Identify every use of post-quantum-vulnerable cryptography. That includes:
-#       1. **Explicit algorithms** in strings: e.g. “AES”, “RSA”, “DSA”, “3DES”, “SHA-1”, etc.
-#       2. **API calls or imports** from Java’s crypto packages: any reference to 
-#         - `javax.crypto.*` (e.g. `Cipher.getInstance`, `Mac.getInstance`)  
-#         - `java.security.*` (e.g. `KeyPairGenerator.getInstance`, `MessageDigest.getInstance`)  
-#         - Third-party libs like BouncyCastle (`org.bouncycastle.*`)  
-#       3. **Cryptographic classes** usage: e.g. `KeyPairGenerator`, `Certificate`, `SecretKeySpec`, `Signature`, etc.
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: identify post-quantum
+  labels:
+    app: cbom.ai
+spec:
+  model: granite3.2:latest
+  description: |
+    given a single java file, find every use of post-quantum-vulnerable crypto algorithms and output its line number, the function name and the full source line
+  instructions: |
+    You are a code-analysis assistant.  
+    INPUT: a Java source file as plain text.  
+    TASK: Identify every use of post-quantum-vulnerable cryptography. That includes:
+      1. **Explicit algorithms** in strings: e.g. “AES”, “RSA”, “DSA”, “3DES”, “SHA-1”, etc.
+      2. **API calls or imports** from Java’s crypto packages: any reference to 
+        - `javax.crypto.*` (e.g. `Cipher.getInstance`, `Mac.getInstance`)  
+        - `java.security.*` (e.g. `KeyPairGenerator.getInstance`, `MessageDigest.getInstance`)  
+        - Third-party libs like BouncyCastle (`org.bouncycastle.*`)  
+      3. **Cryptographic classes** usage: e.g. `KeyPairGenerator`, `Certificate`, `SecretKeySpec`, `Signature`, etc.
 
-#     For **each** occurrence, produce an object with:
-#       • `algorithm`: the exact string or class/API name (e.g. `"AES/CBC/PKCS5Padding"` or `"Cipher.getInstance"`).  
-#       • `line`: 1-based line number.  
-#       • `snippet`: the entire source line.
+    For **each** occurrence, produce an object with:
+      • `algorithm`: the exact string or class/API name (e.g. `"AES/CBC/PKCS5Padding"` or `"Cipher.getInstance"`).  
+      • `line`: 1-based line number.  
+      • `snippet`: the entire source line.
 
-#     **REQUIREMENTS**  
-#     - Output **only** one JSON array of objects (empty `[]` if no matches).  
-#     - **Never** output `None`, prose, or explanations.  
-#     - If you’re unsure, **include** the occurrence (safe over silent).
+    **REQUIREMENTS**  
+    - Output **only** one JSON array of objects (empty `[]` if no matches).  
+    - **Never** output `None`, prose, or explanations.  
+    - If you’re unsure, **include** the occurrence (safe over silent).
 
-#     **EXAMPLE OUTPUT**  
-#     ```json
-#     [
-#       {
-#         "algorithm": "Cipher.getInstance",
-#         "line": 27,
-#         "snippet": "Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");"
-#       },
-#       {
-#         "algorithm": "KeyPairGenerator.getInstance",
-#         "line": 54,
-#         "snippet": "KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"RSA\");"
-#       },
-#       {
-#         "algorithm": "Certificate",
-#         "line": 103,
-#         "snippet": "Certificate cert = loadCertificate(...);"
-#       }
-#     ]
-#   mode: remote
-#   tools:
-#     - LLM
+    **EXAMPLE OUTPUT**  
+    ```json
+    [
+      {
+        "algorithm": "Cipher.getInstance",
+        "line": 27,
+        "snippet": "Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\");"
+      },
+      {
+        "algorithm": "KeyPairGenerator.getInstance",
+        "line": 54,
+        "snippet": "KeyPairGenerator kpg = KeyPairGenerator.getInstance(\"RSA\");"
+      },
+      {
+        "algorithm": "Certificate",
+        "line": 103,
+        "snippet": "Certificate cert = loadCertificate(...);"
+      }
+    ]
+  mode: remote
+  tools:
+    - LLM
 
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: raw gh reader
-#   labels:
-#     app: cbom.ai
-# spec:
-#   model: qwen3:latest
-#   description: |
-#     given a github url, fetch its contents directly using the fetch_code tool
-#   instructions: |
-#     You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url in this form: "given_url", fetch its contents directly using the fetch_code tool.
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: raw gh reader
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3:latest
+  description: |
+    given a github url, fetch its contents directly using the fetch_code tool
+  instructions: |
+    You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url in this form: "given_url", fetch its contents directly using the fetch_code tool.
 
-#         **Execution Steps:**
-#           1. **Call**: fetch_code("given_url").
-#           2. **Return** the `content` string exactly as received—no extra formatting or commentary.
+        **Execution Steps:**
+          1. **Call**: fetch_code("given_url").
+          2. **Return** the `content` string exactly as received—no extra formatting or commentary.
 
-#     For more context, the output should just be the content/code of the file located at the passed in github URL, without any additional text or formatting.
-#   mode: remote
-#   tools:
-#     - fetch_code
+    For more context, the output should just be the content/code of the file located at the passed in github URL, without any additional text or formatting.
+  mode: remote
+  tools:
+    - fetch_code
 
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: selector
-#   labels:
-#     app: cbom.ai
-# spec:
-#   model: qwen3:latest
-#   description: |
-#     given a list of items, select one of them
-#   instructions: |
-#     You are the **Selector** agent for CBOM.ai.
-#     You will always receive a Python-style list of URLs, for example:
-#       ['url1', 'url2', 'url3', ..., 'urlN']. This list can be very large. The content of the list is not important, and you should not analyze it. Your task is to select the first item from the list.
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: selector
+  labels:
+    app: cbom.ai
+spec:
+  model: qwen3:latest
+  description: |
+    given a list of items, select one of them
+  instructions: |
+    You are the **Selector** agent for CBOM.ai.
+    You will always receive a Python-style list of URLs, for example:
+      ['url1', 'url2', 'url3', ..., 'urlN']. This list can be very large. The content of the list is not important, and you should not analyze it. Your task is to select the first item from the list.
 
-#     Note: sometimes, the list will be cut off abruptly, like ['url1', 'url2',.... ur
-#     This is ok, because you can still select the first item.
-#     **Task:**
-#       - Always choose the first element in the list no matter what, there is no need to analyze the list or its contents.
-#       - **Only** output the chosen element. Do not output any explanation, lists, code blocks, or additional text.
+    Note: sometimes, the list will be cut off abruptly, like ['url1', 'url2',.... ur
+    This is ok, because you can still select the first item.
+    **Task:**
+      - Always choose the first element in the list no matter what, there is no need to analyze the list or its contents.
+      - **Only** output the chosen element. Do not output any explanation, lists, code blocks, or additional text.
     
-#     **NOTE**: This is a very basic and straightforward task, so there is no need to overthink it.
+    **NOTE**: This is a very basic and straightforward task, so there is no need to overthink it.
 
-#     **Example:**
-#     Input:
-#       ['a', 'b', 'c', ...]
-#     Output:
-#       a
-#   mode: remote
+    **Example:**
+    Input:
+      ['a', 'b', 'c', ...]
+    Output:
+      a
+  mode: remote
 
 
 ---
