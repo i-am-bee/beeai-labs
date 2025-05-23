@@ -55,7 +55,7 @@ jobs:
     - name: Deploy test agents, workflow, configmap and workflowrun
       run: |
         pwd
-	ls -l
+        ls -l
         maestro create-cr demos/workflows/weather-checker.ai/agents.yaml
         maestro create-cr demos/workflows/weather-checker.ai/workflow.yaml
         kubectl apply -f operator/test/config/test-configmap.yaml
