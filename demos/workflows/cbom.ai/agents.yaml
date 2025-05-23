@@ -219,3 +219,56 @@ spec:
   mode: remote
   tools:
     - LLM
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: BOM Assembler
+  labels:
+    app: cbom.ai
+spec:
+  model: granite3.2:latest
+  description: |
+    cbom assembler agent
+  instructions: |
+    You are the **BOM Assembler** agent for CBOM.ai.
+
+    **Input:** A JSON array of CycloneDX-style component objects.
+
+    **Task:** Produce a complete CycloneDX BOM JSON document with a hardcoded header and the provided components. Use the following template, substituting in the input array:
+
+    ```json
+    {
+      "version": 1,
+      "metadata": {
+        "tools": {"services": [{
+          "name": "Sonar Cryptography Plugin",
+          "version": "1.3.2",
+          "provider": {"name": "IBM"}
+        }]},
+        "timestamp":  "placeholder",
+        "properties": [
+          {"name":"git-url",    "value":"https://github.com/Mastercard/client-encryption-java"},
+          {"name":"git-branch", "value":"main"},
+          {"name":"commit",     "value":"placeholder"},
+          {"name":"purl",       "value":"pkg:github/Mastercard/client-encryption-java"}
+        ]
+      },
+      "$schema": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/bom-1.6.schema.json",
+      "bomFormat": "CycloneDX",
+      "components": {{components}},
+      "specVersion": "1.6",
+      "dependencies": [],
+      "serialNumber": "placeholder"
+    }
+    ```
+
+    - Insert the input array in place of `{{components}}`.
+    - Leave dependencies as an empty array for now.
+    - You do not need to replaced "placeholder" for now, you can just keep it as is.
+    - **Output only** the final JSON document in a code block, no extra text.
+    - **NOTE**: the header is always the same, so you can directly hardcode it in your output.
+  mode: remote
+  tools:
+    - LLM

@@ -15,6 +15,7 @@ spec:
       - raw gh reader
       - identify post-quantum
       - component creator
+      - BOM Assembler
     prompt: |
       Use the java-fetcher tool using these parameters: get_java_file_urls(owner="Mastercard", repo="client-encryption-java") and directly output its result; which the output should be a list of URLs.
     steps:
@@ -28,3 +29,5 @@ spec:
       agent: identify post-quantum
     - name: step5
       agent: component creator
+    - name: step6
+      agent: BOM Assembler
