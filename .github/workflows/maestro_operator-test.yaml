@@ -59,7 +59,8 @@ jobs:
         kubectl apply -f operator/test/config/test-configmap.yaml
         kubectl apply -f operator/test/config/test-workflowrun.yaml
         sleep 15
-
+        kubectl get workflow
+	kubectl get agent
         kubectl get pod -n operator-system -o yaml
         kubectl logs -l control-plane=controller-manager -n operator-system
         kubectl get pod -o yaml

@@ -616,7 +616,8 @@ class CreateCrCmd(Command):
                             exception['agent'] = sanitize_name(exception['agent'])
                 with open("temp_yaml", 'w') as file:
                     yaml.safe_dump(data, file)
-                    subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
+                    result = subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
+                    print(result)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError(f"{str(e)}") from e
