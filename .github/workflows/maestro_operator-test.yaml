@@ -64,7 +64,7 @@ jobs:
         kubectl logs -l control-plane=controller-manager -n operator-system
         kubectl get pod -o yaml
         kubectl logs -l app.kubernetes.io/instance=weather-checker-ai
-	
+
         svc=$(kubectl get svc weather-checker-ai)
         if [ -z "$svc" ]; then
             exit 1
