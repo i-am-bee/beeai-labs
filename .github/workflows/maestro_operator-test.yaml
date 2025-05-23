@@ -40,8 +40,9 @@ jobs:
         make deploy
     - name: Deploy test agents, workflow, configmap and workflowrun
       run: |
-        ./maestro create-cr demos/workflows/weather-checker.ai/agents.yaml
-        ./maestro create-cr demos/workflows/weather-checker.ai/workflow.yaml
+        poetry install
+        maestro create-cr demos/workflows/weather-checker.ai/agents.yaml
+        maestro create-cr demos/workflows/weather-checker.ai/workflow.yaml
         kubectl apply -f operator/test/config/test-configmap.yaml
         kubectl apply -f operator/test/config/test-workflowrun.yaml
         sleep 15
