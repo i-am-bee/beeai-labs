@@ -39,14 +39,14 @@ jobs:
         kubectl apply -f config/crd/bases
         make deploy
     - name: Set up Python & Poetry
-       uses: actions/setup-python@v5
-       with:
-          python-version: "3.12"
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
     - run: |
-       pipx ensurepath
-       echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-       pipx install poetry
-       poetry self add poetry-plugin-shell
+        pipx ensurepath
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        pipx install poetry
+        poetry self add poetry-plugin-shell
     - name: Bootstrap Maestro (deps + venv)
       shell: bash
       run: |
