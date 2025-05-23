@@ -4,7 +4,7 @@ This is an experimental feature of the maestro deployment in kubernetes clusters
 
 This implements the maestro agent and workflow as kubernetes CRD.  An additional CRD workflowrun is defined to invoke the workflow execution.
 
-Maestro "agent" and "workflow" are mapped to "Agent" and "Workflow" custom resources.  For now, "deploycr.py" takes maestro yaml file and deploy the agent and workflow in the cluster as the custom resources.  Another custom resource "WorkflowRun" has agent and workflow custom resource names and other configuration to run the workflow in the cluster.  Creating the "WorkflowRun" custom resource instance invoke the Maestro workflow.
+Maestro "agent" and "workflow" are mapped to "Agent" and "Workflow" custom resources.  "maestro create-cr" takes maestro yaml file and deploys the agent and workflow in the cluster as the custom resources.  Another custom resource "WorkflowRun" has agent and workflow custom resource names and other configuration to run the workflow in the cluster.  Creating the "WorkflowRun" custom resource instance invoke the Maestro workflow.
 Here is an example of the "WorkflowRun"
 
 The names of workflow and agent are updated to match kubernetes resource naming rules.  All capital letters are changed to lowercases and the all special characters including spaces except "-" are replace to "-".
