@@ -51,3 +51,23 @@ Output: JSON array of component objects with bom-ref, evidence, cryptoProperties
 Purpose: Wrap header, metadata, components, dependencies into a final CBOM.
 
 Output: Complete CycloneDX BOM JSON document.
+
+### Mermaid Diagram
+
+<!-- MERMAID_START -->
+```mermaid
+sequenceDiagram
+participant git fetcher
+participant selector
+participant raw gh reader
+participant identify post_quantum
+participant component creator
+participant BOM Assembler
+git fetcher->>selector: step1
+selector->>raw gh reader: step2
+raw gh reader->>identify post_quantum: step3
+identify post_quantum->>component creator: step4
+component creator->>BOM Assembler: step5
+BOM Assembler->>BOM Assembler: step6
+```
+<!-- MERMAID_END -->
