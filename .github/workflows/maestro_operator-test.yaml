@@ -1,0 +1,87 @@
+name: Maestro Operator Test
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+    - '**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+    - '**'
+jobs:
+  test-in-kind:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: |
+        cd operator
+        make docker-build
+        make engine-docker-build
+        docker tag docker.io/library/controller:latest localhost/controller:latest
+        docker tag docker.io/library/maestro-engine:latest localhost/maestro-engine:latest
+    - name: Install Kind
+      run: |
+        curl -Lo ./kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.20.0/kind-$(uname)-amd64"
+        chmod +x ./kind
+        sudo mv kind /usr/local/bin
+        which kind
+    - name: Create Kind cluster
+      run: |
+        kind create cluster --config tests/integration/deploys/kind-config.yaml 
+    - name: Load images cluster
+      run: |
+        kind load docker-image localhost/controller:latest 
+        kind load docker-image localhost/maestro-engine:latest 
+    - name: Install Maestro Operator
+      run: |
+        cd operator
+        kubectl apply -f config/crd/bases
+        make deploy
+    - name: Set up Python & Poetry
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - run: |
+        pipx ensurepath
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        pipx install poetry
+        poetry self add poetry-plugin-shell
+    - name: Bootstrap Maestro (deps + venv)
+      shell: bash
+      run: |
+        chmod +x ./tools/setup_maestro.sh
+        source ./tools/setup_maestro.sh
+    - name: Deploy test agents, workflow, configmap and workflowrun
+      run: |
+        poetry run maestro create-cr demos/workflows/weather-checker.ai/agents.yaml
+        poetry run maestro create-cr demos/workflows/weather-checker.ai/workflow.yaml
+        kubectl apply -f operator/test/config/test-configmap.yaml
+        kubectl apply -f operator/test/config/test-workflowrun.yaml
+        sleep 15
+
+        svc=$(kubectl get svc weather-checker-ai)
+        if [ -z "$svc" ]; then
+            exit 1
+        else
+            echo "Service is created"
+        fi
+        pods=$(kubectl get pod -l app.kubernetes.io/instance=weather-checker-ai)
+        # Check if there are any pods
+        if [ -z "$pods" ]; then
+          exit 1
+        else
+          echo "Pod is created"
+        fi
+
+    - name: Send request
+      run: |
+        curl -L "http://127.0.0.1:30051/?Prompt=Los+angels"
+
+        POD_DETAILS=$(kubectl get pod -l app.kubernetes.io/instance=weather-checker-ai -o json)
+        RESTART_COUNT=$(echo $POD_DETAILS | jq -r '.items[0].status.containerStatuses[0].restartCount')
+        if [ "$RESTART_COUNT" -eq 0 ]; then
+            echo "Pod has not been restarted."
+        else
+            exit 1
+        fi

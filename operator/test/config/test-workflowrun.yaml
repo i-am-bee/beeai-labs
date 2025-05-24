@@ -1,0 +1,16 @@
+apiVersion: maestro.ai4quantum.com/v1alpha1
+kind: WorkflowRun
+metadata:
+  labels:
+    app.kubernetes.io/name: operator
+    app.kubernetes.io/managed-by: kustomize
+  name: weather-checker-ai
+spec:
+  agents:
+  - temperature-agent
+  - hot-or-not-agent
+  workflow: maestro-deployment
+  loglevel: DEBUG
+  nodeport: 30051
+  environments: test-configmap
+  #secrets: mysecret

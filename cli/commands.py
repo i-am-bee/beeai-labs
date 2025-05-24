@@ -13,14 +13,14 @@
 # limitations under the License.
 
 """CLI command implementations for Maestro workflow management."""
-
 import os
+import re
 import signal
 import sys
 import json
 import traceback
 import asyncio
-from subprocess import Popen
+import subprocess
 
 import yaml
 import jsonschema
@@ -66,6 +66,8 @@ class CLI:
             return MetaAgentsCmd(self.args)
         elif self.args.get('clean') and self.args['clean']:
             return CleanCmd(self.args)
+        elif self.args.get('create-cr') and self.args['create-cr']:
+            return CreateCrCmd(self.args)
         else:
             raise Exception("Invalid command")
 
@@ -135,6 +137,8 @@ class Command:
             return self.meta_agents
         elif self.args['clean']:
             return self.clean
+        elif self.args['create-cr']:
+            return self.create_cr
         else:
             raise Exception("Invalid subcommand")
 
@@ -165,6 +169,12 @@ class ValidateCmd(Command):
                 return ValidateCmd.TOOL_SCHEMA_FILE
             elif kind == 'Workflow':
                 return ValidateCmd.WORKFLOW_SCHEMA_FILE
+            elif kind == 'WorkflowRun':
+                Console.ok("WorkflowRun is not supported")
+                return None
+            elif kind == 'CustomResourceDefinition':
+                Console.ok("CustomResourceDefinition is not supported")
+                return None
             else:
                 raise ValueError(f"Unknown kind: {kind}")
         except Exception as e:
@@ -213,6 +223,8 @@ class ValidateCmd(Command):
             discovered_schema_file = ''
             try:
                 discovered_schema_file = self.__discover_schema_file(self.YAML_FILE())
+                if not discovered_schema_file:
+                    return 0
             except Exception as e:
                 Console.error(f"Invalid YAML file: {self.YAML_FILE()}: {str(e)}")
                 return 1
@@ -327,7 +339,7 @@ class DeployCmd(Command):
     def __deploy_agents_workflow_streamlit(self):
         try:
             sys.argv = ["streamlit", "run", "--ui.hideTopBar", "True", "--client.toolbarMode", "minimal", f"{os.getcwd()}/cli/streamlit_deploy.py", self.AGENTS_FILE(), self.WORKFLOW_FILE()]
-            process = Popen(sys.argv)
+            process = subprocess.Popen(sys.argv)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError(f"{str(e)}") from e
@@ -474,7 +486,7 @@ class MetaAgentsCmd(Command):
     def __meta_agents(self, text_file) -> int:
         try:
             sys.argv = ["streamlit", "run", "--ui.hideTopBar", "True", "--client.toolbarMode", "minimal", f"{os.getcwd()}/cli/streamlit_meta_agents_deploy.py", text_file]
-            process = Popen(sys.argv)
+            process = subprocess.Popen(sys.argv)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError(f"{str(e)}") from e
@@ -504,8 +516,8 @@ class MetaAgentsCmd(Command):
             return 1
         return 0
 
-# Create command group
-#  maestro create AGENTS_FILE [options]
+# Clean command group
+#  maestro clean [options]
 class CleanCmd(Command):
     """Command handler for cleaning up running processes."""
     
@@ -543,5 +555,77 @@ class CleanCmd(Command):
         except Exception as e:
             self._check_verbose()
             Console.error(f"Unable to clean: {str(e)}")
+            return 1
+        return 0
+
+# CreateCr command group
+#  maestro create-cr YAML_FILE [options]
+def sanitize_name(name):
+    new_name = re.sub(r'[^a-zA-Z0-9.]','-', name).lower().replace(" ", "-")
+    if re.search(r'[.-0-9]$', new_name):
+        return new_name + 'e'
+    else:
+        return new_name
+
+class CreateCrCmd(Command):
+    def __init__(self, args):
+        self.args = args
+        super().__init__(self.args)
+
+    def YAML_FILE(self):
+        return self.args['YAML_FILE']
+
+    def name(self):
+      return "create-cr"
+
+    def __create_cr(self):
+        try:
+
+            file_path = self.YAML_FILE()
+            with open(file_path, 'r') as file:
+                multiple = yaml.safe_load_all(file)
+
+                for data in multiple:
+                    data['apiVersion'] = "maestro.ai4quantum.com/v1alpha1"
+                    if 'metadata' in data and 'name' in data['metadata']:
+                        data['metadata']['name'] = sanitize_name(data['metadata']['name'])
+                    if data['kind'] == "Workflow":
+                        # remove template.meatdata
+                        if data['spec']['template'].get('metadata'):
+                            del data['spec']['template']['metadata']
+                        if data['spec']['template'].get('agents'):
+                            agents = data['spec']['template']['agents']
+                            samitized_agents = []
+                            for agent in agents:
+                                samitized_agents.append(sanitize_name(agent))
+                            data['spec']['template']['agents'] = samitized_agents
+                        if data['spec']['template'].get('steps'):
+                            steps = data['spec']['template']['steps']
+                            for step in steps:
+                                if step.get('agent'):
+                                    step['agent'] = sanitize_name(step['agent'])
+                                if step.get('parallel'):
+                                    agents = step['parallel']
+                                    samitized_agents = []
+                                    for agent in agents:
+                                        samitized_agents.append(sanitize_name(agent))
+                                    step['parallel'] = samitized_agents
+                        if data['spec']['template'].get('exception'):
+                            exception = data['spec']['template']['exception']
+                            if exception.get('agent'):
+                                exception['agent'] = sanitize_name(exception['agent'])
+                    with open("temp_yaml", 'w') as file:
+                        yaml.safe_dump(data, file)
+                        subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
+        except Exception as e:
+            self._check_verbose()
+            raise RuntimeError(f"{str(e)}") from e
+
+    def create_cr(self):
+        try:
+            self.__create_cr()
+        except Exception as e:
+            self._check_verbose()
+            Console.error(f"Unable to create CR: {str(e)}")
             return 1
         return 0
