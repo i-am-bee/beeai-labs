@@ -587,37 +587,36 @@ class CreateCrCmd(Command):
 
                 for data in multiple:
                     data['apiVersion'] = "maestro.ai4quantum.com/v1alpha1"
-                if 'metadata' in data and 'name' in data['metadata']:
-                    data['metadata']['name'] = sanitize_name(data['metadata']['name'])
-                if data['kind'] == "Workflow":
-                    # remove template.meatdata
-                    if data['spec']['template'].get('metadata'):
-                        del data['spec']['template']['metadata']
-                    if data['spec']['template'].get('agents'):
-                        agents = data['spec']['template']['agents']
-                        samitized_agents = []
-                        for agent in agents:
-                            samitized_agents.append(sanitize_name(agent))
-                        data['spec']['template']['agents'] = samitized_agents
-                    if data['spec']['template'].get('steps'):
-                        steps = data['spec']['template']['steps']
-                        for step in steps:
-                            if step.get('agent'):
-                                step['agent'] = sanitize_name(step['agent'])
-                            if step.get('parallel'):
-                                agents = step['parallel']
-                                samitized_agents = []
-                                for agent in agents:
-                                    samitized_agents.append(sanitize_name(agent))
-                                step['parallel'] = samitized_agents
-                    if data['spec']['template'].get('exception'):
-                        exception = data['spec']['template']['exception']
-                        if exception.get('agent'):
-                            exception['agent'] = sanitize_name(exception['agent'])
-                with open("temp_yaml", 'w') as file:
-                    yaml.safe_dump(data, file)
-                    result = subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
-                    print(result)
+                    if 'metadata' in data and 'name' in data['metadata']:
+                        data['metadata']['name'] = sanitize_name(data['metadata']['name'])
+                    if data['kind'] == "Workflow":
+                        # remove template.meatdata
+                        if data['spec']['template'].get('metadata'):
+                            del data['spec']['template']['metadata']
+                        if data['spec']['template'].get('agents'):
+                            agents = data['spec']['template']['agents']
+                            samitized_agents = []
+                            for agent in agents:
+                                samitized_agents.append(sanitize_name(agent))
+                            data['spec']['template']['agents'] = samitized_agents
+                        if data['spec']['template'].get('steps'):
+                            steps = data['spec']['template']['steps']
+                            for step in steps:
+                                if step.get('agent'):
+                                    step['agent'] = sanitize_name(step['agent'])
+                                if step.get('parallel'):
+                                    agents = step['parallel']
+                                    samitized_agents = []
+                                    for agent in agents:
+                                        samitized_agents.append(sanitize_name(agent))
+                                    step['parallel'] = samitized_agents
+                        if data['spec']['template'].get('exception'):
+                            exception = data['spec']['template']['exception']
+                            if exception.get('agent'):
+                                exception['agent'] = sanitize_name(exception['agent'])
+                    with open("temp_yaml", 'w') as file:
+                        yaml.safe_dump(data, file)
+                        subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
         except Exception as e:
             self._check_verbose()
             raise RuntimeError(f"{str(e)}") from e
