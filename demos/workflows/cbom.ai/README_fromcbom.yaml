@@ -1,0 +1,55 @@
+# CBOM demo (partial)
+
+This part of the demo covers the remediation flow, as based on our earlier cbom.ai demo
+
+- Covers remediation flow only (designed to be merged later)
+- uses same tools as previously, via MCP (see note below)
+- uses 'openai' with 'gpt-4.1-nano'
+
+The sequence is:
+  - `cbom_finder` : extracts some changes to work on from the supplied cbom
+    - currently the CBOM is encoded verbatim in the workflow, when merged this should come from the previous workflow step.
+  - `cbom_fixer` : creates a patchfile with the required fix
+  - `cbom_patcher` : takes a patchfile & creates a github pull request
+
+## Dependencies
+
+### git MCP server
+
+The following launches a custom mcp server hosting only the tools needed for this demo
+
+```bash
+git clone https://github.com/planetf1/mcp-server
+export MCP_ENABLE_TOOLS='tool_cbom*'
+uv run fastmcp run server.py --transport sse                      
+```
+
+### Environment
+
+Ensure the following environment variables are set:
+```shell
+# OpenAI only (url can be blank)
+export OPENAI_API_KEY=<insert openAI API key>
+export MAESTRO_MCP_ENDPOINTS="http://localhost:8000/sse"
+
+# These must not be set in the environment
+# OPENAI_BASE_URL
+# MAESTRO_OPENAI_EXTRA_HEADERS
+# MAESTRO_OPENAI_USE_LITELLM=false
+```
+
+### github tokens
+
+Replace the string `__TOKEN__` in `demos/workflows/cbom.ai/agents_fromcbom.yaml` with a valid token
+for access to https://github.com/Mastercard/client-encryption-java. This needs write access to the repository:
+  
+
+## Running the demo
+```bash
+maestro run /Users/jonesn/AI/maestro/demos/workflows/cbom.ai/agents_fromcbom.yaml /Users/jonesn/AI/maestro/demos/workflows/cbom.ai/workflow_fromcbom.yaml
+````
+
+## Limitations
+- The cbom patcher is not actually creating a pull request (prompt)
+- The fixer tool works intermittently (prompt)
+- The required mcp tool should be added to the demo directory
