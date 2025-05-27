@@ -10,6 +10,7 @@ from .mock_agent import MockAgent
 from .custom_agent import CustomAgent
 from .slack_agent import SlackAgent
 from .metrics_agent import MetricsAgent
+from .prompt_agent import PromptAgent
 
 class AgentFramework(StrEnum):
     """Enumeration of supported frameworks"""
