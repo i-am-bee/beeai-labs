@@ -8,15 +8,17 @@ spec:
   template:
     metadata:
       name: maestro-deployment
-      labels:
-        app: test
-        use-case: test
-    agents:
-        - test1
-        - evaluate
-    prompt: What is the capital of the United States？
+    prompt: What is the capital of the United States?
     steps:
+      # 1) your normal LLM step
       - name: dummy
         agent: test1
+      - name: dummy2
+        agent: test2
       - name: metrics
         agent: evaluate
+        inputs:
+          - from: prompt         # → run’s first arg = original prompt
+          - from: dummy2        # → run’s second arg = dummy’s reply
+        outputs:
+          - answer               # → re‐emit the raw response downstream
