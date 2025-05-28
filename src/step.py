@@ -45,33 +45,41 @@ class Step:
         self.step_parallel = step.get("parallel")
         self.step_loop = step.get("loop")
 
-    async def run(self, prompt):
+    async def run(self, *args):
         """
-        Runs the step with the given prompt and returns the output.
-
-        Args:
-            prompt (str): The prompt to be used for this step.
-
-        Returns:
-            dict: The output of the step.
+        Runs the step with however many arguments the workflow wired in,
+        forwards them to the agent (if any), normalizes the result to a
+        dict with "prompt", and then applies input/condition/parallel/loop.
         """
-        output = {"prompt": prompt}
+        # 1) Invoke the agent (if set) with all args, else fall back to last arg
         if self.step_agent:
-            prompt = await self.step_agent.run(prompt)
-            output["prompt"] = prompt
+            res = await self.step_agent.run(*args)
+        else:
+            res = args[-1] if args else ""
+
+        # 2) Normalize to a dict with 'prompt'
+        if isinstance(res, dict):
+            output = res.copy()
+            prompt = output.get("prompt", "")
+        else:
+            prompt = res
+            output = {"prompt": prompt}
         if self.step_input:
             prompt = self.input(prompt)
             output["prompt"] = prompt
         if self.step_condition:
-            next = self.evaluate_condition(prompt)
-            output["next"] = next
+            nxt = self.evaluate_condition(prompt)
+            output["next"] = nxt
         if self.step_parallel:
             prompt = await self.parallel(prompt)
             output["prompt"] = prompt
+
         if self.step_loop:
             prompt = await self.loop(prompt)
             output["prompt"] = prompt
+
         return output
+
 
     def evaluate_condition(self, prompt):
         """
