@@ -7,7 +7,7 @@ load_dotenv()
 from src.agents.agent import Agent
 from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
-class MetricsAgent(Agent):
+class ScoringAgent(Agent):
     """
     Agent that takes two inputs (prompt & response) plus an optional
     `context` list, prints the scores, and returns only the response.

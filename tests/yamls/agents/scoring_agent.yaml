@@ -32,7 +32,7 @@ metadata:
   name: evaluate 
   labels: 
     app: test-example
-    custom_agent: metrics_agent
+    custom_agent: scoring_agent
 spec:
   model: qwen3:latest # NOTE: the model is actually used to determine the LLM call, so must be a valid model
   framework: custom

@@ -5,7 +5,7 @@ import asyncio
 import pytest
 import litellm
 
-from src.agents.metrics_agent import MetricsAgent
+from src.agents.scoring_agent import ScoringAgent
 from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
 # Auto-patch Litellm provider resolution to accept any model
@@ -32,7 +32,7 @@ def test_metrics_agent_run_returns_original_and_prints(monkeypatch):
     )
 
     printed = []
-    monkeypatch.setattr(MetricsAgent, "print", lambda self, msg: printed.append(msg))
+    monkeypatch.setattr(ScoringAgent, "print", lambda self, msg: printed.append(msg))
 
     agent_def = {
         "metadata": {"name": "metrics_agent", "labels": {}},
@@ -43,7 +43,7 @@ def test_metrics_agent_run_returns_original_and_prints(monkeypatch):
             "instructions": "instr"
         }
     }
-    agent = MetricsAgent(agent=agent_def)
+    agent = ScoringAgent(agent=agent_def)
 
     # Invoke run()
     original = "Test response"
