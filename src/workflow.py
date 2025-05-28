@@ -133,12 +133,14 @@ class Workflow:
         return await self._process_steps(steps, steps[0]["name"], prompt)
 
     async def _process_steps(self, steps, start_step, initial_prompt):
-        # keep track of all variables by name
+        """
+        Core sequential executor with support for:
+          - multi-arg inputs via `step["inputs"]`
+          - optional per-step context via `step["context"]`
+        """
         self._context = {"prompt": initial_prompt}
 
-        # instantiate Step wrappers, but first map any string‐named agents
         for step_def in steps:
-            # map step_def["agent"] string → Agent instance
             if isinstance(step_def.get("agent"), str):
                 agent_obj = self.agents.get(step_def["agent"])
                 if not agent_obj:
@@ -146,17 +148,13 @@ class Workflow:
                         f"Agent '{step_def['agent']}' not found for step '{step_def['name']}'"
                     )
                 step_def["agent"] = agent_obj
-            # now create the Step
             self.steps[step_def["name"]] = Step(step_def)
 
         current_step = start_step
         step_results = {}
 
         while True:
-            # fetch this step’s definition
             step_def = next(s for s in steps if s["name"] == current_step)
-
-            # build the positional args list
             if "inputs" in step_def:
                 args = []
                 for inp in step_def["inputs"]:
@@ -169,10 +167,25 @@ class Workflow:
             else:
                 args = [ self._context["prompt"] ]
 
-            # run the step
-            result = await self.steps[current_step].run(*args)
+            if "context" in step_def:
+                ctx = []
+                for item in step_def["context"]:
+                    if isinstance(item, str):
+                        ctx.append(item)
+                    else:
+                        name = item["from"]
+                        if name not in self._context:
+                            raise RuntimeError(
+                                f"Step '{current_step}' asked for context '{name}', but it does not exist"
+                            )
+                        ctx.append(self._context[name])
+            else:
+                ctx = None
+            if ctx is None:
+                result = await self.steps[current_step].run(*args)
+            else:
+                result = await self.steps[current_step].run(*args, context=ctx)
 
-            # ensure prompt in result and update context
             if "prompt" not in result:
                 raise RuntimeError(
                     f"Step '{current_step}' did not return a 'prompt' key"
@@ -181,7 +194,6 @@ class Workflow:
             self._context[current_step] = new_prompt
             self._context["prompt"] = new_prompt
 
-            # figure out next step
             if result.get("next"):
                 current_step = result["next"]
             else:
