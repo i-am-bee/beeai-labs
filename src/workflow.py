@@ -63,12 +63,23 @@ class Workflow:
         if prompt:
             self.workflow['spec']['template']['prompt'] = prompt
         self._create_or_restore_agents()
+
         template = self.workflow['spec']['template']
-        if template.get('event'):
-            result = await self._condition()
-            return await self.process_event(result)
-        else:
-            return await self._condition()
+        try:
+            if template.get('event'):
+                result = await self._condition()
+                return await self.process_event(result)
+            else:
+                return await self._condition()
+        except Exception as err:
+            exc_def = template.get('exception')
+            if exc_def:
+                agent_name = exc_def.get('agent')
+                handler = self.agents.get(agent_name)
+                if handler:
+                    await handler.run(err)    
+                    return None
+            raise err
 
     def _create_or_restore_agents(self):
         if self.agent_defs:
@@ -95,35 +106,30 @@ class Workflow:
         template = self.workflow["spec"]["template"]
         initial_prompt = template["prompt"]
         steps = template["steps"]
-        # map step name → definition
         step_defs = {step["name"]: step for step in steps}
-        # resolve and register Step objects
+
         for step in steps:
-            # resolve agent
             if step.get("agent"):
                 if isinstance(step["agent"], str):
                     step["agent"] = self.agents.get(step["agent"])
                 if not step["agent"]:
                     raise RuntimeError("Agent doesn't exist")
-            # resolve parallel
             if step.get("parallel"):
                 step["parallel"] = [
                     self.agents.get(name) for name in step["parallel"]
                 ]
-            # resolve loop
             if step.get("loop"):
                 loop_def = step["loop"]
                 loop_def["agent"] = self.agents.get(loop_def.get("step"))
-            # create Step
             self.steps[step["name"]] = Step(step)
 
         step_results = {}
         current = steps[0]["name"]
         prompt = initial_prompt
 
+        # drive the linear/sequenced execution
         while True:
             definition = step_defs[current]
-            # build args based on inputs if specified
             if definition.get("inputs"):
                 args = []
                 for inp in definition["inputs"]:
@@ -136,7 +142,6 @@ class Workflow:
             else:
                 result = await self.steps[current].run(prompt)
 
-            # normalize and record
             prompt = result.get("prompt")
             step_results[current] = prompt
 
@@ -152,63 +157,43 @@ class Workflow:
         return {"final_prompt": prompt, **step_results}
 
     async def process_event(self, result):
-        """
-        Cron‐triggered event:
-          1) Run event.agent (if any)
-          2) Run its named steps (subflow)
-          3) Repeat until exit expression is true against the full result dict
-        Returns the updated result dict.
-        """
         ev         = self.workflow['spec']['template']['event']
         cron       = ev.get('cron')
         agent_name = ev.get('agent')
         step_names = ev.get('steps', [])
         exit_expr  = ev.get('exit')
 
-        # start from the _condition() result dict
-        # (must contain at least {"final_prompt": ...})
         run_once = True
-
         while True:
             if pycron.is_now(cron):
                 if run_once:
-                    # 1) top‐level event.agent
                     if agent_name:
                         agent = self.agents.get(agent_name)
                         if not agent:
                             raise RuntimeError(f"Agent '{agent_name}' not found for event")
                         new_prompt = await agent.run(result["final_prompt"])
-                        result[agent_name]       = new_prompt
-                        result["final_prompt"]   = new_prompt
-
+                        result[agent_name]     = new_prompt
+                        result["final_prompt"] = new_prompt
                     if step_names:
                         raw_steps = self.workflow['spec']['template']['steps']
-                        sub_defs  = [ s for s in raw_steps if s['name'] in step_names ]
-                        out = await self._condition_subflow(sub_defs,
-                                                            step_names[0],
-                                                            result["final_prompt"])
-          
+                        sub_defs  = [s for s in raw_steps if s['name'] in step_names]
+                        out = await self._condition_subflow(
+                            sub_defs,
+                            step_names[0],
+                            result["final_prompt"]
+                        )
                         result.update(out)
                     run_once = False
 
                 if exit_expr and eval_expression(exit_expr, result):
                     break
-
             time.sleep(30)
 
         return result
 
     async def _condition_subflow(self, steps, start, prompt):
-        # similar to _condition but for arbitrary step list
         step_defs = {step["name"]: step for step in steps}
         for step in steps:
-            if step.get("agent"):
-                # already resolved
-                pass
-            if step.get("parallel"):
-                pass
-            if step.get("loop"):
-                pass
             self.steps[step["name"]] = Step(step)
 
         step_results = {}
