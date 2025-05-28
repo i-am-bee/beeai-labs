@@ -8,7 +8,6 @@ import litellm
 from src.agents.scoring_agent import ScoringAgent
 from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
-# Auto-patch Litellm provider resolution to accept any model
 @pytest.fixture(autouse=True)
 def patch_litellm_provider(monkeypatch):
     monkeypatch.setattr(
@@ -16,20 +15,22 @@ def patch_litellm_provider(monkeypatch):
         lambda model_name, **kwargs: (model_name, "openai", None, None)
     )
 
+def test_metrics_agent_run_with_context(monkeypatch):
+    seen = {"relevance": None, "hallucination": None}
 
-def test_metrics_agent_run_returns_original_and_prints(monkeypatch):
-    # Stub scoring to fixed values
     class DummyScore:
-        def __init__(self, value):
-            self.value = value
-    monkeypatch.setattr(
-        AnswerRelevance, "score",
-        lambda self, input, output, context: DummyScore(0.75)
-    )
-    monkeypatch.setattr(
-        Hallucination, "score",
-        lambda self, input, output, context: DummyScore(0.25)
-    )
+        def __init__(self, value): self.value = value
+
+    def fake_rel(self, input, output, context):
+        seen["relevance"] = context
+        return DummyScore(0.50)
+
+    def fake_hall(self, input, output, context):
+        seen["hallucination"] = context
+        return DummyScore(0.20)
+
+    monkeypatch.setattr(AnswerRelevance,  "score", fake_rel)
+    monkeypatch.setattr(Hallucination,     "score", fake_hall)
 
     printed = []
     monkeypatch.setattr(ScoringAgent, "print", lambda self, msg: printed.append(msg))
@@ -43,19 +44,16 @@ def test_metrics_agent_run_returns_original_and_prints(monkeypatch):
             "instructions": "instr"
         }
     }
-    agent = ScoringAgent(agent=agent_def)
+    agent = ScoringAgent(agent_def)
+    prompt   = "What is the capital of France?"
+    response = "Lyon"
+    context  = ["Paris is the capital of France."]
+    out = asyncio.run(agent.run(prompt, response, context=context))
 
-    # Invoke run()
-    original = "Test response"
-    output = asyncio.run(agent.run(original))
+    assert out == response
 
-    # Return value should be the original response
-    assert isinstance(output, str)
-    assert output == original
+    assert seen["relevance"]      is context
+    assert seen["hallucination"]  is context
 
-
-    assert len(printed) == 1, "Expected one print call for metrics"
-    printed_msg = printed[0]
-    assert original in printed_msg
-    assert "relevance: 0.75" in printed_msg
-    assert "hallucination: 0.25" in printed_msg
+    assert len(printed) == 1
+    assert printed[0] == "Lyon\n[relevance: 0.50, hallucination: 0.20]"
