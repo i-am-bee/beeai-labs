@@ -152,30 +152,51 @@ class Workflow:
         return {"final_prompt": prompt, **step_results}
 
     async def process_event(self, result):
-        prompt = result.get("final_prompt", "")
-        ev = self.workflow['spec']['template']['event']
-        cron = ev.get("cron")
-        agent_name = ev.get("agent")
-        step_names = ev.get("steps", [])
-        exit_expr = ev.get("exit")
+        """
+        Cron‐triggered event:
+          1) Run event.agent (if any)
+          2) Run its named steps (subflow)
+          3) Repeat until exit expression is true against the full result dict
+        Returns the updated result dict.
+        """
+        ev         = self.workflow['spec']['template']['event']
+        cron       = ev.get('cron')
+        agent_name = ev.get('agent')
+        step_names = ev.get('steps', [])
+        exit_expr  = ev.get('exit')
 
+        # start from the _condition() result dict
+        # (must contain at least {"final_prompt": ...})
         run_once = True
+
         while True:
             if pycron.is_now(cron):
                 if run_once:
+                    # 1) top‐level event.agent
                     if agent_name:
-                        prompt = await self.agents[agent_name].run(prompt)
+                        agent = self.agents.get(agent_name)
+                        if not agent:
+                            raise RuntimeError(f"Agent '{agent_name}' not found for event")
+                        new_prompt = await agent.run(result["final_prompt"])
+                        result[agent_name]       = new_prompt
+                        result["final_prompt"]   = new_prompt
+
                     if step_names:
-                        sub_defs = [self.get_step(n) for n in step_names]
-                        out = await self._condition_subflow(sub_defs, step_names[0], prompt)
-                        prompt = out.get("final_prompt")
+                        raw_steps = self.workflow['spec']['template']['steps']
+                        sub_defs  = [ s for s in raw_steps if s['name'] in step_names ]
+                        out = await self._condition_subflow(sub_defs,
+                                                            step_names[0],
+                                                            result["final_prompt"])
+          
+                        result.update(out)
                     run_once = False
-                else:
-                    run_once = True
-            if eval_expression(exit_expr, prompt):
-                break
+
+                if exit_expr and eval_expression(exit_expr, result):
+                    break
+
             time.sleep(30)
-        return prompt
+
+        return result
 
     async def _condition_subflow(self, steps, start, prompt):
         # similar to _condition but for arbitrary step list
