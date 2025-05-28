@@ -58,13 +58,13 @@ Output: Complete CycloneDX BOM JSON document.
 ```mermaid
 sequenceDiagram
 participant git fetcher
-participant selector
 participant raw gh reader
 participant identify post_quantum
 participant component creator
 participant BOM Assembler
-git fetcher->>selector: step1
-selector->>raw gh reader: step2
+participant selector agent
+git fetcher->>selector agent: step1
+selector agent->>raw gh reader: step2
 raw gh reader->>identify post_quantum: step3
 identify post_quantum->>component creator: step4
 component creator->>BOM Assembler: step5
