@@ -9,47 +9,49 @@ from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
 class MetricsAgent(Agent):
     """
-    Agent that takes two inputs: 
-      1) the original prompt
-      2) the response string
-
-    It prints an evaluation string containing relevance & hallucination metrics,
-    but returns only the original response downstream.
+    Agent that takes two inputs (prompt & response) plus an optional
+    `context` list, prints the scores, and returns only the response.
     """
 
     def __init__(self, agent: dict) -> None:
         super().__init__(agent)
         spec_model = agent["spec"]["model"]
-        # Auto-prefix for OpenAI-compatible routing
         if "/" not in spec_model:
             spec_model = f"openai/{spec_model}"
         self._spec_model = spec_model
 
-    async def run(self, prompt: str, response: str) -> str:
+    async def run(
+        self,
+        prompt: str,
+        response: str,
+        context: list[str] | None = None
+    ) -> str:
         """
         Args:
-          prompt:   the original workflow input
-          response: the output string from the previous workflow step
+          prompt:   the original prompt
+          response: the LLM’s output
+          context:  optional list of strings to use as gold/context
 
         Returns:
-          The original response string (metrics printed, not returned)
+          the original response (metrics are printed, not returned)
         """
-        # Compute metrics using the prompt as 'input' and response as 'output'
-        rel_result = AnswerRelevance(model=self._spec_model).score(
+        ctx = context or [prompt]
+
+        rel_res = AnswerRelevance(model=self._spec_model).score(
             input=prompt,
             output=response,
-            context=[prompt]
+            context=ctx
         )
-        hall_result = Hallucination(model=self._spec_model).score(
+        hall_res = Hallucination(model=self._spec_model).score(
             input=prompt,
             output=response,
-            context=[prompt]
+            context=ctx
         )
 
-        rel = getattr(rel_result, "value", rel_result)
-        hall = getattr(hall_result, "value", hall_result)
+        rel = getattr(rel_res, "value", rel_res)
+        hall = getattr(hall_res, "value", hall_res)
+
         metrics_line = f"relevance: {rel:.2f}, hallucination: {hall:.2f}"
-        evaluation_str = f"{response}\n[{metrics_line}]"
-        self.print(evaluation_str)
+        self.print(f"{response}\n[{metrics_line}]")
 
         return response
