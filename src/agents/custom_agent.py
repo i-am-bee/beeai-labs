@@ -22,34 +22,25 @@ custom_agent = { "slack_agent": SlackAgent, "metrics_agent": MetricsAgent}
 
 class CustomAgent(Agent):
     """
-    SlackAgent extends the Agent class to post messages to a slack channel.
+    Proxy that dispatches to the configured custom agent.
     """
 
-    def __init__(self, agent: dict) -> None:
-        """
-        Initializes the workflow for the specified BeeAI agent.
+    def __init__(self, agent_def: dict) -> None:
+        super().__init__(agent_def)
+        name = agent_def["metadata"]["labels"].get("custom_agent")
+        if not name or name not in custom_agent:
+            raise ValueError(f"Unknown custom_agent '{name}'")
+        # instantiate the real agent
+        self.agent = custom_agent[name](agent_def)
 
-        Args:
-            agent_name (str): The name of the agent.
+    async def run(self, *args: Any, **kwargs: Any) -> Any:
         """
-        super().__init__(agent)
-        
-        self.custom_agent = agent["metadata"]["labels"].get("custom_agent")
-        self.agent = (custom_agent[self.custom_agent])(agent)
+        Forward any positional or keyword args to the underlying custom agent.
+        """
+        return await self.agent.run(*args, **kwargs)
 
-    async def run(self, prompt: str) -> str:
+    async def run_streaming(self, *args: Any, **kwargs: Any) -> Any:
         """
-        Runs the BeeAI agent with the given prompt.
-        Args:
-            prompt (str): The prompt to run the agent with.
+        Forward any positional or keyword args to the underlying agent’s streaming run.
         """
-        return await self.agent.run(prompt)
-
-    async def run_streaming(self, prompt: str) -> str:
-        """
-        Runs the agent in streaming mode with the given prompt.
-        Args:
-            prompt (str): The prompt to run the agent with.
-        """
-
-        return await self.agent.run_streaming(prompt)
+        return await self.agent.run_streaming(*args, **kwargs)
