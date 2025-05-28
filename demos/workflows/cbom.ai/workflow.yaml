@@ -17,7 +17,7 @@ spec:
       - BOM Assembler
       - selector agent
     prompt: |
-      Use the java-fetcher tool using these parameters: get_java_file_urls(owner="Mastercard", repo="client-encryption-java") and directly output its result; which the output should be a list of URLs.
+      Use the git fetcher tool to get all the java files from the github repo where the owner is "Mastercard" and the repo is "client-encryption-java", and directly output its result. The output should be *ONLY* a list of URLs, and nothing else.
     steps:
     - name: step1
       agent: git fetcher
