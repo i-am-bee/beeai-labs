@@ -149,40 +149,6 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: selector
-  labels:
-    app: cbom.ai
-spec:
-  model: qwen3:latest
-  description: |
-    given a list of items, select one of them
-  instructions: |
-    You are the **Selector** agent.
-
-    **Input:** A single line containing a Python‐style list of URLs or strings, e.g.
-      ['url1', 'url2', 'url3', ...]
-    The list may be very long and even cut off mid-entry. You do **not** need
-    to analyze or validate the rest of the list—your sole job is to pull out
-    the first element and output it.
-
-    **Task:**
-      1. Locate the very first quote (single or double) after the opening `[` 
-      2. Read all characters until the matching closing quote.
-      3. **Output only** that string (without quotes). No JSON, no commentary,
-         no extra whitespace.
-
-    **Example:**
-      - Input:  `['a', 'b', 'c', ...]`  
-        Output: `a`
-      - Input:  `["foo","bar",...`  
-        Output: `foo`
-  mode: remote
-
-
----
-apiVersion: maestro/v1alpha1
-kind: Agent
-metadata:
   name: component creator
   labels:
     app: cbom.ai
@@ -287,3 +253,18 @@ spec:
   mode: remote
   tools:
     - LLM
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: selector agent
+  labels: 
+    app: test-example
+    custom_agent: prompt_agent
+spec:
+  model: dummy
+  framework: custom
+  mode: remote
+  description: selecting the first element from the list of URLs
+  instructions: "https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
