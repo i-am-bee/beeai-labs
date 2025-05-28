@@ -9,8 +9,11 @@ from opik.evaluation.metrics import AnswerRelevance, Hallucination
 
 class MetricsAgent(Agent):
     """
-    Agent that takes a single input (previous step's output string)
-    prints an evaluation string to the terminal containing relevance & hallucination metrics,
+    Agent that takes two inputs: 
+      1) the original prompt
+      2) the response string
+
+    It prints an evaluation string containing relevance & hallucination metrics,
     but returns only the original response downstream.
     """
 
@@ -22,24 +25,25 @@ class MetricsAgent(Agent):
             spec_model = f"openai/{spec_model}"
         self._spec_model = spec_model
 
-    async def run(self, response: str) -> str:
+    async def run(self, prompt: str, response: str) -> str:
         """
         Args:
+          prompt:   the original workflow input
           response: the output string from the previous workflow step
 
         Returns:
-          The original response string (metrics only printed, not returned)
+          The original response string (metrics printed, not returned)
         """
-        # Compute metrics at runtime to avoid CLI pickle issues
+        # Compute metrics using the prompt as 'input' and response as 'output'
         rel_result = AnswerRelevance(model=self._spec_model).score(
-            input=response,
+            input=prompt,
             output=response,
-            context=[response]
+            context=[prompt]
         )
         hall_result = Hallucination(model=self._spec_model).score(
-            input=response,
+            input=prompt,
             output=response,
-            context=[response]
+            context=[prompt]
         )
 
         rel = getattr(rel_result, "value", rel_result)
