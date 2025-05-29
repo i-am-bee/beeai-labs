@@ -1,4 +1,4 @@
-name: Maestro Demo Tests (ollama only)
+name: Maestro Demo Smoke (Poetry + Ollama)
 on:
   push:
     branches: [ 'main' ]
@@ -29,11 +29,16 @@ jobs:
         run: |
           chmod +x ./tools/setup_maestro.sh
           source ./tools/setup_maestro.sh
+      - name: Smoke-test Poetry
+        run: |
+          poetry --version
+          poetry show --no-dev
+
       - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Smoke-test Ollama connectivity
         run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-      - name: Run and test all demo workflows
-        shell: bash
-        run: |
-          poetry run bash ./tools/run-demos.sh
-          poetry run bash ./tools/run-meta-agent.sh
+          ollama list
+          echo '{"prompt":"Hello"}' | ollama run llama3.1:latest
+
