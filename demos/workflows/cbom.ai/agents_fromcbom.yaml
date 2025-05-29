@@ -1,0 +1,292 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: cbom_finder
+  labels:
+    app: cbom.ai
+spec:
+  model: cbom:latest
+  description: cbom finder
+
+  instructions: |
+    You are a software agent that helps developers to find problems in their use of cryptographic algorithms, particularly in relation to it's quantum safety.
+    You will be be provided with a cbom file in json format which you can read and parse the contents to find out about the use of cryptographic algorithms within
+    source code. These are identified as a 'cryptographic-asset'. This CBOM will have been generated from a scan of the developer's source code.
+    Although some regard 128 bit AES encryption as safe against quantum attacks, to be extra safe we should assume 128 bit AES should be upgraded to 256 bit. Use the name 'KEYLEN01' as the name of the remediation.
+    Although RSA is not quantum safe, for the purpose of this demo we should not report it (unless asked).
+    The CBOM can identify which algorithms are used, and identify where in the original source they are used (evidence).
+    When reporting, output should be in a findings file in json format as a downloadable file and should include the following keys:
+    * repository - this is the URL to the github repository
+      Within this create a list of instances representing each finding:
+      * algorithm - this should give the name of the algorithm as found in the cbom
+      * remediation - include the ID of the suggested remediation
+      * filename - the source code file (including full directory path) marked as 'location' in the cbom. This is a place in the file. It is not a geographical location.
+    * URL - provides a link to the raw file on github, in the default branch (you may need to prompt for the github repository if it is not provided)
+    * linenumber - found in the cbom as offset
+    Since we are testing/demonstrating, you should assume a fork exists under the 'planetf1' userid on github, and use this for any URLs.
+  mode: remote
+  tools:
+    - LLM
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: cbom_fixer
+  labels:
+    app: cbom.ai
+spec:
+  model: cbom:latest
+  description: cbom fixer
+
+  instructions: |
+    You are a software agent that helps developers fix problems with cryptographic algorithm usage in their source code.
+    You know the 'Java' programming language.
+    You may be provided with a json file of findings. This will contain information about 
+    * the github repository of the source code
+    * for each findings
+      * The name of the source file (including directory)
+      * a full URL to the file
+      * the location in the file where a problem was detected
+      * the algorithm currently in usage
+      * a remediation label which can be used to decide which tool to get to fix the code
+    When provided this file you should find the right fixer tool to use
+    You should expect to receive back a git patch file. This is a diff of the changes that can be applied to a source tree to remediate the cryptographic problems found.
+    Use '__TOKEN__' as your github api token
+    You will also need a valid email. You can set this to 'cbom-ai@research.ibm.com' if not specified
+    You will also need a valid name. You can set this to 'CBOM-AI remediation' if not specified
+  mode: remote
+  tools:
+    - LLM
+    - 'cbom_fixer_tool'
+  code: |
+    import json
+    import time
+    import os
+    import sys
+    def cbom_fixer_tool(reports: str, github_apikey: str) -> str:
+        """
+        The cbom problem fixer tool takes a remediation report (input parameter) in JSON format and applies the patches to the source     code. It then returns this
+            patchfile to the user
+    
+        Supported remediations:
+        * KEYLEN01
+    
+        Args:
+            report (str): The findings report as a string which this tool will then load as json
+            github_apikey (str): An api key for github
+    
+        Returns:
+            str: git patch (which can be applied to source)
+        """
+        import os
+        import re
+    
+        report=json.loads(reports)
+    
+        # TODO: This could be a tool, taking a single entry?
+        # begin main
+    
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [fixer-tool] " + "ENTRY")
+            print("DEBUG: [fixer-tool] " + "reports: " + reports)
+            print("DEBUG: [fixer-tool] " + "github_apikey: " + github_apikey)
+    
+        # hardcode for now
+        email="patcher@research.ibm.com"
+        name="patcher agent"
+    
+    
+        repositoryURL: str = report["repository"]
+        match = re.search(r"github\.com\/([^\/]+)\/([^\/]+)", repositoryURL)
+        if match:
+            org = match.group(1)
+            repo = match.group(2)
+            repobase = org + "/" + repo
+    
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [fixer-tool] " + "repositoryURL: " + repositoryURL)
+            print("DEBUG: [fixer-tool] " + "org: " + org)
+            print("DEBUG: [fixer-tool] " + "repo: " + repo)
+            print("DEBUG: [fixer-tool] " + "Cloning & setting up working branch")
+    
+    
+        os.system("rm -fr workspace && mkdir -p workspace && cd workspace && git clone " + "https://" + str(github_apikey) + "@github.com/    " + org + "/" + repo + ".git" + " repo" + " && cd repo && git checkout -b staging")
+    
+        os.system("cd workspace/repo && git config user.email " + email + " && git config user.name " + name + " >../out 2>&1")
+    
+        # Only works for a single patch at a time
+        patch=""
+        for f in report["findings"]:
+            if f["remediation"] == 'KEYLEN01':
+                if os.environ.get("BEE_DEBUG") is not None:
+                    print("DEBUG: [fixer-tool] " + "Found remediation to process for: " + f["filename"] )
+                # MacOS sed needs different parm for in-place edit
+    
+                if sys.platform == "darwin":
+                    sed_iparm="-i \'\'"
+                else:
+                    sed_iparm="-i"
+                os.system("cd workspace/repo && sed " + sed_iparm + " \'s/128/256/g\'"+ " " + f["filename"])
+    
+                os.system(command="cd workspace/repo && git add . > ../out 2>&1")
+                os.system(command="cd workspace/repo && git commit -m 'Bee patched!' > ../out 2>&1")
+                os.system(command="cd workspace/repo && git format-patch --stdout -1 HEAD > ../patch 2>&1")
+    
+    
+    
+        with open('workspace/patch','r') as f:
+            patch=f.read()
+    
+    
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [fixer-tool] " + "patch: " + patch)
+            print("DEBUG: [patcher-tool] " + "clearing up workspace")
+    
+        os.system("cd workspace && rm -fr repo")
+    
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [fixer-tool] " + "EXIT")
+    
+    
+        return(patch)
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: cbom_patcher
+  labels:
+    app: cbom.ai
+spec:
+  model: cbom:latest
+  description: cbom patcher
+
+  instructions: |
+    You are a git patcher Agent, and can help developers apply code patches to their github repos and
+    open pull requests.
+    Use '__TOKEN__' as your github api token
+    You will also need a valid email. You can set this to 'cbom-ai@research.ibm.com' if not specified
+    You will also need a valid name. You can set this to 'CBOM-AI remediation' if not specified
+    When you are provided with a file containing a patch, you must read it before calling the patcher tool. The patch is a context diff with an email header. It is not in JSON format and must not be treated as json.
+  mode: remote
+  tools:
+    - LLM
+    - 'cbom_patcher_tool'
+  code: |
+    import json
+    import os
+    import random
+    def cbom_patcher_tool(repositoryURL: str, patch: str, github_apikey: str, email: str, name: str) -> str:
+        """
+        The cbom patcher tool takes a github repository URL (input parameter) and
+        applies the supplied patch to the source code. It then raises a pull
+        request for the change.
+
+        Args:
+            repositoryURL (str): The repository URL on github
+            patch (str): A 'git-patch' formatted patch as a string. This must not be a file
+            github_apikey (str): Valid github api token to access repository
+            email (str): Email address of the person or system making the commits
+            name (str): Name of the person or system making the commits
+
+        Returns:
+            str: The URL of the Pull Request
+        """
+        import os
+        import re
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "ENTRY")
+            print("DEBUG: [patcher-tool] " + "repositoryURL: " + repositoryURL)
+            print("DEBUG: [patcher-tool] " + "patch: " + patch)
+            print("DEBUG: [patcher-tool] " + "github_apikey: " + github_apikey)
+            print("DEBUG: [patcher-tool] " + "email: " + email)
+            print("DEBUG: [patcher-tool] " + "name: " + name)
+
+        match = re.search(r"github\.com\/([^\/]+)\/([^\/]+)", repositoryURL)
+        if match:
+            org = match.group(1)
+            repo = match.group(2)
+            repobase = org + "/" + repo
+
+        branch = "remediation_" + str(random.randint(0, 9999))
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "repositoryURL: " + repositoryURL)
+            print("DEBUG: [patcher-tool] " + "org: " + org)
+            print("DEBUG: [patcher-tool] " + "repo: " + repo)
+            print(
+                "DEBUG: [patcher-tool] "
+                + "Cloning, assigning email/name, and setting up working branch"
+            )
+
+        os.system(
+            "rm -fr workspace && mkdir -p workspace && cd workspace && git clone "
+            + "https://"
+            + github_apikey
+            + "@github.com/"
+            + org
+            + "/"
+            + repo
+            + ".git"
+            + " repo"
+            + " && cd repo && git checkout -b "
+            + branch
+            + " >../out 2>&1"
+        )
+        os.system(
+            "cd workspace/repo && git config user.email "
+            + email
+            + " && git config user.name "
+            + name
+            + " >../out 2>&1"
+        )
+
+        # patch
+        patch_len = len(patch)
+        if patch_len < 200:
+            return "ERROR. Specify a valid patch. " + str(patch_len) + " is too short"
+
+        with open("workspace/patchfile", "w") as f:
+            f.write(patch)
+            f.close()
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "Applying patch")
+        os.system("cd workspace/repo && git am < '../patchfile' >../out 2>&1")
+
+        with open("workspace/out", "r") as f:
+            patch_output = f.read()
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "Pushing update")
+        os.system(
+            "cd workspace/repo && git push --force --set-upstream origin " + branch + " >../out 2>&1"
+        )
+
+        with open("workspace/out", "r") as f:
+            patch_output = f.read()
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "Opening PR")
+        os.environ["GH_TOKEN"] = github_apikey
+        os.system("cd workspace/repo && gh repo set-default " + repobase + " >../out 2>&1")
+        # Currently fails in agent only with 'pull request create failed: GraphQL: No commits between main and remediation_4895 (createPullRequest)'
+        os.system(
+            "cd workspace/repo && gh pr create --title 'QSC Remediation fix' --body 'Autofix by agent' --base main > ../out 2>&1"
+        )
+
+        with open("workspace/out", "r") as f:
+            patch_output = f.read()
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "Output from patch: " + patch_output)
+            print("DEBUG: [patcher-tool] " + "Output from patch: " + patch_output)
+            print("DEBUG: [patcher-tool] " + "Clearing up workspace")
+
+        os.system("cd workspace && rm -fr repo >out 2>&1")
+
+        if os.environ.get("BEE_DEBUG") is not None:
+            print("DEBUG: [patcher-tool] " + "EXIT")
+
+        # return as json
+        return patch_output
