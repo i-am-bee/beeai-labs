@@ -39,6 +39,20 @@ class Mermaid:
                 return step.get('agent')
         return None
 
+    # returns a markdown of the workflow as a mermaid sequence diagram
+    # 
+    # sequenceDiagram
+    # participant agent1
+    # participant agent2
+    #
+    # agent1->>agent2: step1
+    # agent2->>agent3: step2
+    # agent2-->>agent1: step3
+    # agent1->>agent3: step4
+    #
+    # See mermaid sequence diagram documentation: 
+    # https://mermaid.js.org/syntax/sequenceDiagram.html
+
     def __sequence_participants(self):
         tpl = self.workflow['spec']['template']
         agents = tpl.get('agents')
