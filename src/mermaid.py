@@ -36,30 +36,14 @@ class Mermaid:
     def __agent_for_step(self, step_name):
         for step in self.workflow['spec']['template']['steps']:
             if step['name'] == step_name:
-                return step['agent']
+                return step.get('agent')
         return None
-
-    # returns a markdown of the workflow as a mermaid sequence diagram
-    # 
-    # sequenceDiagram
-    # participant agent1
-    # participant agent2
-    #
-    # agent1->>agent2: step1
-    # agent2->>agent3: step2
-    # agent2-->>agent1: step3
-    # agent1->>agent3: step4
-    #
-    # See mermaid sequence diagram documentation: 
-    # https://mermaid.js.org/syntax/sequenceDiagram.html
 
     def __sequence_participants(self):
         tpl = self.workflow['spec']['template']
-        # 1) explicit top‐level agents list wins
         agents = tpl.get('agents')
         if agents:
             return agents
-        # 2) otherwise, derive from steps in order, skipping scoring‐only steps
         seen = []
         for step in tpl.get('steps', []):
             a = step.get('agent')
@@ -78,19 +62,22 @@ class Mermaid:
             sb += f"participant {self.__fix_agent_name(agent)}\n"
 
         steps = self.workflow['spec']['template'].get('steps', [])
+        agentL = None
         for i, step in enumerate(steps):
-            # skip scoring/context‐only steps
+            # skip scoring/context-only steps
             if any(k in step for k in ("inputs", "context", "outputs")):
                 continue
+            # update agentL only when this step names a real agent
+            if step.get('agent'):
+                agentL = self.__fix_agent_name(step['agent'])
 
-            agentL = self.__fix_agent_name(step.get('agent'))
             # find next real agent for the arrow
             agentR = None
             for nxt in steps[i+1:]:
                 if any(k in nxt for k in ("inputs", "context", "outputs")):
                     continue
                 if nxt.get('agent'):
-                    agentR = self.__fix_agent_name(nxt.get('agent'))
+                    agentR = self.__fix_agent_name(nxt['agent'])
                 break
 
             if agentR:
@@ -98,7 +85,7 @@ class Mermaid:
             else:
                 sb += f"{agentL}->>{agentL}: {step['name']}\n"
 
-            # condition / parallel / loop decorations
+            # condition / parallel / loop
             if step.get('condition'):
                 for cond in step['condition']:
                     sb += self.__to_sequenceDiagram_condition(agentL, agentR, cond)
@@ -107,7 +94,7 @@ class Mermaid:
             if step.get('loop'):
                 sb += self.__to_sequenceDiagram_loop(agentL, step['loop'])
 
-        # global cron‐event block
+        # global cron-event block
         event = self.workflow['spec']['template'].get('event')
         if event and 'cron' in event:
             sb += self.__to_sequenceDiagram_event(event)
@@ -156,7 +143,6 @@ class Mermaid:
 
     def __to_sequenceDiagram_condition(self, agentL, agentR, condition):
         sb = ""
-        # case / do / default
         if condition.get('case'):
             cond = condition['case']
             do   = condition.get('do', '')
@@ -164,7 +150,6 @@ class Mermaid:
                 cond = 'default'
                 do   = condition['default']
             sb += f"{agentL}->>{agentR}: {do} {cond}\n"
-        # if / then / else
         elif condition.get('if'):
             if_expr   = condition['if']
             then_expr = condition.get('then', '')
@@ -193,7 +178,7 @@ class Mermaid:
         i     = 0
         while i < len(steps):
             step = steps[i]
-            # skip scoring/context‐only steps
+            # skip scoring/context-only steps
             if any(k in step for k in ("inputs", "context", "outputs")):
                 i += 1
                 continue
@@ -212,7 +197,6 @@ class Mermaid:
             else:
                 sb += f"{aL}-- {step['name']} -->{aL}\n"
 
-            # condition nodes
             if step.get('condition'):
                 for cond in step['condition']:
                     sb += self.__to_flowchart_condition(aL, aR, step, cond)
@@ -242,7 +226,6 @@ class Mermaid:
         return sb
 
     def __to_flowchart_event(self, event):
-        # left unimplemented for flowchart
         return ""
 
     def __to_flowchart_exception(self, steps, exception):
