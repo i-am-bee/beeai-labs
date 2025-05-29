@@ -77,7 +77,7 @@ class Workflow:
                 agent_name = exc_def.get('agent')
                 handler = self.agents.get(agent_name)
                 if handler:
-                    await handler.run(err)    
+                    await handler.run(err)
                     return None
             raise err
 
@@ -120,7 +120,8 @@ class Workflow:
                 ]
             if step.get("loop"):
                 loop_def = step["loop"]
-                loop_def["agent"] = self.agents.get(loop_def.get("step"))
+                # ← the only change: pull from "agent" not "step"
+                loop_def["agent"] = self.agents.get(loop_def.get("agent"))
             self.steps[step["name"]] = Step(step)
 
         step_results = {}
@@ -194,6 +195,10 @@ class Workflow:
     async def _condition_subflow(self, steps, start, prompt):
         step_defs = {step["name"]: step for step in steps}
         for step in steps:
+            # if you ever loop in a subflow, make the same fix here:
+            if step.get("loop"):
+                loop_def = step["loop"]
+                loop_def["agent"] = self.agents.get(loop_def.get("agent"))
             self.steps[step["name"]] = Step(step)
 
         step_results = {}
