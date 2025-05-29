@@ -1,0 +1,25 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: evaluate workflow
+  labels:
+    app: example
+spec:
+  template:
+    metadata:
+      name: maestro-deployment
+    prompt: What is the capital of the United States?
+    steps:
+      - name: dummy
+        agent: test1
+      - name: dummy2
+        agent: test2
+      - name: scoring
+        agent: evaluate
+        inputs:
+          - from: prompt        # → run’s first arg = original prompt
+          - from: dummy2        # → run’s second arg = dummy’s reply
+        context:
+          - "Washington, D.C. is the capital of the United States."  # → context for evaluation
+        outputs:
+          - answer               # → re‐emit the raw response downstream

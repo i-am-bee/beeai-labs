@@ -6,16 +6,16 @@
   "type": "object",
   "properties": {
     "metadata": {
-      "apiVersion": {
-        "type": "string",
-        "description": "maestro/v1"
-      },
-      "kind": {
-        "type": "string",
-        "description": "Workflow"
-      },
       "type": "object",
       "properties": {
+        "apiVersion": {
+          "type": "string",
+          "description": "maestro/v1"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Workflow"
+        },
         "name": {
           "type": "string",
           "description": "workflow name"
@@ -25,9 +25,7 @@
           "description": "workflow labels, key: value pairs"
         }
       },
-      "required": [
-        "name"
-      ]
+      "required": ["name"]
     },
     "spec": {
       "type": "object",
@@ -60,8 +58,8 @@
                   "description": "the event name"
                 },
                 "agent": {
-                    "type": "string",
-                    "description": "the agent name to invoke"
+                  "type": "string",
+                  "description": "the agent name to invoke"
                 },
                 "steps": {
                   "type": "array",
@@ -80,16 +78,16 @@
               }
             },
             "exception": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "exception name"
-                  },
-                  "agent": {
-                    "type": "string",
-                    "description": "the agent for this exception"
-                  }
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "exception name"
+                },
+                "agent": {
+                  "type": "string",
+                  "description": "the agent for this exception"
+                }
               }
             },
             "prompt": {
@@ -108,6 +106,41 @@
                     "type": "string",
                     "description": "the agent for this step"
                   },
+                  "inputs": {
+                    "type": "array",
+                    "description": "Optional list of sources to feed into run()",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string",
+                          "description": "variable name whose value becomes this argument"
+                        }
+                      },
+                      "required": ["from"]
+                    }
+                  },
+                  "context": {
+                    "type": "array",
+                    "description": "Optional array of literal strings or `{ from: stepName }` objects to pass as context",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "from": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["from"],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
                   "input": {
                     "type": "object",
                     "description": "user input",
@@ -118,7 +151,7 @@
                       },
                       "template": {
                         "type": "string",
-                        "description": "template string for next prompt, {prompt} and {respomse} are replaced by the previos prompt and the user response"
+                        "description": "template string for next prompt, {prompt} and {response} are replaced"
                       }
                     }
                   },
@@ -164,8 +197,8 @@
                   "parallel": {
                     "type": "array",
                     "items": {
-                        "type": "string",
-                        "description": "agent"
+                      "type": "string",
+                      "description": "agent"
                     }
                   }
                 },
