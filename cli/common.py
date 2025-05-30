@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys, yaml
+"""Common utility functions and classes for the CLI."""
+
+import sys
+import yaml
 from random import randint
 
-VERBOSE=False
+VERBOSE = False
 
 class Colors:
+    """Class for ANSI color codes."""
+    
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
@@ -28,6 +33,14 @@ class Colors:
     UNDERLINE = '\033[4m'
 
 def parse_yaml(file_path):
+    """Parse a YAML file and return a list of dictionaries.
+    
+    Args:
+        file_path (str): The path to the YAML file.
+        
+    Returns:
+        list: A list of dictionaries containing the parsed YAML data.
+    """
     yaml_data = "--"
     try:
         with open(file_path, "r") as file:
@@ -38,6 +51,14 @@ def parse_yaml(file_path):
 
 
 def read_file(file_path):
+    """Read the contents of a file and return it as a string.
+    
+    Args:
+        file_path (str): The path to the file.
+        
+    Returns:
+        str: The contents of the file.
+    """
     file_content = ''
     try:
         with open(file_path, 'r') as file:
@@ -47,7 +68,17 @@ def read_file(file_path):
         Console.error("Could read file: {file_path}")
 
 class Console:
+    """Class for console output and input handling."""
+    
     def read(message):
+        """Read input from the console.
+        
+        Args:
+            message (str): The message to display to the user.
+            
+        Returns:
+            str: The user's input.
+        """
         return input(message)
 
     def verbose(msg):
@@ -55,25 +86,62 @@ class Console:
             print(f"{Colors.OKBLUE}{msg}{Colors.ENDC}".format(msg=str(msg)))
 
     def print(msg=''):
+        """Print a message to the console.
+        
+        Args:
+            msg (str): The message to print.
+        """
         print(msg)
 
     def println(no=1):
+        """Print a message to the console.
+        
+        Args:
+            no (int): The number of times to print the message.
+        """
         for i in range(no):
             print()
 
     def ok(msg):
+        """Print a message to the console.
+        
+        Args:
+            msg (str): The message to print.
+        """
         print(f"{Colors.OKGREEN}{msg}{Colors.ENDC}".format(msg=str(msg)))
 
     def error(msg):
+        """Print an error message to the console.
+        
+        Args:
+            msg (str): The message to print.
+        """
         Console.fail(msg)
 
     def fail(msg):
+        """Print a failure message to the console.
+        
+        Args:
+            msg (str): The message to print.
+        """
         print(f"{Colors.FAIL}Error: {msg}{Colors.ENDC}".format(msg=str(msg)))
 
     def warn(msg):
+        """Print a warning message to the console.
+        
+        Args:
+            msg (str): The message to print.
+        """
         print(f"{Colors.WARNING}Warning: {msg}{Colors.ENDC}".format(msg=str(msg)))
 
     def progress(count, total, status=''):
+        """Print a progress bar to the console.
+        
+        Args:
+            count (int): The current count.
+            total (int): The total count.
+            status (str): The status message.
+        """
         bar_len = 60
         filled_len = int(round(bar_len * count / float(total)))
 

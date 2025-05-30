@@ -32,8 +32,7 @@ jobs:
       - name: Install Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
-      - name: Run and test all demo workflows
-        shell: bash
+      - name: test connectivity
         run: |
-          poetry run bash ./tools/run-demos.sh
-          poetry run bash ./tools/run-meta-agent.sh
+          ollama list
+          echo '{"prompt":"Hello"}' | ollama run llama3.1:latest

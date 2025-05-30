@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, sys, dotenv
+"""CLI module initialization and path configuration."""
+
+import os
+import sys
+import dotenv
 
 dotenv.load_dotenv()
 

@@ -15,10 +15,24 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
+  name: test2
+  labels:
+    app: test-example
+spec:
+  model: qwen3:latest
+  framework: beeai
+  mode: remote
+  description: this is a test
+  instructions: You are a gibberish generator. You will be given a prompt and you will generate a gibberish response that is not related to the prompt at all.
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
   name: evaluate 
   labels: 
     app: test-example
-    custom_agent: metrics_agent
+    custom_agent: scoring_agent
 spec:
   model: qwen3:latest # NOTE: the model is actually used to determine the LLM call, so must be a valid model
   framework: custom

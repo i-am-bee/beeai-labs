@@ -1,4 +1,8 @@
-import os, sys, traceback, psutil
+"""Streamlit deployment module for Maestro meta-agents workflow UI."""
+
+import os
+import sys
+import psutil
 
 import streamlit as st
 import streamlit.web.cli as st_cli
@@ -6,11 +10,16 @@ import streamlit.web.cli as st_cli
 from streamlit import runtime
 from streamlit.runtime.scriptrunner import add_script_run_ctx,get_script_run_ctx
 
-from streamlit_workflow_ui import StreamlitWorkflowUI
+from cli.streamlit_workflow_ui import StreamlitWorkflowUI
 
-from cli.common import Console, parse_yaml, read_file
+from cli.common import Console, read_file
 
 def deploy_meta_agents_streamlit(prompt_text_file):
+    """Deploy and run meta-agents workflow using Streamlit UI.
+    
+    Args:
+        prompt_text_file (str): Path to the prompt text file
+    """
     generated_agent = "generated_agent"
     generated_workflow = "generated_workflow"
 
@@ -43,7 +52,7 @@ def deploy_meta_agents_streamlit(prompt_text_file):
 
     # Page header
     st.image("images/maestro.png", width=200)
-    st.title(f"Maestro Meta-Agents workflows")
+    st.title("Maestro Meta-Agents workflows")
 
     # Set tabs for: Meta-Agents agents and workflow workflows and the generated workflow
     agents_tab, workflow_tab, generated_workflow_tab = st.tabs(["Agents", "Workflow", "Generated"])

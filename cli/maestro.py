@@ -26,6 +26,7 @@ Usage:
   maestro validate SCHEMA_FILE YAML_FILE [options]
   maestro meta-agents TEXT_FILE [options]
   maestro clean [options]
+  maestro create-cr YAML_FILE [options]
 
   maestro (-h | --help)
   maestro (-v | --version)
@@ -57,14 +58,14 @@ import sys
 
 from docopt import docopt
 
-from commands import CLI
-from common import Console
+from cli.commands import CLI
+from cli.common import Console
 
 def __execute(command):
     try:
         rc = command.execute()
         if rc != 0:
-            Console.error("executing command: {rc}".format(rc=rc))
+            Console.error(f"executing command: {rc}")
         return rc
     except Exception as e:
         Console.error(str(e))

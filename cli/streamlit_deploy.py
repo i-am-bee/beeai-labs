@@ -1,4 +1,22 @@
-import io, sys, asyncio, subprocess, os, psutil
+# Copyright © 2025 IBM
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Streamlit deployment module for Maestro workflow UI."""
+
+import sys
+import os
+import psutil
 
 import streamlit as st
 import streamlit.web.cli as st_cli
@@ -6,18 +24,19 @@ import streamlit.web.cli as st_cli
 from streamlit import runtime
 from streamlit.runtime.scriptrunner import add_script_run_ctx,get_script_run_ctx
 
+from cli.common import parse_yaml
+
 from streamlit_workflow_ui import StreamlitWorkflowUI
-
-from cli.common import Console, parse_yaml, read_file
-
-# TODO: refactor
 
 sys_stdout = sys.stdout
 
-global workflow_instance
-global thread
-
 def deploy_agents_workflow_streamlit(agents_file, workflow_file):
+    """Deploy and run a Maestro workflow using Streamlit UI.
+    
+    Args:
+        agents_file (str): Path to the agents configuration file
+        workflow_file (str): Path to the workflow configuration file
+    """
     workflow_yaml = parse_yaml(workflow_file)
     
     # Set page configuration
@@ -37,11 +56,10 @@ def deploy_agents_workflow_streamlit(agents_file, workflow_file):
 
     # Page header
     st.image("images/maestro.png", width=200)
-    st.title(f"Maestro workflow")
+    st.title("Maestro workflow")
 
     ui = StreamlitWorkflowUI(agents_file, workflow_file, workflow_yaml[0]['spec']['template']['prompt'], 'Maestro workflow')
     ui.setup_ui()
-
 
 if __name__ == '__main__':
     if runtime.exists():

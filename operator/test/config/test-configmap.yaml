@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-configmap
+data:
+  DRY_RUN: "1"
+  #BEE_API_KEY: sk-proj-testkey
+  #BEE_API: "http://192.168.86.27:4000"

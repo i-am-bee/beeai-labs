@@ -1,18 +1,13 @@
+# Maestro
+
 > [!WARNING]
 > [PRE-Alpha] Please reach out if you want to get involved in the discussions. All feedback is welcomed
 
-# Maestro
-
 A multi-agent platform with the vision to facilitate deployment and running of AI agents.
-
-In this initial version you are going to find some examples showing how to run a group of agents, from differnt frameoeks, e.g., BeeAI, OpenAI, CrewAI, and others. 
 
 ## Local environment Setup
 
-* Create a Python3.11 virtual environment
-* Run a local instance of the [BeeAI Platform](https://github.com/i-am-bee/bee-stack)
-  * [Helpful tips](./demos/README.md) on setting up the stack
-
+* Create a Python 3.12 virtual environment
 * Install dependencies: Use the `setup_maestro.sh` script in order to install required libraries using poetry. Run `source ./tools/setup_maestro.sh` in order to install the dependencies and activate a virtual environment. Only need to install the dependencies once, in the future directly activate the venv.
 
 * Configure environmental variables: `.env`
@@ -21,7 +16,7 @@ In this initial version you are going to find some examples showing how to run a
 
 There are two steps to running a workflow: defining some agents and creating a workflow to run those agents.
 
-> Note: to run Maestro, you will need to [configure your local environment](#local-environment)
+> Note: to run Maestro, you will need to [configure your local environment](#local-environment-setup)
 
 ### Agent Definition
 
@@ -127,7 +122,7 @@ or
 maestro deploy agent.yaml workflow.yaml --dry-run # to use mock agents for quick testing
 ```
 
-This will start the workflow in a [`streamlit`]() server and you can access it from your browser: http://localhost:8501/?embed=true
+This will start the workflow in a [`streamlit`](https://streamlit.io) server and you can access it from your browser: [http://localhost:8501/?embed=true](http://localhost:8501/?embed=true)
 
 After running, use the `maestro clean` command to shut down the instance.
 
@@ -182,5 +177,6 @@ Additionally, to auto update all maestro readme demos with mermaid (after change
 
 This allows the execution of Agents on OpenAI, or compatible endpoints (including Ollama), and supports the use of local and remote MCP tools. See [README_openai.md](docs/README_openai.md)
 
-# Contributing
+## Contributing
+
 * Learn about [contributing](./demos/CONTRIBUTING.md)

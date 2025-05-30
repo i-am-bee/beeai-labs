@@ -1,16 +1,28 @@
-import io, os, sys, yaml, asyncio, subprocess, psutil, traceback, threading, time
+"""Streamlit UI implementation for Maestro workflow visualization and interaction."""
+
+import asyncio
+import io
+import os
+import sys
+import threading
+import time
+import traceback
+
+import yaml
 
 import streamlit as st
 import streamlit_mermaid as stmd
 
 from src.workflow import Workflow
-from cli.common import Console, parse_yaml, read_file
+from cli.common import parse_yaml, read_file
 
 sys_stdout = sys.stdout
 
-global workflow_instance
-
 class StreamlitWorkflowUI:
+    """Streamlit UI implementation for Maestro workflow visualization and interaction."""
+    
+    workflow_instance = None
+
     def __init__(self, agents_file, workflow_file, prompt='', title='Maestro workflow', save_file=''):
         self.title = title
         self.prompt = prompt
@@ -25,6 +37,7 @@ class StreamlitWorkflowUI:
         self.workflow = self.__create_workflow(self.agents_yaml, self.workflow_yaml)
 
     def setup_ui(self):        
+        """Initialize and set up the Streamlit UI components."""
         self.__initialize_session_state()
         self.__add_workflow_name_and_files()
         self.__create_chat_messages()
@@ -45,7 +58,6 @@ class StreamlitWorkflowUI:
         return file_or_string
 
     def __add_workflow_name_and_files(self):
-        global workflow_instance
         # add line of workflow: title, agents.yaml, and workflow.yaml
         with st.form(f"draw_form:{self.title}"):
             st.markdown(f"### {self.workflow_yaml[0]['metadata']['name']}")
@@ -62,7 +74,7 @@ class StreamlitWorkflowUI:
                 show = st.form_submit_button("Show diagram")
             # create workflow
             try:
-                workflow_instance = self.__create_workflow(self.agents_yaml, self.workflow_yaml[0])
+                StreamlitWorkflowUI.workflow_instance = self.__create_workflow(self.agents_yaml, self.workflow_yaml[0])
             except Exception as e:
                 traceback.print_exc()
                 raise RuntimeError(f"Unable to create agents: {str(e)}") from e
@@ -128,7 +140,7 @@ class StreamlitWorkflowUI:
                         if save_to_file:
                             if "</file>" in line:
                                 save_to_file = False
-                                with open(self.save_file, "w") as file:
+                                with open(self.save_file, "w", encoding="utf-8") as file:
                                     file.write(file_contents)
                                 file_contents = ""
                             else:
@@ -145,7 +157,7 @@ class StreamlitWorkflowUI:
                             if save_to_file:
                                 if "</file>" in line:
                                     save_to_file = False
-                                    with open(self.save_file, "w") as file:
+                                    with open(self.save_file, "w", encoding="utf-8") as file:
                                         file.write(file_contents)
                                     file_contents = ""
                                 else:
@@ -170,11 +182,10 @@ class StreamlitWorkflowUI:
 
     def __create_workflow_ui(self):
         # create workflow
-        global workflow_instance
         # add workflow mermaid diagram to page
         st.markdown("")
         st.markdown(f"###### _Sequence diagram of workflow_")
-        mermaid_diagram = workflow_instance.to_mermaid()
+        mermaid_diagram = StreamlitWorkflowUI.workflow_instance.to_mermaid()
         stmd.st_mermaid(mermaid_diagram, key=f"mermaid_diagram:{self.title}")
 
     def __generate_output():
@@ -186,7 +197,7 @@ class StreamlitWorkflowUI:
         global output
         output = io.StringIO()
         sys.stdout = output
-        asyncio.run(workflow_instance.run(prompt))
+        asyncio.run(StreamlitWorkflowUI.workflow_instance.run(prompt))
 
     def __create_workflow(self, agents_yaml, workflow_yaml):
         return Workflow(agents_yaml, workflow_yaml)

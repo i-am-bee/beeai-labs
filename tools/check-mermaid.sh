@@ -10,6 +10,15 @@ fi
 declare -i fail=0
 WORKFLOW_FILES=$(find . -name '*workflow*.yaml')
 AGENT_FILES=$(find . -name '*agents*.yaml')
+EXCLUDE_FILES=("./tests/yamls/workflowrun/simple_workflow_run.yaml"
+	       "./operator/config/crd/bases/maestro.ai4quantum.com_workflowruns.yaml"
+	       "./operator/config/crd/bases/maestro.ai4quantum.com_workflows.yaml"
+	       "./operator/config/crd/bases/maestro.ai4quantum.com_agents.yaml"
+	       "./operator/config/rbac/workflowrun_editor_role.yaml"
+	       "./operator/config/rbac/workflowrun_viewer_role.yaml"
+	       "./operator/config/samples/maestro_v1alpha1_workflowrun.yaml"
+	       "./demos/workflows/ibm-summary.ai/workflowrun.yaml"
+	       "./operator/test/config/test-workflowrun.yaml")
 
 echo "|Filename|Type|Stats|" >> "$GITHUB_STEP_SUMMARY"
 echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
@@ -18,14 +27,16 @@ echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
 # TODO Consolidate duplication
 for f in $WORKFLOW_FILES
 do
-    if ! maestro mermaid --verbose "$f"
-    then
-      RESULT="FAIL ❌"
-      fail+=1
-    else
-      RESULT="PASS ✅"
+    if ! printf '%s\n' "${EXCLUDE_FILES[@]}" | grep -q "^$f$"; then
+        if ! maestro mermaid --verbose "$f"
+        then
+          RESULT="FAIL ❌"
+          fail+=1
+        else
+          RESULT="PASS ✅"
+        fi
+        echo "|$f|workflow|$RESULT|" >> "$GITHUB_STEP_SUMMARY"
     fi
-    echo "|$f|workflow|$RESULT|" >> "$GITHUB_STEP_SUMMARY"
 done
 
 if [ -z "$CI" ];
