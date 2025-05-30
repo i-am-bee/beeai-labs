@@ -1,0 +1,19 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: prompt workflow
+  labels:
+    app: example
+spec:
+  template:
+    metadata:
+      name: prompt agent
+      labels:
+        app: test prompt agent
+        use-case: test
+    agents:
+        - test-prompt-agent
+    prompt: This is a dummy prompt, this should not be returned. The prompt in the agent definition instructions should be returned.
+    steps:
+      - name: step1
+        agent: test-prompt-agent

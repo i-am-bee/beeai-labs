@@ -9,7 +9,8 @@ from .remote_agent import RemoteAgent
 from .mock_agent import MockAgent
 from .custom_agent import CustomAgent
 from .slack_agent import SlackAgent
-from .metrics_agent import MetricsAgent
+from .scoring_agent import ScoringAgent
+from .prompt_agent import PromptAgent
 
 class AgentFramework(StrEnum):
     """Enumeration of supported frameworks"""
@@ -57,8 +58,6 @@ class AgentFactory:
             return remote_factories[framework]
         else:
             return factories[framework]
-        
-        return factories[framework]
 
     @classmethod
     def get_factory(cls, framework: str, mode="local") -> Callable[..., Union[BeeAIAgent, BeeAILocalAgent, CrewAIAgent, OpenAIAgent, RemoteAgent, MockAgent]]:

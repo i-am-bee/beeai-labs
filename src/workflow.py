@@ -14,220 +14,225 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, dotenv, time
-from src.mermaid import Mermaid
+import os
+import dotenv
+import time
 import pycron
 
+from src.mermaid import Mermaid
 from src.step import Step, eval_expression
 from src.agents.agent_factory import AgentFramework, AgentFactory
-
-from src.agents.beeai_agent import BeeAIAgent
-from src.agents.crewai_agent import CrewAIAgent
-from src.agents.openai_agent import OpenAIAgent
-from src.agents.remote_agent import RemoteAgent
-from src.agents.mock_agent import MockAgent
-
 from src.agents.agent import save_agent, restore_agent
 
-dotenv.load_dotenv() #TODO is this needed now that __init__.py in package runs this?
+dotenv.load_dotenv()
+
 
 def get_agent_class(framework: str, mode="local") -> type:
-    """
-    Returns the agent class based on the provided framework.
-
-    Args:
-        framework (str): The framework to get the agent class for.
-
-    Returns:
-        type: The agent class based on the provided framework.
-    """
     if os.getenv("DRY_RUN"):
+        from src.agents.mock_agent import MockAgent
         return MockAgent
-
     return AgentFactory.create_agent(framework, mode)
 
+
 def create_agents(agent_defs):
-    """
-    Creates agents based on the provided definitions.
-
-    Args:
-        agent_defs (list): A list of agent definitions. Each definition is a dictionary with the following keys:
-            "spec": A dictionary containing the specification of the agent.
-                "framework": The framework of the agent (e.g., "bee").
-
-    Returns:
-        None
-    """
     for agent_def in agent_defs:
-        # Use 'bee' if this value isn't set
-        #
         agent_def["spec"]["framework"] = agent_def["spec"].get(
             "framework", AgentFramework.BEEAI
         )
-        save_agent(get_agent_class(agent_def["spec"]["framework"], agent_def["spec"].get("mode"))(agent_def))
+        cls = get_agent_class(
+            agent_def["spec"]["framework"],
+            agent_def["spec"].get("mode")
+        )
+        save_agent(cls(agent_def))
+
 
 class Workflow:
-    """Execute sequential workflow.
-
-    Args:
-        agent_defs (dict): Dictionary of agent definitions.
-        workflow (dict): Workflow definition.
-
-    Attributes:
-        agents (dict): Dictionary of agents.
-        steps (dict): Dictionary of steps.
-    """
-    def __init__(self, agent_defs={}, workflow={}):
-        """Execute sequential workflow.
-        input:
-            agents: array of agent definitions, saved agent names, or None (agents in workflow must be pre-created)
-            workflow: workflow definition
-        """
+    def __init__(self, agent_defs=None, workflow=None):
         self.agents = {}
         self.steps = {}
+        self.agent_defs = agent_defs or []
+        self.workflow = workflow or {}
 
-        self.agent_defs = agent_defs
-        self.workflow = workflow
-
-    # generates a mermaid markdown representation of the workflow
-    # kind: sequenceDiagram or flowchart
-    # orientation: TD (top down) or RL (right left) when kind is flowchart
     def to_mermaid(self, kind="sequenceDiagram", orientation="TD") -> str:
-        #TODO: why is self.workflow an array?
-        workflow = self.workflow
-        if isinstance(self.workflow, list):
-            workflow = self.workflow[0]
-
-        return Mermaid(workflow, kind, orientation).to_markdown()
+        wf = self.workflow
+        if isinstance(wf, list):
+            wf = wf[0]
+        return Mermaid(wf, kind, orientation).to_markdown()
 
     async def run(self, prompt=''):
-        """Execute workflow."""
+        if prompt:
+            self.workflow['spec']['template']['prompt'] = prompt
+        self._create_or_restore_agents()
+
+        template = self.workflow['spec']['template']
         try:
-            if prompt != '':
-                self.workflow['spec']['template']['prompt'] = prompt
-            self.create_or_restore_agents(self.agent_defs, self.workflow)
-            if self.workflow['spec']['template'].get('event'):
-                output = await self._condition()
-                return await self.process_event(output)
+            if template.get('event'):
+                result = await self._condition()
+                return await self.process_event(result)
             else:
                 return await self._condition()
         except Exception as err:
-            if self.workflow["spec"]["template"].get("exception"):
-                exp = self.workflow["spec"]["template"].get("exception")
-                exp_agent = self.agents.get(exp["agent"])
-                if exp_agent:
-                    await exp_agent.run(err)
-            else:
-                raise err
+            exc_def = template.get('exception')
+            if exc_def:
+                agent_name = exc_def.get('agent')
+                handler = self.agents.get(agent_name)
+                if handler:
+                    await handler.run(err)
+                    return None
+            raise err
 
-    # private methods
-    def create_or_restore_agents(self, agent_defs, workflow):
-        """
-        Creates or restores agents based on the provided definitions and workflow.
-
-        Args:
-            agent_defs (list): A list of agent definitions. Each definition can be either a string (agent name) or a dictionary (agent definition).
-            workflow (dict): A dictionary representing the workflow.
-
-        Returns:
-            None
-        """
-        if agent_defs:
-            if type(agent_defs[0]) == str:
-                for agent_name in agent_defs:
-                    self.agents[agent_name] = restore_agent(agent_name)
-            else:
-                for agent_def in agent_defs:
-                  # Use 'bee' if this value isn't set
-                  #
-                  agent_def["spec"]["framework"] = agent_def["spec"].get(
-                      "framework", AgentFramework.BEEAI
-                  )
-                  self.agents[agent_def["metadata"]["name"]] = get_agent_class(agent_def["spec"]["framework"], agent_def["spec"].get("mode"))(agent_def)
+    def _create_or_restore_agents(self):
+        if self.agent_defs:
+            for agent_def in self.agent_defs:
+                agent_def["spec"]["framework"] = agent_def["spec"].get(
+                    "framework", AgentFramework.BEEAI
+                )
+                cls = get_agent_class(
+                    agent_def["spec"]["framework"],
+                    agent_def["spec"].get("mode")
+                )
+                self.agents[agent_def["metadata"]["name"]] = cls(agent_def)
         else:
-            for agent in workflow["spec"]["template"]["agents"]:
-                self.agents[agent] = restore_agent(agent)
+            for name in self.workflow["spec"]["template"]["agents"]:
+                self.agents[name] = restore_agent(name)
 
-    #TODO: why is this public? It should be private by naming: _find_index(...) @aki
     def find_index(self, steps, name):
-        for step in steps:
+        for idx, step in enumerate(steps):
             if step.get("name") == name:
-                return steps.index(step)
+                return idx
+        return None
 
     async def _condition(self):
-        """
-        This function is responsible for executing the workflow steps based on the provided prompt.
-        It iterates through the steps and runs each step using the `run` method of the `Step` class.
-        The function takes in the workflow template as input, which includes the prompt and the steps.
-        It also uses the `agents` dictionary to map the agent names to their corresponding objects.
-        The function returns a dictionary containing the final prompt after all the steps have been executed.
-        """
-        prompt = self.workflow["spec"]["template"]["prompt"]
-        steps = self.workflow["spec"]["template"]["steps"]
-        return await self._process_steps(steps, self.workflow["spec"]["template"]["steps"][0]["name"], prompt)
+        template = self.workflow["spec"]["template"]
+        initial_prompt = template["prompt"]
+        steps = template["steps"]
+        step_defs = {step["name"]: step for step in steps}
 
-    async def _process_steps(self, steps, start_step, prompt):
         for step in steps:
             if step.get("agent"):
-                if type(step["agent"]) == str:
+                if isinstance(step["agent"], str):
                     step["agent"] = self.agents.get(step["agent"])
                 if not step["agent"]:
-                    raise Exception("Agent doesn't exist")
+                    raise RuntimeError("Agent doesn't exist")
             if step.get("parallel"):
-                agents = []
-                for agent in step.get("parallel"):
-                    agents.append(self.agents.get(agent))
-                step["parallel"] = agents
+                step["parallel"] = [
+                    self.agents.get(name) for name in step["parallel"]
+                ]
             if step.get("loop"):
-                step["loop"]["agent"] = self.agents.get(step["loop"]["agent"])
+                loop_def = step["loop"]
+                # ← the only change: pull from "agent" not "step"
+                loop_def["agent"] = self.agents.get(loop_def.get("agent"))
             self.steps[step["name"]] = Step(step)
-        current_step = start_step
+
         step_results = {}
+        current = steps[0]["name"]
+        prompt = initial_prompt
+
+        # drive the linear/sequenced execution
         while True:
-            response = await self.steps[current_step].run(prompt)
-            prompt = response["prompt"]
-            if response.get("next"):
-                current_step = response["next"]
+            definition = step_defs[current]
+            if definition.get("inputs"):
+                args = []
+                for inp in definition["inputs"]:
+                    src = inp["from"]
+                    if src == "prompt":
+                        args.append(initial_prompt)
+                    else:
+                        args.append(step_results[src])
+                result = await self.steps[current].run(*args)
             else:
-                if current_step == steps[len(steps)-1].get("name"):
+                result = await self.steps[current].run(prompt)
+
+            prompt = result.get("prompt")
+            step_results[current] = prompt
+
+            if "next" in result:
+                current = result["next"]
+            else:
+                last = steps[-1]["name"]
+                if current == last:
                     break
-                else:
-                    current_step = steps[self.find_index(steps, current_step)+1].get("name")
-        step_results["final_prompt"] = prompt
-        return step_results
+                idx = self.find_index(steps, current)
+                current = steps[idx + 1]["name"]
 
-    def get_step(self, step_name):
-        steps = self.workflow["spec"]["template"]["steps"]
-        for step in steps:
-            if step.get("name") == step_name:
-                return step
+        return {"final_prompt": prompt, **step_results}
 
-    async def process_event(self, prompt):
-        cron = self.workflow['spec']['template']['event'].get("cron")
-        name = self.workflow['spec']['template']['event'].get("name")
-        step_names = self.workflow['spec']['template']['event'].get("steps")
-        agent = self.workflow['spec']['template']['event'].get("agent")
-        exit = self.workflow['spec']['template']['event'].get("exit")
+    async def process_event(self, result):
+        ev         = self.workflow['spec']['template']['event']
+        cron       = ev.get('cron')
+        agent_name = ev.get('agent')
+        step_names = ev.get('steps', [])
+        exit_expr  = ev.get('exit')
 
-        run = True
+        run_once = True
         while True:
             if pycron.is_now(cron):
-                if run:
-                    if agent:
-                        prompt = await self.agents.get(agent).run(prompt)
+                if run_once:
+                    if agent_name:
+                        agent = self.agents.get(agent_name)
+                        if not agent:
+                            raise RuntimeError(f"Agent '{agent_name}' not found for event")
+                        new_prompt = await agent.run(result["final_prompt"])
+                        result[agent_name]     = new_prompt
+                        result["final_prompt"] = new_prompt
                     if step_names:
-                        event_steps = []
-                        for step_name in step_names:
-                            event_steps.append(self.get_step(step_name))
-                        output = await self._process_steps(event_steps, step_names[0], prompt)
-                        prompt = output.get("final_prompt") 
-                    run = False
-                else:
-                    run = True
-            if eval_expression(exit, prompt):
-                break
-            time.sleep(30)
-        return prompt
+                        raw_steps = self.workflow['spec']['template']['steps']
+                        sub_defs  = [s for s in raw_steps if s['name'] in step_names]
+                        out = await self._condition_subflow(
+                            sub_defs,
+                            step_names[0],
+                            result["final_prompt"]
+                        )
+                        result.update(out)
+                    run_once = False
 
-        
-        
+                if exit_expr and eval_expression(exit_expr, result):
+                    break
+            time.sleep(30)
+
+        return result
+
+    async def _condition_subflow(self, steps, start, prompt):
+        step_defs = {step["name"]: step for step in steps}
+        for step in steps:
+            # if you ever loop in a subflow, make the same fix here:
+            if step.get("loop"):
+                loop_def = step["loop"]
+                loop_def["agent"] = self.agents.get(loop_def.get("agent"))
+            self.steps[step["name"]] = Step(step)
+
+        step_results = {}
+        current = start
+
+        while True:
+            definition = step_defs[current]
+            if definition.get("inputs"):
+                args = []
+                for inp in definition["inputs"]:
+                    src = inp["from"]
+                    if src == "prompt":
+                        args.append(prompt)
+                    else:
+                        args.append(step_results[src])
+                result = await self.steps[current].run(*args)
+            else:
+                result = await self.steps[current].run(prompt)
+
+            prompt = result.get("prompt")
+            step_results[current] = prompt
+
+            if "next" in result:
+                current = result["next"]
+            else:
+                if current == steps[-1]["name"]:
+                    break
+                idx = self.find_index(steps, current)
+                current = steps[idx + 1]["name"]
+
+        return {"final_prompt": prompt, **step_results}
+
+    def get_step(self, step_name):
+        for s in self.workflow["spec"]["template"]["steps"]:
+            if s.get("name") == step_name:
+                return s
+        return None

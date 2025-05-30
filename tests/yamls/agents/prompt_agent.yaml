@@ -1,0 +1,13 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: test-prompt-agent
+  labels:
+    app: prompt-example
+    custom_agent: prompt_agent
+spec:
+  model: dummy
+  framework: custom
+  mode: remote
+  description: prompt agent
+  instructions: "This message should be used to test the prompt agent. The agent should return the message as is."
