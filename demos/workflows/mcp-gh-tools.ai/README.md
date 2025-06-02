@@ -5,7 +5,7 @@ This demo shows how to use Maestro agents and connect to/use MCP tools, an exten
 ## Required Exports
 
 ```bash
-MAESTRO_MCP_ENDPOINTS="/Users/gliu/Desktop/work/github-mcp-server/cmd/github-mcp-server/github-mcp-server"
+MAESTRO_MCP_ENDPOINTS="/Users/gliu/Desktop/work/github-mcp-server/cmd/github-mcp-server/github-mcp-server stdio"
 OPENAI_API_KEY=ollama
 OPENAI_BASE_URL="http://localhost:11434/v1" 
 GITHUB_PERSONAL_ACCESS_TOKEN=token
