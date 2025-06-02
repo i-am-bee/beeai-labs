@@ -1,0 +1,37 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: generate1-10
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  framework: bee
+  description: 
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    import random
+    input = "[This,is,a,test,for,loop]"
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: countdown
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  framework: bee
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: |
+    print(input)
+
+
+

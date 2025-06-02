@@ -21,8 +21,8 @@ def eval_expression(expression, prompt):
     return eval(expression, local)
 
 def convert_to_list(s):
-    s = s.replace("[", "").replace("]", "").replace(" ", "")
-    return ast.literal_eval(s)
+    result = s[1:-1].split(',')
+    return result
 
 class Step:
     """
