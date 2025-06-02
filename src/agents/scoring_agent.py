@@ -11,14 +11,18 @@ class ScoringAgent(Agent):
     """
     Agent that takes two inputs (prompt & response) plus an optional
     `context` list, prints the scores, and returns only the response.
+
+    Defaults to using Ollama (via Litellm) if no provider prefix is given.
+    If you explicitly write "openai/…" or "ollama/…", those will be honored.
     """
 
     def __init__(self, agent: dict) -> None:
         super().__init__(agent)
-        spec_model = agent["spec"]["model"]
-        if "/" not in spec_model:
-            spec_model = f"openai/{spec_model}"
-        self._spec_model = spec_model
+        raw_model = agent["spec"]["model"]
+        if "/" in raw_model:
+            self._litellm_model = raw_model
+        else:
+            self._litellm_model = f"ollama/{raw_model}"
 
     async def run(
         self,
@@ -35,20 +39,20 @@ class ScoringAgent(Agent):
         Returns:
           the original response (metrics are printed, not returned)
         """
+
         ctx = context or [prompt]
-
-        rel_res = AnswerRelevance(model=self._spec_model).score(
+        rel_res = AnswerRelevance(model=self._litellm_model).score(
             input=prompt,
             output=response,
             context=ctx
         )
-        hall_res = Hallucination(model=self._spec_model).score(
+        hall_res = Hallucination(model=self._litellm_model).score(
             input=prompt,
             output=response,
             context=ctx
         )
 
-        rel = getattr(rel_res, "value", rel_res)
+        rel  = getattr(rel_res,  "value", rel_res)
         hall = getattr(hall_res, "value", hall_res)
 
         metrics_line = f"relevance: {rel:.2f}, hallucination: {hall:.2f}"
