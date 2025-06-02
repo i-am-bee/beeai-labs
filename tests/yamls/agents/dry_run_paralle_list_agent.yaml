@@ -11,7 +11,7 @@ spec:
   tools:
     - code_interpreter
     - test
-  instructions: input= '[aa,bb,cc]'
+  instructions: input='[aa,bb,cc]'
 
 ---
 

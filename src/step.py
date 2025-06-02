@@ -4,25 +4,9 @@
 import dotenv
 import asyncio
 import ast
+from src.utils import eval_expression, convert_to_list
 
 dotenv.load_dotenv()
-
-def eval_expression(expression, prompt):
-    """
-    Evaluate an expression with a given prompt.
-
-    Args:
-        expression (str): The expression to evaluate.
-        prompt: The value bound to `input` when evaluating.
-    Returns:
-        The result of evaluating the expression.
-    """
-    local = {"input": prompt}
-    return eval(expression, local)
-
-def convert_to_list(s):
-    result = s[1:-1].split(',')
-    return result
 
 class Step:
     """
@@ -128,7 +112,7 @@ class Step:
         Returns:
             str: The results of running the agents in parallel as a string.
         """
-        #results = await asyncio.gather(*[asyncio.create_task(agent.run(prompt)) for agent in self.step_parallel])
+
         tasks = []
         if prompt.find("[") != -1:
             args = convert_to_list(prompt)

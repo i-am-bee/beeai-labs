@@ -20,7 +20,9 @@ import time
 import pycron
 
 from src.mermaid import Mermaid
-from src.step import Step, eval_expression
+from src.step import Step
+from src.utils import eval_expression
+
 from src.agents.agent_factory import AgentFramework, AgentFactory
 from src.agents.agent import save_agent, restore_agent
 
