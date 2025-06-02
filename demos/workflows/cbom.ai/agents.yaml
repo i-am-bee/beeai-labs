@@ -10,7 +10,7 @@ spec:
     output the java files given a repository
   instructions: |
     You are the **Java Fetcher** agent.  
-    **IMPORTANT**: After you invoke the `java-fetcher` tool, you MUST **directly return** its output — exactly character-for-character—and nothing else.  
+    **IMPORTANT**: After you invoke the `java-fetcher` (also known as 'get_java_file_urls') tool, you MUST **directly return** its output — exactly character-for-character—and nothing else.  
     Do **not**:
       - Reformat or prettify the list  
       - Edit, Sort, filter, dedupe, or correct paths  
@@ -22,7 +22,8 @@ spec:
         ```  
       3. Receive the tool’s response, an array of URLs: ['url1', 'url2', 'url3', etc ...]
       4. **Immediately** print/output that array exactly as-is. *NOTHING ELSE AND NO EDITING*
-  mode: remote
+  mode: local
+  framework: openai
   tools:
     - java-fetcher
   code: |
@@ -105,7 +106,8 @@ spec:
         "snippet": "Certificate cert = loadCertificate(...);"
       }
     ]
-  mode: remote
+  mode: local
+  framework: openai
   tools:
     - LLM
 
@@ -121,14 +123,15 @@ spec:
   description: |
     given a github url, fetch its contents directly using the fetch_code tool
   instructions: |
-    You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url in this form: "given_url", fetch its contents directly using the fetch_code tool.
+    You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url in this form: "given_url", fetch its contents directly using the fetch_code tool (also known as 'fetch_raw_file_content').
 
         **Execution Steps:**
           1. **Call**: fetch_code("given_url").
           2. **Return** the `content` string exactly as received—no extra formatting or commentary.
 
     For more context, the output should just be the content/code of the file located at the passed in github URL, without any additional text or formatting.
-  mode: remote
+  mode: local
+  framework: openai
   tools:
     - fetch_code
   code: |
@@ -197,7 +200,8 @@ spec:
     - Any missing data (e.g., file location, offset, primitive) may be left as placeholders.
     - Output **only** the JSON array (no extra text), formatted in a code block.
     - If input is empty (`[]`), output `[]`.
-  mode: remote
+  mode: local
+  framework: openai
   tools:
     - LLM
 
@@ -250,7 +254,8 @@ spec:
     - You do not need to replaced "placeholder" for now, you can just keep it as is.
     - **Output only** the final JSON document in a code block, no extra text.
     - **NOTE**: the header is always the same, so you can directly hardcode it in your output.
-  mode: remote
+  mode: local
+  framework: openai
   tools:
     - LLM
 
