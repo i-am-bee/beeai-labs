@@ -132,7 +132,7 @@ class Step:
         tasks = []
         if prompt.find("[") != -1:
             args = convert_to_list(prompt)
-            tasks = [asyncio.create_task(agent.run(prompt)) for index, agent in enumerate(self.step_parallel)]
+            tasks = [asyncio.create_task(agent.run(args[index])) for index, agent in enumerate(self.step_parallel)]
         else:
             tasks = [asyncio.create_task(agent.run(prompt)) for agent in self.step_parallel]
         results = await asyncio.gather(*tasks)
