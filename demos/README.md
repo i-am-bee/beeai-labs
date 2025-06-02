@@ -107,7 +107,7 @@ Please set `SLACK_BOT_TOKEN` and `SLACK_TEAM_ID` as environment variables. See `
 
 ##### Evaluation/Metrics Support
 
-The Metrics Agent integrates Opik's LLM as a judge metrics into our workflows. Automatically route `spec.model` in the agent definition and add to workflow to automatically evaluate using `AnswerRelevance` and `Hallucination` scores. 
+The Metrics Agent integrates Opik's LLM as a judge metrics into our workflows. Automatically route `spec.model` in the agent definition and add to workflow to automatically evaluate using `AnswerRelevance` and `Hallucination` scores. Can also additionally add `context` if the user knows the correct response or format a response should take.
 
 See `./tests/yamls/agents/metrics_agent.py` and `./tests/yamls/workflows/metrics_agents.py` for more details.
 
