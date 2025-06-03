@@ -11,7 +11,7 @@ class ScoringAgent(Agent):
     """
     Agent that takes two inputs (prompt & response) plus an optional
     `context` list.  The response is always converted to a string before scoring.
-    Metrics are printed, and the original response (list, dict, or string) is returned.
+    Metrics are printed, and the original response is returned.
     """
 
     def __init__(self, agent: dict) -> None:
@@ -25,19 +25,25 @@ class ScoringAgent(Agent):
     async def run(
         self,
         prompt: str,
-        response,
+        response: str,
         context: list[str] | None = None
     ) -> any:
         """
         Args:
           prompt:   the original prompt
-          response: the agent’s output (could be a string, list, dict, etc.)
+          response: the agent’s output
           context:  optional list of strings to use as gold/context
+
+        Note: The response only supports strings for now because Opik's evaluation passes in this as a json object.
+        Currently anything else is unsupported, so we can avoid python crash but the Opik backend itself will fail.
 
         Returns:
           The original response (unchanged).  Metrics are printed to stdout.
         """
-        response_text = str(response)
+        assert isinstance(response, str), (
+            f"ScoringAgent only supports string responses, got {type(response).__name__}"
+        )
+        response_text = response
         ctx = context or [prompt]
 
         try:
