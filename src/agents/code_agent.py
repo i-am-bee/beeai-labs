@@ -23,29 +23,29 @@ class CodeAgent(Agent):
         super().__init__(agent)
         
 
-    async def run(self, prompt: str) -> str:
+    async def run(self, *args, context=None) -> str:
         """
         Runs the BeeAI agent with the given prompt.
         Args:
             prompt (str): The prompt to run the agent with.
         """
 
-        self.print(f"Running {self.agent_name} with {prompt}...\n")
-        local = {"input": prompt}
+        self.print(f"Running {self.agent_name} with {args}...\n")
+        local = {"input": args}
         exec(self.agent_code, local)
         answer = local["input"]
         self.print(f"Response from {self.agent_name}: {answer}\n")        
         return local["input"]
 
-    async def run_streaming(self, prompt: str) -> str:
+    async def run_streaming(self, *args, context=None) -> str:
         """
         Runs the BeeAI agent with the given prompt.
         Args:
             prompt (str): The prompt to run the agent with.
         """
 
-        self.print(f"Running {self.agent_name} with {prompt}...\n")
-        local = {"input": prompt}
+        self.print(f"Running {self.agent_name} with {args}...\n")
+        local = {"input": args}
         exec(self.agent_code, local)
         answer = local["input"]
         self.print(f"Response from {self.agent_name}: {answer}\n")        

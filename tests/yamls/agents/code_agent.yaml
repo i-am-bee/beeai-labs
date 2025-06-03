@@ -11,6 +11,6 @@ spec:
   description: code agnet
   instructions: execute oython code
   code: |
-    print(input)
+    print(input[0])
     input = "Hi!"
     
