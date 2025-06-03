@@ -20,15 +20,17 @@ class Agent:
         # TODO: Review which attributes belong in base class vs subclasses
         self.agent_name = agent['metadata']['name']
         self.agent_framework = agent['spec']['framework']
-        self.agent_model = agent['spec']['model']
+        self.agent_model = agent['spec'].get('model')
 
         self.agent_tools = agent['spec'].get('tools', [])
 
-        self.agent_desc = agent['spec']['description']
-        self.agent_instr = agent['spec']['instructions']
+        self.agent_desc = agent['spec'].get('description')
+        self.agent_instr = agent['spec'].get('instructions')
 
         self.agent_input = agent['spec'].get('input')
         self.agent_output = agent['spec'].get('output')
+
+        self.agent_code = agent['spec'].get('code')
 
         self.instructions = f'{self.agent_instr} Input is expected in format: {self.agent_input}' if self.agent_input else self.agent_instr
         self.instructions = f'{self.instructions} Output must be in format: {self.agent_output}' if self.agent_output else self.instructions

@@ -1,0 +1,16 @@
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: code
+  labels:
+    app: slack-example
+spec:
+  model: dummy
+  framework: code
+  mode: local
+  description: code agnet
+  instructions: execute oython code
+  code: |
+    print(input)
+    input = "Hi!"
+    
