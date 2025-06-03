@@ -122,7 +122,6 @@ class Workflow:
                 ]
             if step.get("loop"):
                 loop_def = step["loop"]
-                # ← the only change: pull from "agent" not "step"
                 loop_def["agent"] = self.agents.get(loop_def.get("agent"))
             self.steps[step["name"]] = Step(step)
 
@@ -130,7 +129,6 @@ class Workflow:
         current = steps[0]["name"]
         prompt = initial_prompt
 
-        # drive the linear/sequenced execution
         while True:
             definition = step_defs[current]
             if definition.get("inputs"):
@@ -139,8 +137,10 @@ class Workflow:
                     src = inp["from"]
                     if src == "prompt":
                         args.append(initial_prompt)
-                    else:
+                    elif src in step_results:
                         args.append(step_results[src])
+                    else:
+                        args.append(src)
                 result = await self.steps[current].run(*args)
             else:
                 result = await self.steps[current].run(prompt)
@@ -197,7 +197,6 @@ class Workflow:
     async def _condition_subflow(self, steps, start, prompt):
         step_defs = {step["name"]: step for step in steps}
         for step in steps:
-            # if you ever loop in a subflow, make the same fix here:
             if step.get("loop"):
                 loop_def = step["loop"]
                 loop_def["agent"] = self.agents.get(loop_def.get("agent"))
@@ -214,8 +213,10 @@ class Workflow:
                     src = inp["from"]
                     if src == "prompt":
                         args.append(prompt)
-                    else:
+                    elif src in step_results:
                         args.append(step_results[src])
+                    else:
+                        args.append(src)
                 result = await self.steps[current].run(*args)
             else:
                 result = await self.steps[current].run(prompt)
