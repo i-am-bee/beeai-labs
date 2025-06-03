@@ -31,3 +31,9 @@ spec:
       agent: component creator
     - name: step6
       agent: BOM Assembler
+    - name: step7
+      agent: cbom finder 
+    - name: step8 
+      agent: cbom fixer
+    - name: step9 
+      agent: cbom patcher     
