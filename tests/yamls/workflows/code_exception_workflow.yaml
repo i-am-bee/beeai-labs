@@ -1,0 +1,24 @@
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: code workflow
+  labels:
+    app: code
+spec:
+  template:
+    metadata:
+      name: code agent
+      labels:
+        app: code agent
+        use-case: test
+    agents:
+        - code
+        - test1
+    prompt: Hello code!  How are you?
+    exception:
+      name: step1
+      agent: test1
+    steps:
+      - name: code_step
+        agent: code
+

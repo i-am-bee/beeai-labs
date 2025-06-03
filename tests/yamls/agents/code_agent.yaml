@@ -5,12 +5,11 @@ metadata:
   labels:
     app: slack-example
 spec:
-  model: dummy
   framework: code
   mode: local
   description: code agnet
-  instructions: execute oython code
+  instructions: execute python code
   code: |
     print(input[0])
-    input = "Hi!"
+    output["answer"] = "Hi!"
     

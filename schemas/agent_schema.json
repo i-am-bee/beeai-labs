@@ -75,10 +75,7 @@
             "type": "string",
             "description": "The (optional) url to send a request to the agent"
         }
-      },
-      "required": [
-        "model"
-      ]
+      }
     }
   }
 }
