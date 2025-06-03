@@ -18,7 +18,6 @@ import os, yaml
 import pytest
 from unittest import TestCase
 from src.workflow import Workflow
-
 import asyncio
 
 def parse_yaml(file_path):
@@ -41,7 +40,10 @@ class TestLoop(TestCase):
 
     def test_loop(self):
         response = asyncio.run(self.workflow.run())
-        assert "Hi!" in response["final_prompt"]
+        if os.getenv("DRY_RUN") and os.getenv("DRY_RUN") != '':
+            assert "Hello code" in response["final_prompt"]
+        else:
+            assert "Hi!" in response["final_prompt"]
 
 if __name__ == '__main__':
     unittest.main()
