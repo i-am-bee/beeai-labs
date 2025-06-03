@@ -268,3 +268,18 @@ spec:
   mode: remote
   description: selecting the first element from the list of URLs
   instructions: "https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
+
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: score
+  labels: 
+    app: test-example
+    custom_agent: scoring_agent
+spec:
+  model: qwen3:latest
+  framework: custom
+  mode: remote
+  description: gets score, relevance/hallucination using defined model
+  instructions: evaluates the response using Opik
