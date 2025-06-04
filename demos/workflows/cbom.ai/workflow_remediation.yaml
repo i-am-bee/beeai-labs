@@ -16,6 +16,10 @@ spec:
       - component creator
       - BOM Assembler
       - selector agent
+      - cbom finder 
+      - cbom patcher 
+      - cbom fixer 
+      - cbom injector
     prompt: |
       Use the git fetcher tool to get all the java files from the github repo where the owner is "Mastercard" and the repo is "client-encryption-java", and directly output its result. The output should be *ONLY* a list of URLs, and nothing else.
     steps:
@@ -31,9 +35,11 @@ spec:
       agent: component creator
     - name: step6
       agent: BOM Assembler
-    - name: step7
-      agent: cbom finder 
-    - name: step8 
-      agent: cbom fixer
-    - name: step9 
-      agent: cbom patcher     
+    #- name: step6a
+    #  agent: cbom injector
+    #- name: step7
+    #  agent: cbom finder 
+    #- name: step8 
+    #  agent: cbom fixer
+    #- name: step9 
+    #  agent: cbom patcher     
