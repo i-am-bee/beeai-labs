@@ -137,6 +137,8 @@ class Workflow:
                     src = inp["from"]
                     if src == "prompt":
                         args.append(initial_prompt)
+                    elif "instructions:" in src:
+                        args.append(step_defs[src.split(":")[-1]]["agent"].agent_instr)
                     elif src in step_results:
                         args.append(step_results[src])
                     else:
