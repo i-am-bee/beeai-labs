@@ -13,3 +13,29 @@ spec:
     print(input[0])
     output["answer"] = "Hi!"
     
+---    
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: github-lister
+  labels:
+    app: cbom-demo-pretest
+spec:
+  framework: code
+  mode: local
+  description: list repos from GitHub
+  instructions: list my GitHub repos using the GitHub API
+  code: |
+    import os
+    import requests
+
+    token = os.getenv("GITHUB_TOKEN")
+    user = os.getenv("GITHUB_USER")
+    if not token or not user:
+        output["error"] = "GITHUB_TOKEN or GITHUB_USER not set"
+    else:
+        headers = {"Authorization": f"Bearer {token}"}
+        url = f"https://api.github.com/users/{user}/repos"
+        r = requests.get(url, headers=headers)
+        repos = [repo["name"] for repo in r.json()]
+        output["repos"] = repos

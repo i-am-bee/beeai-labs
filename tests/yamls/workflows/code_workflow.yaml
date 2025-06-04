@@ -13,8 +13,11 @@ spec:
         use-case: test
     agents:
         - code
+        - github-lister
     prompt: Hello code!  How are you?
     steps:
       - name: code_step
         agent: code
+      - name: github_code_testing
+        agent: github-lister
 
