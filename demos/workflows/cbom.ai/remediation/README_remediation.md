@@ -26,7 +26,7 @@ For example:
     ```shell
     export OPENAI_BASE_URL=http://localhost:11434/v1
     export OPENAI_API_KEY="ollama"
-    export MAESTRO_MCP_ENDPOINTS="python3 ~/src/mcp-server/mcp_server.py --log /tmp/mcp.log demos/workflows/cbom.ai/java_fetcher.py demos/workflows/cbom.ai/fetch_code.py demos/workflows/cbom.ai/tool_fixer.py demos/workflows/cbom.ai/tool_patcher.py"
+    export MAESTRO_MCP_ENDPOINTS="python3 ~/src/mcp-server/mcp_server.py --log /tmp/mcp.log demos/workflows/cbom.ai/java_fetcher.py demos/workflows/cbom.ai/remediation/fetch_code.py demos/workflows/cbom.ai/remediation/tool_fixer.py demos/workflows/cbom.ai/remediation/tool_patcher.py"
     ```
 
 # Optional to see intermediate results
