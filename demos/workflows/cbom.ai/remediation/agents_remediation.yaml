@@ -281,7 +281,7 @@ metadata:
   labels:
     app: cbom.ai
 spec:
-  model: granite3.3:2b
+  model: llama3.2:3b
   description: |
     CBOM patcher agent
   instructions: |
@@ -361,7 +361,7 @@ metadata:
   labels:
     app: cbom.ai
 spec:
-  model: granite3.3:2b
+  model: llama3.2:3b
   description: |
     CBOM fixer agent
   instructions: |
@@ -444,7 +444,7 @@ metadata:
   labels:
     app: cbom.ai
 spec:
-  model: granite3.3:2b
+  model: llama3.2:3b
   description: |
     CBOM finder agent
   instructions: |

@@ -4,8 +4,8 @@ import os
 import platform
 import sys
 
-# Changed: github_apikey is now optional
-def fixer_tool(reports: str, github_apikey: str = None) -> str:
+# Changed: github_apikey parameter removed
+def fixer_tool(reports: str) -> str:
     """
     The cbom problem fixer tool takes a remediation report (input parameter) in JSON format and applies patches to the source code. It then returns this
         patchfile to the user
@@ -14,20 +14,13 @@ def fixer_tool(reports: str, github_apikey: str = None) -> str:
     * KEYLEN01
     Args:
         report (str): The findings report in JSON format
-        github_apikey (str, optional): An API key for GitHub. If not provided,
-            the value from the `GITHUB_TOKEN` environment variable will be used.
 
     Returns:
         str: git patch (which can be applied to source), or an error string if
-             the GitHub API key is not found.
+             the GITHUB_TOKEN environment variable is not set.
     """
-    # import os # Already imported at module level
-    # import re # Already imported at module level
-
-    # Resolve the effective GitHub API key
-    _effective_apikey = github_apikey
-    if _effective_apikey is None:
-        _effective_apikey = os.environ.get("GITHUB_TOKEN")
+    # Resolve the GitHub API key from environment variable
+    _effective_apikey = os.environ.get("GITHUB_TOKEN")
 
     if not _effective_apikey:
         return "ERROR: GitHub API key not provided and GITHUB_TOKEN environment variable is not set."
@@ -40,8 +33,8 @@ def fixer_tool(reports: str, github_apikey: str = None) -> str:
     if os.environ.get("BEE_DEBUG") is not None:
         print("DEBUG: [fixer-tool] " + "ENTRY")
         print("DEBUG: [fixer-tool] " + "reports: " + reports)
-        # Changed: Print the effective API key
-        print("DEBUG: [fixer-tool] " + "github_apikey (effective): " + _effective_apikey)
+        # Changed: Reflect that API key comes from env var
+        print("DEBUG: [fixer-tool] " + "github_apikey (from GITHUB_TOKEN): " + (_effective_apikey if _effective_apikey else "Not Set"))
 
     # hardcode for now
     email="patcher@research.ibm.com"
@@ -108,8 +101,8 @@ def fixer_tool(reports: str, github_apikey: str = None) -> str:
 # END
 # Run the pipeline (unless in library) - useful test case
 if __name__ == "__main__":
-    api_token=os.environ.get("GH_TOKEN")
+    # api_token=os.environ.get("GH_TOKEN") # No longer passed as an argument
     with open('data/findings.json','r') as f:
         report=f.read()
-        patch=fixer_tool(report,api_token)
+        patch=fixer_tool(report) # Changed: api_token removed
         print(patch)

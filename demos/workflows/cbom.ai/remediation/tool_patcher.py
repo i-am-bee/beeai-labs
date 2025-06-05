@@ -7,9 +7,6 @@ import random
 def patcher_tool(
     repositoryURL: str,
     patch: str,
-    github_apikey: str = None,
-    email: str = "cbom-ai@research.ibm.com",
-    name: str = "CBOM-AI remediation",
 ) -> str:
     """
     The cbom patcher tool takes a github repository URL (input parameter) and
@@ -19,36 +16,36 @@ def patcher_tool(
     Args:
         repositoryURL (str): The repository URL on github
         patch (str): A 'git-patch' formatted patch as a string. This must not be a file
-        github_apikey (str, optional): Valid github api token to access repository.
-            If not provided, the value from the `GITHUB_TOKEN` environment
-            variable will be used.
-        email (str, optional): Email address of the person or system making the commits.
-            Defaults to 'cbom-ai@research.ibm.com'.
-        name (str, optional): Name of the person or system making the commits.
-            Defaults to 'CBOM-AI remediation'.
+
+    The GitHub API key is sourced from the `GITHUB_TOKEN` environment variable.
+    The email address for commits is taken from the `PATCHER_EMAIL` environment
+    variable (defaulting to 'cbom-ai@research.ibm.com' if not set).
+    The name for commits is taken from the `PATCHER_NAME` environment
+    variable (defaulting to 'CBOM-AI remediation' if not set).
 
     Returns:
         str: The URL of the Pull Request, or an error string if the GitHub API
-             key is not found.
+             key (from GITHUB_TOKEN environment variable) is not found.
     """
-    # import os # Already imported at module level
     import re
 
-    # Resolve the effective GitHub API key
-    _effective_apikey = github_apikey
-    if _effective_apikey is None:
-        _effective_apikey = os.environ.get("GITHUB_TOKEN")
-
+    # Resolve the GitHub API key from environment variable
+    _effective_apikey = os.environ.get("GITHUB_TOKEN")
     if not _effective_apikey:
         return "ERROR: GitHub API key not provided and GITHUB_TOKEN environment variable is not set."
+
+    # Resolve email and name from environment variables or use defaults
+    _effective_email = os.environ.get("PATCHER_EMAIL", "cbom-ai@research.ibm.com")
+    _effective_name = os.environ.get("PATCHER_NAME", "CBOM-AI remediation")
 
     if os.environ.get("BEE_DEBUG") is not None:
         print("DEBUG: [patcher-tool] " + "ENTRY")
         print("DEBUG: [patcher-tool] " + "repositoryURL: " + repositoryURL)
         print("DEBUG: [patcher-tool] " + "patch: " + patch)
-        print("DEBUG: [patcher-tool] " + "github_apikey (effective): " + _effective_apikey)
-        print("DEBUG: [patcher-tool] " + "email: " + email)
-        print("DEBUG: [patcher-tool] " + "name: " + name)
+        # Changed: Reflect that API key comes from env var
+        print("DEBUG: [patcher-tool] " + "github_apikey (from GITHUB_TOKEN): " + (_effective_apikey if _effective_apikey else "Not Set"))
+        print("DEBUG: [patcher-tool] " + "email (from PATCHER_EMAIL or default): " + _effective_email)
+        print("DEBUG: [patcher-tool] " + "name (from PATCHER_NAME or default): " + _effective_name)
 
     match = re.search(r"github\.com\/([^\/]+)\/([^\/]+)", repositoryURL)
     if match:
@@ -77,9 +74,9 @@ def patcher_tool(
     )
     os.system(
         "cd workspace/repo && git config user.email "
-        + email
+        + _effective_email
         + " && git config user.name "
-        + name
+        + _effective_name
         + " >../out 2>&1"
     )
 
@@ -143,12 +140,8 @@ if __name__ == "__main__":
     with open("data/patchfile.master", "r") as f:
         patch = f.read()
         # Test with explicit None to check env var fallback for apikey
-        # Email and name will use defaults if not provided
         result = patcher_tool(
             "https://github.com/planetf1/client-encryption-java",
             patch,
-            github_apikey=None, # Will try to use GITHUB_TOKEN
-            # email="test@example.com", # Optional: to override default
-            # name="My Test User",       # Optional: to override default
         )
         print(result)
