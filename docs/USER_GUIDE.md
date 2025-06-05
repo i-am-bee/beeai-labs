@@ -112,6 +112,14 @@ The step has properties that define the work of the setp.  Everything is optiona
 - **context**: array of string or object passed to agent as context
 - **input**: definition of user promot and user input processing
 - **loop**: definition iterative agent execution
+  - When the input is an array, loop repeats agent execution until each input element is passed to the agent 
+  - When the input is not an array, loop repeats agent execution until the output meets the `until` expression.
+  - The until expression is a python statement that returns true or false.  The loop stops when the until expression is true.  The LLM output is passed in the expression as a variable `input`.
+  ```
+  loop:
+    agent: agent1
+    until expression
+  ```    
 - **condition**: step execution flow control.  The next step is changed according to the agent execution output
   - Condition supports `if`, `then`, `else` and `case` `do`.
   - expression is a python statement that returns true or false.  The LLM output is passed in the expression as a variable `input`.
@@ -132,6 +140,14 @@ The step has properties that define the work of the setp.  Everything is optiona
     do: next step 3
   ```
 - **parallel**: array of agents that are executed in parallel
+  - Parallel has an array of agents.  It exectes all agents in the array at the same time.  The output of each agent are put together in order in the array in the output.
+  - When the input is an array, each element of the array passed to the agent in the array.
+  - When the input in not an array, the same input is passed to all agents in the array.
+  ```
+  parallel:
+  - agent1
+  - agent2
+  ```
 
 ### event
 
