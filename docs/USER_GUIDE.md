@@ -261,8 +261,22 @@ spec:
         agent: hot-or-not Agent
 ```
 
-## demos
+## Demos
 
-There are demo workflows are available
+Some demo workflows are available. For setting up the demo environment refer to [README.md](https://github.com/AI4quantum/maestro/blob/main/demos/README.md)
+### Demos with workflow
 
-- 
+- [Activity Planner AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/activity-planner.ai/README.md)
+- [CBOM AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/cbom.ai/README.md)
+- [IBM Summary AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/ibm-summary.ai/README.md)
+- [Summary AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/summary.ai/README.md)
+- [Weather Checker AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/weather-checker.ai/README.md)
+
+## Demos with agent / tool integration
+
+- [Activity Planner CrewAI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/activity-planner-crewai.ai/README.md)
+- [MCP GH Tools AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/mcp-gh-tools.ai/README.md)
+- [OpenAI MCP AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/mcp-gh-tools.ai/README.md)
+
+## Demo Meta Agent
+- [Meta Agents](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/meta-agents/README.md)
