@@ -14,21 +14,9 @@ spec:
     import re
     import sys
 
-    def find_cbom_base():
-        cur = os.getcwd()
-        while True:
-            candidate = os.path.join(cur, "demos", "workflows", "cbom.ai", "example-cbom.json")
-            if os.path.isfile(candidate):
-                return os.path.dirname(candidate)
-            parent = os.path.dirname(cur)
-            if parent == cur:
-                raise FileNotFoundError("Could not locate cbom.ai/example-cbom.json")
-            cur = parent
-
-    base_dir = find_cbom_base()
-    cbom_path = os.path.join(base_dir, "example-cbom.json")
-    workspace_dir = os.path.join(base_dir, "workspace")
-    patch_path = os.path.join(workspace_dir, "patch")
+    cbom_path = "/Users/gliu/Desktop/work/maestro/demos/workflows/cbom.ai/example-cbom.json"
+    workspace_dir = "/Users/gliu/Desktop/work/maestro/demos/workflows/cbom.ai/workspace"
+    patch_path = "/Users/gliu/Desktop/work/maestro/demos/workflows/cbom.ai/workspace/patch"
 
     with open(cbom_path) as f:
         cbom = json.load(f)
@@ -67,7 +55,6 @@ spec:
     os.system(f"cd {workspace_dir} && rm -fr repo")
     print("✅ Patch updated successfully.")
 
-
 ---
 apiVersion: maestro/v1alpha1
 kind: Agent
@@ -84,19 +71,8 @@ spec:
     import random
     import re
 
-    cur = os.getcwd()
-    while True:
-        candidate = os.path.join(cur, "demos", "workflows", "cbom.ai", "example-cbom.json")
-        if os.path.isfile(candidate):
-            base_dir = os.path.dirname(candidate)
-            break
-        parent = os.path.dirname(cur)
-        if parent == cur:
-            raise FileNotFoundError("Could not locate cbom.ai/example-cbom.json")
-        cur = parent
-
-    workspace_dir = os.path.join(base_dir, "workspace")
-    patch_path = os.path.join(workspace_dir, "patch")
+    workspace_dir = "/Users/gliu/Desktop/work/maestro/demos/workflows/cbom.ai/workspace"
+    patch_path = "/Users/gliu/Desktop/work/maestro/demos/workflows/cbom.ai/workspace/patch"
 
     with open(patch_path, "r") as f:
         patch = f.read()
@@ -105,9 +81,11 @@ spec:
     github_token = os.getenv("GITHUB_TOKEN")
     email = "patcher@cbom.ai"
     name = "Patcher Bot"
+
     match = re.search(r"github\.com\/([^\/]+)\/([^\/]+)", repo_url)
     if not match:
         raise ValueError(f"Could not parse org/repo from URL: {repo_url}")
+
     org, repo = match.group(1), match.group(2)
     repobase = f"{org}/{repo}"
     branch = f"remediation_{random.randint(1000, 9999)}"
