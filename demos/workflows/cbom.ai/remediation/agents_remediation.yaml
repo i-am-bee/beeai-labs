@@ -293,6 +293,62 @@ spec:
     You will also need a valid email. You can set this to 'cbom-ai@research.ibm.com' if not specified
     You will also need a valid name. You can set this to 'CBOM-AI remediation' if not specified
     When you are provided with a file containing a patch, you must read it before calling the patcher tool. The patch is a context diff with an email header. It is not in JSON format and must not be treated as json.
+
+    You are the **patcher** agent and can help developers apply code patches to their github repos and
+    open pull requests..  
+    When you are provided with a file containing a patch, you must read it before calling the patcher tool. The patch is a context diff with an email header. It is not in JSON format and must not be treated as json.
+    You can use the 'patcher_tool' to create a github pull request based on the patch
+    **IMPORTANT**: After you invoke the `patcher_tool`
+    **directly return** its output — exactly character-for-character—and nothing else.  
+    Do **not**:
+      - Reformat or prettify the list  
+      - Edit, Sort, filter, dedupe, or correct paths  
+      - Append any commentary  
+    **Input:**
+      You will be provided with a patchfile. This will contain information about the code change to make.
+      You will need to provide the repository to use. You can use 'https://github.com/planetf1/client-encryption-java'
+      for this if you do not know the name.
+    **Output:**
+      The tool should create a pull request and return a text string containing a URL to the
+      pull request on github. You should clearly mention this in your final response, inviting the user to
+      review and comment on the PR prior to merging
+    **Steps:**  
+      1. Invoke the tool:  
+        ```Python
+        patcher_tool(patchfile='text')
+        ```
+        the string 'text' above should be replaced with the content of the patchfile you receive as input. 
+        There is no need to supply any optional parameters 
+      3. Receive the tool’s response, a message containing a link to a newly opened Pull Request
+    **Example:**
+      This is an example of the python code to call the tool:
+      ```python
+      pr_response = """
+      From 94abe5f3b19d11a4d538ef629467a89392e50d2c Mon Sep 17 00:00:00 2001
+      From: patcher <patcher@research.ibm.com>
+      Date: Mon, 2 Dec 2024 11:46:35 +0000
+      Subject: [PATCH] Bee patched!
+      ---
+       .../java/src/crypto.java    | 2 +-
+       1 file changed, 1 insertion(+), 1 deletion(-)
+      diff --git a/src/main/java/src/crypto.java b/src/main/crypto.java
+      index 31cb738..bc98c36 100644
+      --- a/src/main/java/src/crypto.java
+      +++ b/src/main/java/src/crypto.java
+      @@ -20,7 +20,7 @@ public class AESGCM {
+      public static byte[] decrypt(Key cek, JweObject object) throws GeneralSecurityException {
+        byte[] aad = object.getRawHeader().getBytes(StandardCharsets.US_ASCII);
+      - gc gcmSpec = new GCMParameterSpec(128, EncodingUtils.base64Decode(object.getIv()));
+      + gc gcmSpec = new GCMParameterSpec(256, EncodingUtils.base64Decode(object.getIv()));
+        a = b
+        return cipher(cek, gcmSpec, bytes, aad, Cipher.DECRYPT_MODE);
+      }
+      --
+      2.45.2
+      """
+      ```
+      'pr_response' will contain information about the pull request - you should print this with 
+      some explanatory text
   mode: local
   framework: openai
   tools:
@@ -319,7 +375,7 @@ spec:
     **Input:**
       You will be provided with a json file of findings. This will contain information about 
         * the github repository of the source code
-        * for each findings
+        * for each finding
           * The name of the source file (including directory)
           * a full URL to the file
           * the location in the file where a problem was detected
@@ -328,11 +384,54 @@ spec:
     **Steps:**  
       1. Invoke the tool:  
         ```Python
-        fixer_tool(reports='json', github_apikey="dummy")
+        fixer_tool(reports='json')
         ```
-        the string 'json' above should be replaced with the content of the json file you receive as input.  
+        the string 'json' above should be replaced with the content of the json file you receive as input. 
+        There is no need to supply any optional parameters 
       3. Receive the tool’s response, a string representing a unix patch file
       4. **Immediately** print/output that string exactly as-is. *NOTHING ELSE AND NO EDITING*
+    **Example:**
+      This is an example of the python code to call the tool:
+      ```python
+      report = {
+        {
+          "repository": "https://github.com/myorg/crypto-repo",
+          "findings": [
+            {
+              "algorithm": "AES128-CBC-PKCS5",
+              "remediation": "KEYLEN01",
+              "filename": "src/main/java/crypto.java",
+              "URL": "https://raw.githubusercontent.com/myorg/crypto-repo/main/src/main/java/crypto.java",
+            "linenumber": 276
+            }
+          ]
+        },
+        patch: str=fixer_tool(report)
+        ```
+      The output from the fixer_tool will then look something like this:
+      ```text
+      From 94abe5f3b19d11a4d538ef629467a89392e50d2c Mon Sep 17 00:00:00 2001
+      From: patcher <patcher@research.ibm.com>
+      Date: Mon, 2 Dec 2024 11:46:35 +0000
+      Subject: [PATCH] Bee patched!
+      ---
+       .../java/src/crypto.java    | 2 +-
+       1 file changed, 1 insertion(+), 1 deletion(-)
+      diff --git a/src/main/java/src/crypto.java b/src/main/crypto.java
+      index 31cb738..bc98c36 100644
+      --- a/src/main/java/src/crypto.java
+      +++ b/src/main/java/src/crypto.java
+      @@ -20,7 +20,7 @@ public class AESGCM {
+      public static byte[] decrypt(Key cek, JweObject object) throws GeneralSecurityException {
+        byte[] aad = object.getRawHeader().getBytes(StandardCharsets.US_ASCII);
+      - gc gcmSpec = new GCMParameterSpec(128, EncodingUtils.base64Decode(object.getIv()));
+      + gc gcmSpec = new GCMParameterSpec(256, EncodingUtils.base64Decode(object.getIv()));
+        a = b
+        return cipher(cek, gcmSpec, bytes, aad, Cipher.DECRYPT_MODE);
+      }
+      --
+      2.45.2
+      ```
   mode: local
   framework: openai
   tools:
@@ -364,6 +463,22 @@ spec:
       * URL - provides a link to the raw file on github, in the default branch (you may need to prompt for the github repository if it is not provided)
       * linenumber - found in the cbom as offset
     Since we are testing/demonstrating, you should assume a fork exists under the 'planetf1' userid on github, and use this for any URLs.
+    **Example Output:**
+    ```json
+    {
+      {
+        "repository": "https://github.com/myorg/crypto-repo",
+        "findings": [
+          {
+            "algorithm": "AES128-CBC-PKCS5",
+            "remediation": "KEYLEN01",
+            "filename": "src/main/java/crypto.java",
+            "URL": "https://raw.githubusercontent.com/myorg/crypto-repo/main/src/main/java/crypto.java",
+          "linenumber": 276
+          }
+        ]
+      },
+    ```
   mode: local
   framework: openai
   tools:
