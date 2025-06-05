@@ -113,6 +113,24 @@ The step has properties that define the work of the setp.  Everything is optiona
 - **input**: definition of user promot and user input processing
 - **loop**: definition iterative agent execution
 - **condition**: step execution flow control.  The next step is changed according to the agent execution output
+  - Condition supports `if`, `then`, `else` and `case` `do`.
+  - expression is a python statement that returns true or false.  The LLM output is passed in the expression as a variable `input`.
+  - The based on the expression evaluation, the next step is selected. 
+  - if:
+  ```
+  - if: expression
+    then: next step 1
+    else: next step 2  
+  ```
+  - case:
+  ```
+  - case: expression 1
+    do: next step 1
+  - case: expression 2
+    do: next step 2
+  - default
+    do: next step 3
+  ```
 - **parallel**: array of agents that are executed in parallel
 
 ### event
