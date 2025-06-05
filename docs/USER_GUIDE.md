@@ -4,9 +4,8 @@
 1. [Maestro Language](#maestro-language)
 2. [Maestro CLI](#maestro-cli)
 3. [Maestro UIs](#maestro-uis)
-4. [Simple Examples](#simple-examples)
+4. [Examples](#examples)
 5. [Demos](#demos)
-6. [FAQs](#faqs)
 
 ## Maestro Language
 
@@ -190,24 +189,80 @@ The workflow output come out after the inpiut of the prompt string and pressing 
 The `maestro run` command outout comes out in the command window.
 ![Screenshot 2025-06-05 at 1 07 28 PM](https://github.com/user-attachments/assets/f9b9f90c-6e9a-4c8d-b9fc-6b178355644d)
 
-## Simple Examples
+## Examples
 
-### Example 1: Simple Sequential Workflow
+### [Weather Checker AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/weather-checker.ai/README.md): Simple Sequential Workflow
+The weather checker ai is a simple sequential workflow.  I have 2 agents Temperatire agent that retrieve the current temperature of the given location and hot-or-not Agent that retrive the historical temperature of the given location and returns whether the current temperature is hotter or colder.
 
-```maestro
- 
-agent A {
-  task t1 {
-    // Task 1 logic
-  }
-}
+#### agent.yaml
+```yaml
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: Temperature Agent
+  labels:
+    app: mas-example
+spec:
+  model: "llama3.1:latest"
+  framework: beeai
+  mode: remote
+  description: Get the current weather
+  tools:
+    - code_interpreter
+    - weather
+  instructions: An input is given of a location.  Use the OpenMeteo tool to get today's current forecast for the location. Return results in the format -location, temperature in Fahrenheit, and date.
+---
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: hot-or-not Agent
+  labels:
+    app: mas-example
+spec:
+  model: "llama3.1:latest"
+  framework: beeai
+  mode: remote
+  description: Is the current temperature hotter than usual?
+  tools:
+    - code_interpreter
+    - weather
+  instructions: |
+    Use the OpenMeteo weather tool to find the historical temperature of the given location.  Return whether the current temperature is hotter or colder.
 
-agent B {
-  task t2 {
-    // Task 2 logic
-  }
-}
+    Example Process:
+    Input: New York, 50 degrees F
 
-workflow w1 {
-  A -> B
-}
+    Compare input against historical temperature (lets say 55) in input location.
+
+    Output: The current temperature is colder than the historical temperature.
+```
+
+#### workflow.yaml
+```yaml
+apiVersion: maestro/v1alpha1
+kind: Workflow
+metadata:
+  name: Weather Checker AI
+  labels:
+    app: mas-example
+spec:
+  template:
+    metadata:
+      labels:
+        app: mas-example
+    agents:
+      - Temperature Agent
+      - hot-or-not Agent
+    prompt: New York City
+    steps:
+      - name: get_temperature
+        agent: Temperature Agent
+      - name: compare_temperature
+        agent: hot-or-not Agent
+```
+
+## demos
+
+There are demo workflows are available
+
+- 
