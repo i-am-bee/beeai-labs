@@ -153,21 +153,42 @@ The Maestro Command Line Interface (CLI) allows users to manage workflows that i
 
 ## Maestro UIs
 
+### Streamlit deploy UI
+
+Maestro initial UI
+
 ![Screenshot 2025-06-05 at 11 09 36 AM](https://github.com/user-attachments/assets/7a7cd362-6995-471f-a1b5-ec9c6729c8b4)
 
+Show diagram button shows the worklflow diagram 
 
 ![Screenshot 2025-06-05 at 11 13 50 AM](https://github.com/user-attachments/assets/afabaa19-0a9d-4893-b6c6-da958caf6492)
 
+aragnts.yaml and workflow.yaml buttoms show agent and workflow yaml files contents
+
 ![Screenshot 2025-06-05 at 11 14 49 AM](https://github.com/user-attachments/assets/82a51bde-3032-4a46-a794-8368e8cfd0ea)
 
+Submit button strarts the workflow with the inputted prompt string
 
 ![Screenshot 2025-06-05 at 11 26 06 AM](https://github.com/user-attachments/assets/1acebecf-0add-4ae7-b873-13d4e8992cfd)
 
+### Docker, Kubernates deploy UI
 
-Maestro provides two user interfaces for visualizing and managing workflows:
+Maestro initial UI
 
-- **Maestro Web UI**: A web-based interface for designing, executing, and monitoring workflows.
-- **Maestro Visual Studio Code Extension**: An extension for Visual Studio Code, enabling Maestro workflow development within the code editor.
+![Screenshot 2025-06-05 at 12 39 01 PM](https://github.com/user-attachments/assets/0053422d-f1be-4cd5-af10-323630e3aa7d)
+
+The workflow name and "Agent definitions" links show or download the workflow and agent yaml files.
+The workflow diagram is shown.
+The input field for the prompt and the Re-run button starting the workflow at the bottom.
+
+![Screenshot 2025-06-05 at 12 40 30 PM](https://github.com/user-attachments/assets/b87f4a78-6218-4a85-a1b8-de01a9f0da1e)
+
+The workflow output come out after the inpiut of the prompt string and pressing of the Re-run button
+
+### maestro run output
+
+The `maestro run` command outout comes out in the command window.
+![Screenshot 2025-06-05 at 1 07 28 PM](https://github.com/user-attachments/assets/f9b9f90c-6e9a-4c8d-b9fc-6b178355644d)
 
 ## Simple Examples
 
