@@ -138,16 +138,19 @@ The Maestro Command Line Interface (CLI) allows users to manage workflows that i
 
 ### Basic Commands
 
-- `maestro create` AGENTS_FILE [options]: create agent
+- `maestro create` AGENTS_FILE [options]: create agent  
 - `maestro deploy` AGENTS_FILE WORKFLOW_FILE [options] [ENV...] deploy and run the workflow in docker, kubernetes or Streamit
+  - target option: `--deocker`: deployed in docker, `--k8s`: deployed in kubernetes cluster, `--streamlit`: deployed in streamlit
+  - environment option: `env` takes a string that has list of key=value separated by comma.
+  - auto_prompt option: '--auto-prompt` automatically starts workflow when the workflow is deployed 
 - `maestro mermaid` WORKFLOW_FILE [options]: generate the mermaid output for the workflow
 - `maestro run` WORKFLOW_FILE [options]: run the workflow with existing agents in command window
 - `maestro run` AGENTS_FILE WORKFLOW_FILE [options]: create agents and run the workflow in command window
 - `maestro validate` YAML_FILE [options]: validate agent or workflow definition yaml file
 - `maestro validate` SCHEMA_FILE YAML_FILE [options]: validate agent or workflow definition yaml file using the specified schema file 
-- `maestro meta-agents` TEXT_FILE [options]: run ....
+- `maestro meta-agents` TEXT_FILE [options]: run maestro meta agent with the given description file
 - `maestro clean` [options]: clean up Streamit servers of maestro
-- `maestro create-cr` YAML_FILE [options]: create maestro custom resource in kubernetes cluster
+- `maestro create-cr` YAML_FILE [options]: create maestro custom resources in kubernetes cluster
 
 
 ## Maestro UIs
@@ -192,7 +195,7 @@ The `maestro run` command outout comes out in the command window.
 ## Examples
 
 ### [Weather Checker AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/weather-checker.ai/README.md): Simple Sequential Workflow
-The weather checker ai is a simple sequential workflow.  I have 2 agents Temperatire agent that retrieve the current temperature of the given location and hot-or-not Agent that retrive the historical temperature of the given location and returns whether the current temperature is hotter or colder.
+The weather checker ai is a simple sequential workflow.  I have 2 agents Temperature agent that retrieves the current temperature of the given location and hot-or-not Agent that retrives the historical temperature of the given location and returns whether the current temperature is hotter or colder.
 
 #### agent.yaml
 ```yaml
@@ -236,7 +239,7 @@ spec:
 
     Output: The current temperature is colder than the historical temperature.
 ```
-
+ 
 #### workflow.yaml
 ```yaml
 apiVersion: maestro/v1alpha1
