@@ -4,23 +4,26 @@ import os
 import platform
 import sys
 
-def fixer_tool(reports: str, github_apikey: str) -> str:
+# Changed: github_apikey parameter removed
+def fixer_tool(reports: str) -> str:
     """
-    The cbom problem fixer tool takes a remediation report (input parameter) in JSON format and applies the patches to the source code. It then returns this
+    The cbom problem fixer tool takes a remediation report (input parameter) in JSON format and applies patches to the source code. It then returns this
         patchfile to the user
 
     Supported remediations:
     * KEYLEN01
-
     Args:
         report (str): The findings report in JSON format
-        github_apikey (str): An api key for github
 
     Returns:
-        str: git patch (which can be applied to source)
+        str: git patch (which can be applied to source), or an error string if
+             the GITHUB_TOKEN environment variable is not set.
     """
-    import os
-    import re
+    # Resolve the GitHub API key from environment variable
+    _effective_apikey = os.environ.get("GITHUB_TOKEN")
+
+    if not _effective_apikey:
+        return "ERROR: GitHub API key not provided and GITHUB_TOKEN environment variable is not set."
 
     report=json.loads(reports)
 
@@ -30,7 +33,8 @@ def fixer_tool(reports: str, github_apikey: str) -> str:
     if os.environ.get("BEE_DEBUG") is not None:
         print("DEBUG: [fixer-tool] " + "ENTRY")
         print("DEBUG: [fixer-tool] " + "reports: " + reports)
-        print("DEBUG: [fixer-tool] " + "github_apikey: " + github_apikey)
+        # Changed: Reflect that API key comes from env var
+        print("DEBUG: [fixer-tool] " + "github_apikey (from GITHUB_TOKEN): " + (_effective_apikey if _effective_apikey else "Not Set"))
 
     # hardcode for now
     email="patcher@research.ibm.com"
@@ -39,10 +43,11 @@ def fixer_tool(reports: str, github_apikey: str) -> str:
 
     repositoryURL: str = report["repository"]
     match = re.search(r"github\.com\/([^\/]+)\/([^\/]+)", repositoryURL)
+    if not match: # Added for robustness before using org/repo
+        return f"ERROR: Could not parse repository URL: {repositoryURL}"
     if match:
         org = match.group(1)
         repo = match.group(2)
-        repobase = org + "/" + repo
 
     if os.environ.get("BEE_DEBUG") is not None:
         print("DEBUG: [fixer-tool] " + "repositoryURL: " + repositoryURL)
@@ -51,8 +56,9 @@ def fixer_tool(reports: str, github_apikey: str) -> str:
         print("DEBUG: [fixer-tool] " + "Cloning & setting up working branch")
 
 
-    os.system("rm -fr workspace && mkdir -p workspace && cd workspace && git clone " + "https://" + str(github_apikey) + "@github.com/" + org + "/" + repo + ".git" + " repo" + " && cd repo && git checkout -b staging")
-
+    # Changed: Use the resolved _effective_apikey and f-string for clarity
+    clone_command = f"rm -fr workspace && mkdir -p workspace && cd workspace && git clone https://{_effective_apikey}@github.com/{org}/{repo}.git repo && cd repo && git checkout -b staging"
+    os.system(clone_command)
     os.system("cd workspace/repo && git config user.email " + email + " && git config user.name " + name + " >../out 2>&1")
 
     # Only works for a single patch at a time
@@ -95,8 +101,8 @@ def fixer_tool(reports: str, github_apikey: str) -> str:
 # END
 # Run the pipeline (unless in library) - useful test case
 if __name__ == "__main__":
-    api_token=os.environ.get("GH_TOKEN")
+    # api_token=os.environ.get("GH_TOKEN") # No longer passed as an argument
     with open('data/findings.json','r') as f:
         report=f.read()
-        patch=fixer_tool(report,api_token)
+        patch=fixer_tool(report) # Changed: api_token removed
         print(patch)
