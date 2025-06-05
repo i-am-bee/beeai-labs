@@ -13,7 +13,10 @@ spec:
         use-case: test
     agents:
         - fixer-agent
+        - patcher-agent
     prompt: testing
     steps:
       - name: code_step
         agent: fixer-agent
+      - name: patch_pull_step
+        agent: patcher-agent
