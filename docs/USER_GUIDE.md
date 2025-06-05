@@ -153,6 +153,17 @@ The Maestro Command Line Interface (CLI) allows users to manage workflows that i
 
 ## Maestro UIs
 
+![Screenshot 2025-06-05 at 11 09 36 AM](https://github.com/user-attachments/assets/7a7cd362-6995-471f-a1b5-ec9c6729c8b4)
+
+
+![Screenshot 2025-06-05 at 11 13 50 AM](https://github.com/user-attachments/assets/afabaa19-0a9d-4893-b6c6-da958caf6492)
+
+![Screenshot 2025-06-05 at 11 14 49 AM](https://github.com/user-attachments/assets/82a51bde-3032-4a46-a794-8368e8cfd0ea)
+
+
+![Screenshot 2025-06-05 at 11 26 06 AM](https://github.com/user-attachments/assets/1acebecf-0add-4ae7-b873-13d4e8992cfd)
+
+
 Maestro provides two user interfaces for visualizing and managing workflows:
 
 - **Maestro Web UI**: A web-based interface for designing, executing, and monitoring workflows.
