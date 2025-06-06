@@ -203,6 +203,8 @@ The Maestro Command Line Interface (CLI) allows users to manage workflows that i
 
 Maestro initial UI
 
+There are 2 parts in Maestro UI.  The first part is information about the workflow.  It has the name of the workflow, buttons that show contents of the agent and the workflow definitons and a button that shows the diagram of the workflow.  The second part is workflow execution.  It has the workflow prompt input field and its prompt suggestions and the submit button that triggers the workflow.  The output of the workflow execution is also displayed in this part.
+
 ![Screenshot 2025-06-05 at 11 09 36 AM](https://github.com/user-attachments/assets/7a7cd362-6995-471f-a1b5-ec9c6729c8b4)
 
 Show diagram button shows the workflow diagram 
