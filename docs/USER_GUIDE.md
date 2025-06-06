@@ -109,8 +109,18 @@ The step has properties that define the work of the setp.  Everything is optiona
 - **name**: name of step definition
 - **agent**: name of agent executed in this step
 - **inputs**: array source passed to agent as argument
+  - inputs has an array of `from` that has source of input for the agent input
+  - Each input from source for the agent are put into a list
+    - source: `prompt`- the initial workflow prompt
+    - source: `instructions:step name` - the instructions for the agent in the step
+    - source: step name - the result of the step execution
+    - source: other string - this string
 - **context**: array of string or object passed to agent as context
 - **input**: definition of user promot and user input processing
+  - Input takes user input in the command window.
+  - Input has `prompt` and `template`
+  - The `prompt` is the user input prompt string.  The `{prompt}` in the prompt string is replaced by the input of this step.
+  - The `template` is the string to the next step.  The `{prompt}` and `{response}` in the template string are replaced by the input of this step and the user input.  
 - **loop**: definition iterative agent execution
   - When the input is an array, loop repeats agent execution until each input element is passed to the agent 
   - When the input is not an array, loop repeats agent execution until the output meets the `until` expression.
