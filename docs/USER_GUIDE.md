@@ -42,7 +42,7 @@ The syntax of the agent definition is defined in the [json schema](https://githu
   - **framework**: agent framework type.  Current supported agent frameworks are : "beeai", "crewai", "openai", "remotem", "custom" and "code"
   - **mode**: Remote or Local.  Some agents support agent remotely.  Remote is supported by "beeai" and "remote" 
   - **description**: Description of this agent
-  - **tools**: array of tool names. This is not implemeted yet.
+  - **tools**: array of tool names. This is not implemented yet.
 
 ### Workflow
 Workflow example defined in yaml format is:
@@ -94,7 +94,7 @@ The syntax of the workflow definition is defined in the [json schema](https://gi
       - **labels**: array of key, value pairs. This is optional and can be used to associate any information to this template
     - **agents**: array of agent names used in this workflow
     - **prompt**: initial prompt for this workflow
-    - **event**: definition of event.  Event trigers workflow execution
+    - **event**: definition of event.  Event triggers workflow execution
     - **exception**: definition of exception handling.
     - **steps**: array of steps.  Steps are executed from top to bottom in this list unless the step has `condition` in it. 
       - **name**: name of step
@@ -104,7 +104,7 @@ The syntax of the workflow definition is defined in the [json schema](https://gi
 
 The step is an unit of work in the workflow.  It includes execution of agent, execution of agents in parallel or sequential, taking user input, preprocess input of step, post process execution output, deciding the next step to be executed.
 
-The step has properties that define the work of the setp.  Everything is optional except `name` property.
+The step has properties that define the work of the step.  Everything is optional except `name` property.
 
 - **name**: name of step definition
 - **agent**: name of agent executed in this step
@@ -116,7 +116,7 @@ The step has properties that define the work of the setp.  Everything is optiona
     - source: step name - the result of the step execution
     - source: other string - this string
 - **context**: array of string or object passed to agent as context
-- **input**: definition of user promot and user input processing
+- **input**: definition of user prompt and user input processing
   - Input takes user input in the command window.
   - Input has `prompt` and `template`
   - The `prompt` is the user input prompt string.  The `{prompt}` in the prompt string is replaced by the input of this step.
@@ -150,7 +150,7 @@ The step has properties that define the work of the setp.  Everything is optiona
     do: next step 3
   ```
 - **parallel**: array of agents that are executed in parallel
-  - Parallel has an array of agents.  It exectes all agents in the array at the same time.  The output of each agent are put together in order in the array in the output.
+  - Parallel has an array of agents.  It executes all agents in the array at the same time.  The output of each agent is put together in order in the array in the output.
   - When the input is an array, each element of the array passed to the agent in the array.
   - When the input in not an array, the same input is passed to all agents in the array.
   ```
@@ -161,7 +161,7 @@ The step has properties that define the work of the setp.  Everything is optiona
 
 ### event
 
-The event is one way to triger worlflow execution.  Only cron event is suppoorted now.
+The event is one way to trigger workflow execution.  Only cron event is supported now.
 
 - **name**: name of event definition
 - **cron**: cron job in standard cron format
@@ -178,7 +178,7 @@ The exception is executed when an exception happens during the execution of the 
 
 ## Maestro CLI
 
-The Maestro Command Line Interface (CLI) allows users to manage workflows that inlcudes validate, run, deploy and some other commands.
+The Maestro Command Line Interface (CLI) allows users to manage workflows that includes validate, run, deploy and some other commands.
 
 ### Basic Commands
 
@@ -209,7 +209,7 @@ Show diagram button shows the worklflow diagram
 
 ![Screenshot 2025-06-05 at 11 13 50 AM](https://github.com/user-attachments/assets/afabaa19-0a9d-4893-b6c6-da958caf6492)
 
-aragnts.yaml and workflow.yaml buttoms show agent and workflow yaml files contents
+aragnts.yaml and workflow.yaml buttons show agent and workflow yaml files contents
 
 ![Screenshot 2025-06-05 at 11 14 49 AM](https://github.com/user-attachments/assets/82a51bde-3032-4a46-a794-8368e8cfd0ea)
 
@@ -229,17 +229,17 @@ The input field for the prompt and the Re-run button starting the workflow at th
 
 ![Screenshot 2025-06-05 at 12 40 30 PM](https://github.com/user-attachments/assets/b87f4a78-6218-4a85-a1b8-de01a9f0da1e)
 
-The workflow output come out after the inpiut of the prompt string and pressing of the Re-run button
+The workflow output come out after the input of the prompt string and pressing of the Re-run button
 
 ### maestro run output
 
-The `maestro run` command outout comes out in the command window.
+The `maestro run` command output comes out in the command window.
 ![Screenshot 2025-06-05 at 1 07 28 PM](https://github.com/user-attachments/assets/f9b9f90c-6e9a-4c8d-b9fc-6b178355644d)
 
 ## Examples
 
 ### [Weather Checker AI](https://github.com/AI4quantum/maestro/blob/main/demos/workflows/weather-checker.ai/README.md): Simple Sequential Workflow
-The weather checker ai is a simple sequential workflow.  I have 2 agents Temperature agent that retrieves the current temperature of the given location and hot-or-not Agent that retrives the historical temperature of the given location and returns whether the current temperature is hotter or colder.
+The weather checker ai is a simple sequential workflow.  I have 2 agents Temperature agent that retrieves the current temperature of the given location and hot-or-not Agent that retrieves the historical temperature of the given location and returns whether the current temperature is hotter or colder.
 
 #### agent.yaml
 ```yaml
