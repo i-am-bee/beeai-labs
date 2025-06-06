@@ -309,6 +309,110 @@ spec:
       - name: compare_temperature
         agent: hot-or-not Agent
 ```
+### loop workflow: Simple Loop Workflow
+The loop workflow demonstrates simple loop workflow.  It has 2 agents. The generate1-10 agent that generates one number between 1 and 10 and the countdown Agent that gets a number and dicrease it by 1 and it returns "happy" when number becomes 0.  The countdown agent is executed in the loop until the agent returns "happy. 
+
+#### agent.yaml
+```
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: generate1-10
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  mode: remote
+  description:
+  tools:
+    - code_interpreter
+    - test
+  instructions: genereate a number between 1 and 10 and just output the number
+
+---
+
+apiVersion: maestro/v1alpha1
+kind: Agent
+metadata:
+  name: countdown
+  labels:
+    app: test-example
+spec:
+  model: "llama3.1:latest"
+  mode: remote
+  description: this is a test
+  tools:
+    - code_interpreter
+    - test
+  instructions: you get a nunber.  Dicrease the number by 1 and if the number becomes 0, output "happy" otherwise output the new number.
+```
+#### workflow.yaml
+```
+apiVersion: maestro/v1
+kind: Workflow
+metadata:
+  name: loop workflow
+  labels:
+    app: example
+spec:
+  strategy:
+    type: sequence
+  template:
+    metadata:
+      name: loop-workflow
+      labels:
+        app: example
+	use-case: test
+    agents:
+	- generate1-10
+        - countdown
+    prompt: Generate a number
+    steps:
+      - name: step1
+        agent: generate1-10
+      - name: step2
+        loop:
+            agent: countdown
+            until: (input.find("happy") != -1)
+```
+#### output
+```
+🐝 Running generate1-10...
+
+🐝 Response from generate1-10: 7
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 6
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 5
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 4
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 3
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 2
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 1
+
+🐝 Running countdown...
+
+🐝 Response from countdown: 0
+
+🐝 Running countdown...
+
+🐝 Response from countdown: happy
+```
 
 ## Demos
 
