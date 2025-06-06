@@ -205,15 +205,15 @@ Maestro initial UI
 
 ![Screenshot 2025-06-05 at 11 09 36 AM](https://github.com/user-attachments/assets/7a7cd362-6995-471f-a1b5-ec9c6729c8b4)
 
-Show diagram button shows the worklflow diagram 
+Show diagram button shows the workflow diagram 
 
 ![Screenshot 2025-06-05 at 11 13 50 AM](https://github.com/user-attachments/assets/afabaa19-0a9d-4893-b6c6-da958caf6492)
 
-aragnts.yaml and workflow.yaml buttons show agent and workflow yaml files contents
+agents.yaml and workflow.yaml buttons show agent and workflow yaml files contents
 
 ![Screenshot 2025-06-05 at 11 14 49 AM](https://github.com/user-attachments/assets/82a51bde-3032-4a46-a794-8368e8cfd0ea)
 
-Submit button strarts the workflow with the inputted prompt string
+Submit button starts the workflow with the input prompt string
 
 ![Screenshot 2025-06-05 at 11 26 06 AM](https://github.com/user-attachments/assets/1acebecf-0add-4ae7-b873-13d4e8992cfd)
 
