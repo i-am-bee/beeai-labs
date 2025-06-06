@@ -52,6 +52,38 @@ Purpose: Wrap header, metadata, components, dependencies into a final CBOM.
 
 Output: Complete CycloneDX BOM JSON document.
 
+## Remediation and PR automation
+
+After generating a CycloneDX-formatted CBOM, the system can optionally apply automated remediations and open a GitHub pull request with the proposed fixes.
+
+### 7. Fixer Agent
+
+Parses the CBOM to identify components using non-recommended configurations (e.g., AES-128).
+
+Applies simple sed-based transformations to upgrade values (e.g., 128 → 256).
+
+Generates a .patch file using git format-patch from the staged change.
+
+### 8. Patcher Agent
+
+Takes the generated patch and applies it to a clean clone of the target GitHub repository.
+
+Pushes the changes to a new branch (e.g., remediation_4821).
+
+Uses the GitHub CLI (gh pr create) to open a pull request into the original repo’s main branch.
+
+#### Permissions & Token Requirements
+
+To apply patches and create pull requests, the following permissions are required:
+
+A GitHub Personal Access Token (PAT) with the repo scope.
+
+The token must be exported as an environment variable:
+
+```bash
+export GITHUB_TOKEN=ghp_...
+```
+
 ### Mermaid Diagram
 
 <!-- MERMAID_START -->
