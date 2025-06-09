@@ -35,7 +35,7 @@ class CodeAgent(Agent):
         try:
             exec(self.agent_code, local)
         except Exception as e:
-            self.print(f"Exception rxecuting code: {e}\n")
+            self.print(f"Exception executing code: {e}\n")
             raise e
         answer = str(local["output"])
         self.print(f"Response from {self.agent_name}: {answer}\n")        
@@ -53,7 +53,7 @@ class CodeAgent(Agent):
         try:
             exec(self.agent_code, local)
         except Exception as e:
-            self.print(f"Exception rxecuting code: {e}\n")
+            self.print(f"Exception executing code: {e}\n")
             raise e
         answer = str(local["output"])
         self.print(f"Response from {self.agent_name}: {answer}\n")        
