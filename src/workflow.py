@@ -86,14 +86,17 @@ class Workflow:
     def _create_or_restore_agents(self):
         if self.agent_defs:
             for agent_def in self.agent_defs:
-                agent_def["spec"]["framework"] = agent_def["spec"].get(
-                    "framework", AgentFramework.BEEAI
-                )
-                cls = get_agent_class(
-                    agent_def["spec"]["framework"],
-                    agent_def["spec"].get("mode")
-                )
-                self.agents[agent_def["metadata"]["name"]] = cls(agent_def)
+                if isinstance(agent_def, str):
+                    self.agents[agent_def] = restore_agent(agent_def)
+                else:
+                    agent_def["spec"]["framework"] = agent_def["spec"].get(
+                        "framework", AgentFramework.BEEAI
+                    )
+                    cls = get_agent_class(
+                        agent_def["spec"]["framework"],
+                        agent_def["spec"].get("mode")
+                    )
+                    self.agents[agent_def["metadata"]["name"]] = cls(agent_def)
         else:
             for name in self.workflow["spec"]["template"]["agents"]:
                 self.agents[name] = restore_agent(name)
