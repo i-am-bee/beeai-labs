@@ -95,6 +95,10 @@ spec:
                                 type: string
                             type: object
                           type: array
+                        context:
+                          items:
+                            type: string
+                          type: array
                         input:
                           properties:
                             prompt:
@@ -102,6 +106,13 @@ spec:
                             template:
                               type: string
                           type: object
+                        inputs:
+                          items:
+                            properties:
+                              from:
+                                type: string
+                            type: object
+                          type: array
                         loop:
                           properties:
                             agent:

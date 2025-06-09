@@ -561,7 +561,7 @@ class CleanCmd(Command):
 # CreateCr command group
 #  maestro create-cr YAML_FILE [options]
 def sanitize_name(name):
-    new_name = re.sub(r'[^a-zA-Z0-9.]','-', name).lower().replace(" ", "-")
+    new_name = re.sub(r'[^a-zA-Z0-9]','-', name).lower().replace(" ", "-")
     if re.search(r'[.-0-9]$', new_name):
         return new_name + 'e'
     else:
