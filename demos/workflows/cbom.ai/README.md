@@ -95,12 +95,17 @@ participant identify post_quantum
 participant component creator
 participant BOM Assembler
 participant selector agent
+participant score
+participant fixer_agent
+participant patcher_agent
 git fetcher->>selector agent: step1
 selector agent->>raw gh reader: step2
 raw gh reader->>identify post_quantum: step3
 identify post_quantum->>component creator: step4
 component creator->>BOM Assembler: step5
-BOM Assembler->>BOM Assembler: step6
+BOM Assembler->>fixer_agent: step6
+fixer_agent->>patcher_agent: code_step
+patcher_agent->>patcher_agent: patch_pull_step
 ```
 <!-- MERMAID_END -->
 
