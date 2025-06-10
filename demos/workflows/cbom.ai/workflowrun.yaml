@@ -7,7 +7,6 @@ metadata:
   name: cbom-ai
 spec:
   agents:
-  - git-fetcher
   - raw-gh-reader
   - identify-post-quantum
   - component-creator
