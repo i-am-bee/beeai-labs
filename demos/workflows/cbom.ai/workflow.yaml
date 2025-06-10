@@ -41,7 +41,7 @@ spec:
         - from: "Given a raw github link, output its raw file directly."
         - from: step3
       context:
-        - "A correct output should just be the raw version of a java file."
+        - "The current output should be the following: https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
     - name: step4
       agent: identify post-quantum
     - name: step5
