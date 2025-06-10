@@ -54,13 +54,13 @@ Output: Complete CycloneDX BOM JSON document.
 
 ## Remediation and PR automation
 
-After generating a CycloneDX-formatted CBOM, the system can optionally apply automated remediations and open a GitHub pull request with the proposed fixes.
+After generating a CycloneDX-formatted CBOM, the system can optionally apply automated remediations and open a GitHub pull request(s) with the proposed fixes.
 
 ### 7. Fixer Agent
 
 Parses the CBOM to identify components using non-recommended configurations (e.g., AES-128).
 
-Applies simple sed-based transformations to upgrade values (e.g., 128 → 256).
+Applies remediation strategies from LLM-based suggestions to upgrade values (e.g., 128 → 256).
 
 Generates a .patch file using git format-patch from the staged change.
 
