@@ -11,11 +11,10 @@ spec:
         app: cbom.ai
     agents:
       - gh fetch
-      - raw gh reader
+      - gh reader
       - identify post-quantum
       - component creator
       - BOM Assembler
-      - selector agent
       - score
       - fixer-agent
       - patcher-agent
@@ -25,36 +24,20 @@ spec:
     - name: step1
       agent: gh fetch
     - name: step2
-      agent: selector agent
-    - name: step2_score
-      agent: score
-      inputs: 
-        - from: "Get a java file from the github mastercard repo and return its raw link."
-        - from: step2
-      context: 
-        - "A correct output should be a string containing a raw GitHub URLs ending in .java from the Mastercard/client-encryption-java repo, with no extra text or formatting."
+      agent: gh reader
     - name: step3
-      agent: raw gh reader
-    - name: step3_score
-      agent: score
-      inputs: 
-        - from: "Given a raw github link, output its raw file directly."
-        - from: step3
-      context:
-        - "The current output should be the following: https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
-    - name: step4
       agent: identify post-quantum
-    - name: step5
+    - name: step4
       agent: component creator
-    - name: step6
+    - name: step5
       agent: BOM Assembler
     - name: final_score
       agent: score
       inputs: 
         - from: "Given the components and headers, assemble them to create a structurally valid CBOM. It is ok to have placeholders, but the JSON must be valid."
-        - from: step6
+        - from: step5
       context:
-        - "A correct output should be a json that is structurally valid. Additionally, the CBOM itself should contain libraries themselves that are not quantum safe, which is why it is added to the CBOM. It is ok to have placeholders for miissing information within the CBOM itself."
+        - "A correct output should be a json that is structurally valid. Additionally, the CBOM itself should contain libraries themselves that are not quantum safe, which is why it is added to the CBOM. It is ok to have placeholders for missing information within the CBOM itself."
     - name: code_step
       agent: fixer-agent
     - name: patch_pull_step

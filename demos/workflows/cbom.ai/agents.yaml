@@ -86,37 +86,19 @@ spec:
 apiVersion: maestro/v1alpha1
 kind: Agent
 metadata:
-  name: raw gh reader
+  name: gh reader
   labels:
     app: cbom.ai
 spec:
-  model: qwen3:latest
-  description: |
-    given a github url, fetch its contents directly using the fetch_code tool
-  instructions: |
-    You are the **File Content Fetcher** agent for CBOM.ai. You will be given a raw github url in this form: "given_url", fetch its contents directly using the fetch_code tool.
-
-        **Execution Steps:**
-          1. **Call**: fetch_code("given_url").
-          2. **Return** the `content` string exactly as received—no extra formatting or commentary.
-
-    For more context, the output should just be the content/code of the file located at the passed in github URL, without any additional text or formatting.
-  mode: remote
-  tools:
-    - fetch_code
+  framework: code
+  mode: local
+  description: Fetch raw file contents from a GitHub URL
   code: |
     import requests
-
-    def fetch_raw_file_content(url: str) -> str:
-        """
-        Fetch the full content of a raw.githubusercontent.com URL using HTTP.
-
-        :param url: Raw file URL (e.g., https://raw.githubusercontent.com/.../AesEncrypter.java)
-        :return: The file content as a text string
-        """
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.text
+    url = "https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
+    response = requests.get(url)
+    response.raise_for_status()
+    output["content"] = response.text
 
 ---
 apiVersion: maestro/v1alpha1
@@ -226,22 +208,7 @@ spec:
   mode: remote
   tools:
     - LLM
-
----
-apiVersion: maestro/v1alpha1
-kind: Agent
-metadata:
-  name: selector agent
-  labels: 
-    app: test-example
-    custom_agent: prompt_agent
-spec:
-  model: dummy
-  framework: custom
-  mode: remote
-  description: selecting the first element from the list of URLs
-  instructions: "https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
-
+    
 ---
 apiVersion: maestro/v1alpha1
 kind: Agent
@@ -365,3 +332,4 @@ spec:
 
     os.system(f"cd {workspace_dir} && rm -fr repo")
     print(f"✅ Patch applied and PR created on branch: {branch}")
+
