@@ -33,6 +33,13 @@ kubectl port-forward svc/gateway 8000
 ```
 
 
+### Add dependencies
+
+```bash
+pip install qiskit-serverless qiskit numpy
+```
+
+
 ### Upload QAOA function to Qiskit Serverless
 
 ```bash
