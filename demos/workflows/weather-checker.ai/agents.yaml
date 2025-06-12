@@ -3,7 +3,7 @@ kind: Agent
 metadata:
   name: Temperature Agent
   labels:
-    app: mas-example
+    app: label value with space
 spec:
   model: "llama3.1:latest"
   framework: beeai
