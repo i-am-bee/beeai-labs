@@ -589,6 +589,9 @@ class CreateCrCmd(Command):
                     data['apiVersion'] = "maestro.ai4quantum.com/v1alpha1"
                     if 'metadata' in data and 'name' in data['metadata']:
                         data['metadata']['name'] = sanitize_name(data['metadata']['name'])
+                    if 'metadata' in data and 'labels' in data['metadata']:
+                        for key in data['metadata']['labels']:
+                            data['metadata']['labels'][key] = sanitize_name(data['metadata']['labels'][key])
                     if data['kind'] == "Workflow":
                         # remove template.meatdata
                         if data['spec']['template'].get('metadata'):
@@ -616,7 +619,10 @@ class CreateCrCmd(Command):
                                 exception['agent'] = sanitize_name(exception['agent'])
                     with open("temp_yaml", 'w') as file:
                         yaml.safe_dump(data, file)
-                        subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
+                        result = subprocess.run(['kubectl', 'apply', "-f", "temp_yaml"], capture_output=True, text=True)
+                        if result.returncode != 0:
+                            print(f"Stderr: {result.stderr}")
+                            return 1
         except Exception as e:
             self._check_verbose()
             raise RuntimeError(f"{str(e)}") from e
