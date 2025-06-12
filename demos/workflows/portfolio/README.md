@@ -16,10 +16,6 @@ portfolio->>portfolio: portfolio
 
 ## Getting Started
 
-* Run a local instance of the [bee-stack](https://github.com/i-am-bee/bee-stack/blob/main/README.md)
-
-* Verify a valid llm is available to bee-stack
-
 * Install [maestro](https://github.com/i-am-bee/beeai-labs) dependencies: `cd ../../../maestro && poetry shell && poetry install && cd -`
 
 * Configure environmental variables: `cp example.env .env`
