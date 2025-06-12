@@ -33,7 +33,7 @@ kubectl port-forward svc/gateway 8000
 ```
 
 
-### Add function
+### Upload QAOA function to Qiskit Serverless
 
 ```bash
 ./scripts/upload_function.py
