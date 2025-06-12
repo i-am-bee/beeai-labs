@@ -89,21 +89,19 @@ export GITHUB_TOKEN=ghp_...
 <!-- MERMAID_START -->
 ```mermaid
 sequenceDiagram
-participant git fetcher
-participant raw gh reader
+participant gh fetch
+participant gh reader
 participant identify post_quantum
 participant component creator
 participant BOM Assembler
-participant selector agent
 participant score
 participant fixer_agent
 participant patcher_agent
-git fetcher->>selector agent: step1
-selector agent->>raw gh reader: step2
-raw gh reader->>identify post_quantum: step3
-identify post_quantum->>component creator: step4
-component creator->>BOM Assembler: step5
-BOM Assembler->>fixer_agent: step6
+gh fetch->>gh reader: step1
+gh reader->>identify post_quantum: step2
+identify post_quantum->>component creator: step3
+component creator->>BOM Assembler: step4
+BOM Assembler->>fixer_agent: step5
 fixer_agent->>patcher_agent: code_step
 patcher_agent->>patcher_agent: patch_pull_step
 ```
