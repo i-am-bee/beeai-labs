@@ -181,3 +181,4 @@ agents.db
 
 # IDE workspaces
 *.code-workspace
+.idea
