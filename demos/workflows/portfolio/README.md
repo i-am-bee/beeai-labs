@@ -11,7 +11,6 @@ participant stock
 participant portfolio
 stock->>portfolio: stock
 portfolio->>portfolio: portfolio
-
 ```
 <!-- MERMAID_END -->
 
