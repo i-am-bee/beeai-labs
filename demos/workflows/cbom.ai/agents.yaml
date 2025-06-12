@@ -208,22 +208,7 @@ spec:
   mode: remote
   tools:
     - LLM
-
-# ---
-# apiVersion: maestro/v1alpha1
-# kind: Agent
-# metadata:
-#   name: selector agent
-#   labels: 
-#     app: test-example
-#     custom_agent: prompt_agent
-# spec:
-#   model: dummy
-#   framework: custom
-#   mode: remote
-#   description: selecting the first element from the list of URLs
-#   instructions: "https://raw.githubusercontent.com/Mastercard/client-encryption-java/main/src/main/java/com/mastercard/developer/encryption/EncryptionConfig.java"
-
+    
 ---
 apiVersion: maestro/v1alpha1
 kind: Agent
