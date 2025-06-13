@@ -1,16 +1,16 @@
 # Contributing
 
-Bee Hive is an open-source project committed to bringing LLM agents to people of all backgrounds. This page describes how you can join the Bee community in this goal.
+Maestro is an open-source project committed to bringing LLM agents to people of all backgrounds. This page describes how you can join the Maestro community in this goal.
 
 ## Before you start
 
-If you are new to Bee contributing, we recommend you do the following before diving into the code:
+If you are new to Maestro contributing, we recommend you do the following before diving into the code:
 
 - Read [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## Style and lint
 
-Bee Hive uses the following tools to meet code quality standards and ensure a unified code style across the codebase:
+Maestro uses the following tools to meet code quality standards and ensure a unified code style across the codebase:
 
 We use the following libs to check the Python code: 
 - [Black](https://black.readthedocs.io/) - Code Formatter
@@ -28,16 +28,16 @@ If you've written some code but need help finishing it, want to get initial feed
 
 ## Choose an issue to work on
 
-Bee uses the following labels to help non-maintainers find issues best suited to their interests and experience level:
+Maestro uses the following labels to help non-maintainers find issues best suited to their interests and experience level:
 
 - [good first issue](https://github.com/i-am-bee/bee-hive/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) - these issues are typically the simplest available to work on, ideal for newcomers. They should already be fully scoped, with a straightforward approach outlined in the descriptions.
 - [help wanted](https://github.com/i-am-bee/bee-hive/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) - these issues are generally more complex than good first issues. They typically cover work that core maintainers don't currently have the capacity to implement and may require more investigation/discussion. These are great options for experienced contributors looking for something more challenging.
 
 ## Set up a development environment
 
-To start contributing to the Bee Hive, follow these steps to set up your development environment:
+To start contributing to Maestro, follow these steps to set up your development environment:
 
-1. **Set up Python environment:** We recommend using Python 3.11 or higher. First, ensure you have Python installed:
+1. **Set up Python environment:** We recommend using Python 3.12 or higher. First, ensure you have Python installed:
 
 ```bash
 python --version
