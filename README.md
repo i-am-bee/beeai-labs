@@ -12,7 +12,15 @@ cd maestro
 
 2. Install dependencies:
 ```bash
+uv venv
+source .venv/bin/activate
+uv pip install -r requirements.txt
 uv pip install -e .
+```
+
+Note: If using scoring agents, additionally install:
+```bash
+uv pip install -r requirements-extra.txt
 ```
 
 ## Usage
